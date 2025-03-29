@@ -70,23 +70,26 @@ class AdminPostController extends Controller
             $pathNew = $folder . '/' . $imageName;
             $pathNewMin = $folder . '/' . 'min_' . $imageName;
 
-            Storage::copy($pathTmp, $pathNew);
+            if (Storage::copy($pathTmp, $pathNew)){
+                $imageMin = \Intervention\Image\Laravel\Facades\Image::read(Storage::get($pathTmp))->scaleDown(300, 200);
+                $imageMin->save('storage/' . $pathNewMin);
 
-            $imageMin = \Intervention\Image\Laravel\Facades\Image::read(Storage::get($pathTmp))->scaleDown(300, 200);
-            $imageMin->save('storage/' . $pathNewMin);
+                Image::create([
+                    'post_id' => $post->id,
+                    'name' => $imageName,
+                    'folder' => $folder,
+                    'path' => '/storage' . $pathNew,
+                    'pathMin' => '/storage' . $pathNewMin,
+                    'size' => $temporaryImage->size,
+                ]);
 
-            Image::create([
-                'post_id' => $post->id,
-                'name' => $imageName,
-                'folder' => $folder,
-                'path' => '/storage' . $pathNew,
-                'pathMin' => '/storage' . $pathNewMin,
-                'size' => $temporaryImage->size,
-            ]);
+                Storage::deleteDirectory($temporaryImage->folder);
 
-            Storage::deleteDirectory($temporaryImage->folder);
-
-            $temporaryImage->delete();
+                $temporaryImage->delete();
+            }return response()->json([
+                'message' => 'Record not found.'
+            ], 404);
+//            Storage::copy($pathTmp, $pathNew);
         }
         $request->session()->flash('message_form', 'Автомобиль успешно добавлен22');
         return to_route('admin-post.index')->with('message', 'Category Created Successfully');

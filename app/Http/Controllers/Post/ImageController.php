@@ -21,7 +21,7 @@ class ImageController extends Controller
     {
         $userId = auth()->id();
 
-        if (!$request->hasFile('imageFilePond')) {
+        if ($request->hasFile('imageFilePond')) {
             $image = $request->file('imageFilePond');
 
             $filename = Str::random() . '.webp';
@@ -61,6 +61,16 @@ class ImageController extends Controller
 //        ];
 //        return response()->file($path, $headers);
 //    }
+
+public function restore()
+{
+    $userId = auth()->id();
+
+    $tmpImages = TemporaryFile::where('id_user', $userId)->get();
+//    return response()->json($tmpImages);
+    return $tmpImages;
+
+}
 
     public function destroy()
     {

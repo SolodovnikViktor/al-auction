@@ -1,5 +1,5 @@
 <script setup>
-import {Head, useForm, router,} from '@inertiajs/vue3';
+import {Head, useForm,} from '@inertiajs/vue3';
 import IndexLayout from "@/Layouts/IndexLayout.vue";
 import vueFilePond from 'vue-filepond';
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
@@ -14,6 +14,8 @@ import AdminNav from "@/Components/Admin/AdminNav.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import MyInput from "@/Components/Options/MyInput.vue";
 import {ref} from "vue";
+
+import axios from "axios";
 
 
 const props = defineProps({
@@ -67,46 +69,25 @@ const form = useForm({
 let myFiles = []
 let errorLoadFiles = ref(false);
 
-function handleFilePondLoad(id) {
-    form.images.push(id)
-    console.log('load')
-    // router.visit('create', {only: ['tmpImages'],})
-    router.reload({only: ['tmpImages']})
-
-    // reloadProps()
-    // handleFilePondInit()
-    return id;
+ function getImages() {
+    axios.get('/admin/tmp-restore')
+        .then(response => {
+            pondRestore(response.data)
+        })
+        .catch(error => {
+            console.log(error);
+        });
 }
 
-
-function reloadProps() {
-    router.reload({only: ['tmpImages']})
-
-
-    // handleFilePondInit()
-    setTimeout(handleFilePondInit, 1000)
-}
-
-function handleFilePondRevert(id, load, error) {
-    form.images = form.images.filter((image) => image !== id);
-    // reloadProps()
-    router.reload({only: ['tmpImages']})
-    console.log(props.tmpImages)
-    errorLoadFiles.value = false;
-}
-
-function handleFilePondInit() {
+function pondRestore(images){
     myFiles = []
     form.images = []
     errorLoadFiles.value = false;
-
-    // console.log(props.tmpImages)
     // router.reload({only: ['tmpImages']})
-
     // router.visit('create', {only: ['tmpImages'],})
-
-    for (const image of props.tmpImages) {
+    for (const image of images) {
         form.images.push(image.id.toString())
+        console.log(form.images)
         myFiles.push({
             source: image.fullFolder,
             options: {
@@ -123,10 +104,29 @@ function handleFilePondInit() {
             }
         });
     }
-    console.log(props.tmpImages)
+    // console.log(props.tmpImages)
     form.title = ' '
     form.title = ''
 }
+
+// Загружено 1 фото
+function handleFilePondLoad(id) {
+    form.images.push(id)
+    console.log('load')
+    // router.visit('create', {only: ['tmpImages'],})
+    // router.reload({only: ['tmpImages']})
+    // getImages()
+    // handleFilePondInit()
+    return id;
+}
+function handleFilePondRevert(id, load, error) {
+    form.images = form.images.filter((image) => image !== id);
+    // getImages()
+    // router.reload({only: ['tmpImages']})
+    // console.log(props.tmpImages)
+    errorLoadFiles.value = false;
+}
+
 
 function fileRenameFunction(file) {
     const random = Math.random().toString(36).substring(2).toUpperCase();
@@ -140,11 +140,15 @@ function activateFile(i) {
 // Перетаскивание
 function reorderFiles(i, files) {
 }
+// Вызывается по готовности FilePond
+function handleFilePondInit() {
+    getImages()
+}
 
 // Вызывается, когда все файлы в списке были обработаны
 function handleFilePondSuccess() {
-    console.log('Success')
-    reloadProps()
+    console.log('function handleFilePondSuccess')
+    getImages()
 }
 
 function FilePondErrorLoad(error, files) {
@@ -195,7 +199,6 @@ function FilePondErrorLoad(error, files) {
                             allow-reorder="true"
                             itemInsertLocation="after"
 
-
                             force-revert="true"
 
 
@@ -208,7 +211,7 @@ function FilePondErrorLoad(error, files) {
                             checkValidity="true"
 
                             imagePreviewMaxHeight="230"
-                            filePosterHeight="230"
+                            filePosterMaxHeight="230"
                             maxFiles="40"
 
                             allowFileRename="true"

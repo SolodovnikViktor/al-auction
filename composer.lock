@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "100c14839975e9884de69aea7c17adec",
+    "content-hash": "860f96fde8050dfabd3a409de493b17f",
     "packages": [
         {
             "name": "brick/math",
@@ -6598,6 +6598,10 @@
                 "docker",
                 "laravel"
             ],
+            "support": {
+                "issues": "https://github.com/laravel/sail/issues",
+                "source": "https://github.com/laravel/sail"
+            },
             "time": "2025-01-24T15:45:36+00:00"
         },
         {
