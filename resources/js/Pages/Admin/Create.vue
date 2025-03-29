@@ -299,7 +299,6 @@ function FilePondErrorLoad(error, files) {
 }
 </style>
 
-
 <!--<div class="relative w-full shadow sm:rounded-2xl bg-white">-->
 <!--<div-->
 <!--    class="overflow-hidden grid grid-cols-12 gap-4 pb-4 mb-4 border-b border-gray-600">-->
