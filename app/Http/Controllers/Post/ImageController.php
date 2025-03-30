@@ -5,40 +5,38 @@ namespace App\Http\Controllers\Post;
 use App\Http\Controllers\Controller;
 use App\Models\TemporaryFile;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Inertia\Response;
 use Intervention\Image\Laravel\Facades\Image;
-
-use function Laravel\Prompts\error;
 
 class ImageController extends Controller
 {
-
     public function store(Request $request)
     {
         $userId = auth()->id();
-
         if ($request->hasFile('imageFilePond')) {
             $image = $request->file('imageFilePond');
-
             $filename = Str::random() . '.webp';
             $folder = '/images/tmp/' . 'UserID-' . $userId . '/' . uniqid('image-', true);
-
             $imageTmp = Image::read($image)->scaleDown(1200, 900)->toWebp(70);
-//            $image->storeAs($folder, $filename);
             if (Storage::put($folder . '/' . $filename, $imageTmp)) {
                 $size = Storage::size($folder . '/' . $filename);
-
                 $imageId = TemporaryFile::create([
-                    'fullFolder' => '/storage' . $folder . '/' . $filename,
+                    'path' => '/storage' . $folder . '/' . $filename,
                     'folder' => $folder,
                     'filename' => $filename,
                     'id_user' => $userId,
                     'size' => $size,
                 ]);
+                $tempReorder = DB::table('temporary_reorder')->where('userId', $userId)->first();
+
+                DB::table('temporary_reorder')->where('userId', $userId)->delete();
+                DB::table('temporary_reorder')->insert([
+                    'userId' => $userId,
+                    'position' => $tempReorder->position . ',' . $imageId->id,
+                ]);
+
                 return $imageId->id;
             }
         }
@@ -51,36 +49,61 @@ class ImageController extends Controller
         ], 404);
     }
 
-//    public function restore()
-//    {
-//        dd('22');
-//        $path = public_path('images/image-67d0b1dc25fa87.86451071/1.jpg');
-//        $headers = [
-//            'Content-Type' => 'image/jpeg',
-//            'Content-Disposition' => 'inline; filename="1.jpg"'
-//        ];
-//        return response()->file($path, $headers);
-//    }
+    public function restore()
+    {
+        $arraysTmp = [];
+        $arrayTmp = [];
+        $userId = auth()->id();
+        $tempReorder = DB::table('temporary_reorder')->where('userId', $userId)->first();
 
-public function restore()
-{
-    $userId = auth()->id();
-
-    $tmpImages = TemporaryFile::where('id_user', $userId)->get();
-//    return response()->json($tmpImages);
-    return $tmpImages;
-
-}
+        if ($tempReorder->position !== '') {
+            $tempReorder = explode(',', $tempReorder->position);
+            foreach ($tempReorder as $item) {
+                if ($temporaryFile = TemporaryFile::where('id', $item)->first()) {
+                    $arraysTmp [] = $temporaryFile;
+                }
+            }
+            foreach ($arraysTmp as $array) {
+                $arrayTmp [] = $array;
+            }
+            return response()->json($arrayTmp);
+        }
+        return TemporaryFile::where('id_user', $userId)->get();
+    }
 
     public function destroy()
     {
+        $userId = auth()->id();
+
+
         $image = request()->getContent();
-        $temporaryImage = TemporaryFile::where('id', $image)->orWhere('fullFolder', $image)->first();
+        $temporaryImage = TemporaryFile::where('id', $image)->orWhere('path', $image)->first();
+        $tempReorder = DB::table('temporary_reorder')->where('userId', $userId)->first();
+        $tempReorder = str_replace(',' . $temporaryImage->id, '', $tempReorder->position);
+        DB::table('temporary_reorder')->where('userId', $userId)->delete();
+        DB::table('temporary_reorder')->insert([
+            'userId' => $userId,
+            'position' => $tempReorder,
+        ]);
+
         if ($temporaryImage) {
             Storage::deleteDirectory($temporaryImage->folder);
             $temporaryImage->delete();
         }
-        return '';
+        return $temporaryImage->id;
     }
 
+    public function reorder(Request $request)
+    {
+        $userId = auth()->id();
+        DB::table('temporary_reorder')->where('userId', $userId)->delete();
+        DB::table('temporary_reorder')->insert([
+            'userId' => $userId,
+            'position' => $request->getContent(),
+        ]);
+
+//        $tmpImages = TemporaryFile::where('id_user', $userId)->get();
+//    return response()->json($tmpImages);
+        return [];
+    }
 }

@@ -10,16 +10,23 @@ return new class extends Migration {
         Schema::create('temporary_files', function (Blueprint $table) {
             $table->id();
             $table->string('folder');
-            $table->string('fullFolder');
+            $table->string('path');
             $table->string('filename');
             $table->string('id_user');
             $table->string('size');
             $table->timestamps();
+        });
+
+        Schema::create('temporary_reorder', function (Blueprint $table) {
+            $table->id();
+            $table->integer('userId');
+            $table->string('position');
         });
     }
 
     public function down(): void
     {
         Schema::dropIfExists('temporary_files');
+        Schema::dropIfExists('temporary_reorder');
     }
 };

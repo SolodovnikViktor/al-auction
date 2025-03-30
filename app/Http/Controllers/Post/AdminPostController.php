@@ -14,6 +14,7 @@ use App\Models\TemporaryFile;
 use App\Models\Transmission;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
@@ -25,21 +26,18 @@ class AdminPostController extends Controller
     public function index(): Response
     {
         $postsPaginate = Post::with('user', 'images', 'imagesPath')->paginate(15);
-
-
         $posts = PostResource::collection(Post::paginate(15));
 
         return Inertia::render('Admin/Index', [
             'posts' => $posts,
             'postsPaginate' => $postsPaginate,
-
         ]);
     }
 
     public function create(): Response
     {
         $userId = auth()->id();
-
+        $filePositionId = DB::table('temporary_reorder')->where('userId', $userId)->select('position')->first();
         $colors = Color::all()->select('id', 'title');
         $drives = Drive::all()->select('id', 'title');
         $bodyTypes = BodyType::all()->select('id', 'title');
@@ -47,12 +45,12 @@ class AdminPostController extends Controller
         $tmpImages = TemporaryFile::where('id_user', $userId)->get();
 
         return Inertia::render('Admin/Create', [
-
             'colors' => $colors,
             'drives' => $drives,
             'bodyTypes' => $bodyTypes,
             'transmissions' => $transmissions,
             'tmpImages' => $tmpImages,
+            'filePositionId' => $filePositionId,
         ]);
     }
 
@@ -70,8 +68,11 @@ class AdminPostController extends Controller
             $pathNew = $folder . '/' . $imageName;
             $pathNewMin = $folder . '/' . 'min_' . $imageName;
 
-            if (Storage::copy($pathTmp, $pathNew)){
-                $imageMin = \Intervention\Image\Laravel\Facades\Image::read(Storage::get($pathTmp))->scaleDown(300, 200);
+            if (Storage::copy($pathTmp, $pathNew)) {
+                $imageMin = \Intervention\Image\Laravel\Facades\Image::read(Storage::get($pathTmp))->scaleDown(
+                    300,
+                    200
+                );
                 $imageMin->save('storage/' . $pathNewMin);
 
                 Image::create([
@@ -82,11 +83,10 @@ class AdminPostController extends Controller
                     'pathMin' => '/storage' . $pathNewMin,
                     'size' => $temporaryImage->size,
                 ]);
-
                 Storage::deleteDirectory($temporaryImage->folder);
-
                 $temporaryImage->delete();
-            }return response()->json([
+            }
+            return response()->json([
                 'message' => 'Record not found.'
             ], 404);
 //            Storage::copy($pathTmp, $pathNew);
