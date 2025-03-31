@@ -29,14 +29,15 @@ class ImageController extends Controller
                     'id_user' => $userId,
                     'size' => $size,
                 ]);
-                $tempReorder = DB::table('temporary_reorder')->where('userId', $userId)->first();
 
-                DB::table('temporary_reorder')->where('userId', $userId)->delete();
-                DB::table('temporary_reorder')->insert([
-                    'userId' => $userId,
-                    'position' => $tempReorder->position . ',' . $imageId->id,
-                ]);
-
+                if ($tempReorder = DB::table('temporary_reorder')->where('userId', $userId)
+                    ->value('position')){
+                    DB::table('temporary_reorder')->where('userId', $userId)->delete();
+                    DB::table('temporary_reorder')->insert([
+                        'userId' => $userId,
+                        'position' => $tempReorder . ',' . $imageId->id,
+                    ]);
+                }
                 return $imageId->id;
             }
         }
@@ -51,46 +52,48 @@ class ImageController extends Controller
 
     public function restore()
     {
-        $arraysTmp = [];
+        $tmpArr = [];
         $arrayTmp = [];
         $userId = auth()->id();
-        $tempReorder = DB::table('temporary_reorder')->where('userId', $userId)->first();
+        $tmpFile = TemporaryFile::where('id_user', $userId)->get();
 
-        if ($tempReorder->position !== '') {
-            $tempReorder = explode(',', $tempReorder->position);
-            foreach ($tempReorder as $item) {
-                if ($temporaryFile = TemporaryFile::where('id', $item)->first()) {
-                    $arraysTmp [] = $temporaryFile;
+        if ($tempReorder = DB::table('temporary_reorder')->where('userId', $userId)->first()) {
+            if ($tempReorder->position !== '') {
+                $tempReorderArr = explode(',', $tempReorder->position);
+//                dd($tempReorder);
+                foreach ($tempReorderArr as $item) {
+                    if ($tmpFile = TemporaryFile::where('id', $item)->first()) {
+                        $tmpArr [] = $tmpFile;
+                    }
                 }
+                foreach ($tmpArr as $array) {
+                    $arrayTmp [] = $array;
+                }
+                return response()->json($arrayTmp);
             }
-            foreach ($arraysTmp as $array) {
-                $arrayTmp [] = $array;
-            }
-            return response()->json($arrayTmp);
         }
-        return TemporaryFile::where('id_user', $userId)->get();
+        return $tmpFile;
     }
 
     public function destroy()
     {
         $userId = auth()->id();
-
-
         $image = request()->getContent();
-        $temporaryImage = TemporaryFile::where('id', $image)->orWhere('path', $image)->first();
-        $tempReorder = DB::table('temporary_reorder')->where('userId', $userId)->first();
-        $tempReorder = str_replace(',' . $temporaryImage->id, '', $tempReorder->position);
-        DB::table('temporary_reorder')->where('userId', $userId)->delete();
-        DB::table('temporary_reorder')->insert([
-            'userId' => $userId,
-            'position' => $tempReorder,
-        ]);
-
-        if ($temporaryImage) {
-            Storage::deleteDirectory($temporaryImage->folder);
-            $temporaryImage->delete();
+        $tmpFile = TemporaryFile::where('id', $image)->orWhere('path', $image)->first();
+        if($tmpReorder = DB::table('temporary_reorder')->where('userId', $userId)->first()){
+            $tmpReorderUserId = str_replace($tmpFile->id, '', $tmpReorder->position);
+            $tmpReorderUserId = ltrim($tmpReorderUserId, ',');
+            $tmpReorderUserId = rtrim($tmpReorderUserId, ',');
+            DB::table('temporary_reorder')->where('userId', $userId)->update([
+                'position' => $tmpReorderUserId,
+            ]);
         }
-        return $temporaryImage->id;
+
+        if ($tmpFile) {
+            Storage::deleteDirectory($tmpFile->folder);
+            $tmpFile->delete();
+        }
+        return $tmpFile->id;
     }
 
     public function reorder(Request $request)

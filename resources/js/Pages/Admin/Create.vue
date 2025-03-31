@@ -27,7 +27,6 @@ const props = defineProps({
     tmpImages: Array,
     filePositionId: {
         type: Object,
-        required: true,
         default: [],
     },
 });
@@ -119,6 +118,7 @@ function pondRestore(images) {
             }
         });
     }
+    console.log(form.images)
     form.title = ' '
     form.title = ''
 }
@@ -154,14 +154,19 @@ function activateFile(i) {
 // Перетаскивание
 function reorderFiles(files, origin, target) {
     console.log(files[0].file.name);
-    console.log(origin, target)
     form.images = []
     let filePositionId = ''
     files.forEach(function (file) {
         form.images.push(file.file.id.toString())
-        filePositionId = filePositionId + ',' + file.file.id
+        if (filePositionId === '') {
+            filePositionId = filePositionId + file.file.id
+        }else {
+            filePositionId = filePositionId + ',' + file.file.id
+        }
+
     })
     console.log(filePositionId)
+    console.log(form.images)
 
     axios.post('/admin/tmp-reorder', filePositionId)
         .then((response) => {
