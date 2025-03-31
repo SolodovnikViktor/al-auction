@@ -19,6 +19,8 @@ Route::middleware(['auth', 'verified', 'roles:admin'])->group(function () {
     Route::get('/admin/posts', [AdminPostController::class, 'index'])->name('admin-post.index');
     Route::get('/admin/post/create', [AdminPostController::class, 'create'])->name('admin-post.create');
     Route::post('/admin/post/create', [AdminPostController::class, 'store'])->name('admin-post.store');
+    Route::get('/admin/{post}/edit', [AdminPostController::class, 'edit'])->name('admin-post.edit');
+
     Route::post('/admin/tmp-upload', [ImageController::class, 'store']);
     Route::get('/admin/tmp-restore', [ImageController::class, 'restore']);
     Route::post('/admin/tmp-reorder', [ImageController::class, 'reorder']);

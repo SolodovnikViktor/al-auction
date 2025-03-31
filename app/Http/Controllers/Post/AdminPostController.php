@@ -12,14 +12,11 @@ use App\Models\Image;
 use App\Models\Post;
 use App\Models\TemporaryFile;
 use App\Models\Transmission;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 use Inertia\Response;
-use Intervention\Image\ImageManager;
 
 class AdminPostController extends Controller
 {
@@ -86,9 +83,9 @@ class AdminPostController extends Controller
                 Storage::deleteDirectory($temporaryImage->folder);
                 $temporaryImage->delete();
             }
-            return response()->json([
-                'message' => 'Record not found.'
-            ], 404);
+//            return response()->json([
+//                'message' => 'Record not found.'
+//            ], 404);
 //            Storage::copy($pathTmp, $pathNew);
         }
         $request->session()->flash('message_form', 'Автомобиль успешно добавлен22');
@@ -101,6 +98,18 @@ class AdminPostController extends Controller
 
     public function edit(Post $post): Response
     {
+        $userId = auth()->id();
+        $colors = Color::all()->select('id', 'title');
+        $drives = Drive::all()->select('id', 'title');
+        $bodyTypes = BodyType::all()->select('id', 'title');
+        $transmissions = Transmission::all()->select('id', 'title');
+        return Inertia::render('Admin/Edit', [
+            'post' => $post,
+            'colors' => $colors,
+            'drives' => $drives,
+            'bodyTypes' => $bodyTypes,
+            'transmissions' => $transmissions,
+        ]);
     }
 
     public function update(Request $request, Post $post): Response

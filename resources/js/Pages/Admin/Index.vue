@@ -1,5 +1,5 @@
 <script setup>
-import {Head} from '@inertiajs/vue3';
+import {Head, Link} from '@inertiajs/vue3';
 import IndexLayout from "@/Layouts/IndexLayout.vue";
 import AdminNav from "@/Components/Admin/AdminNav.vue";
 
@@ -26,19 +26,26 @@ console.log(props.postsPaginate)
         </template>
 
         <div class="w-full p-2 lg:p-6 max-w-screen-2xl mx-auto shadow sm:rounded-2xl bg-white">
-            {{ posts }}
             <div class="grid grid-cols-12 gap-4 pb-4 mb-4 border-b border-gray-200">
                 <div v-for="post in posts"
-                     class="overflow-hidden col-span-12 sm:col-span-6 lg:col-span-3 text-gray-900 ">
-                    <swiper
-                        :pagination="{clickable: true}"
-                        :space-between="50"
-                        :modules="modules"
-                        class="mySwiper swiper">
-                        <swiper-slide v-for="img in post.images" :key="img.id" class="hover:grow">
-                            <img :src="img.path" :alt="img.name">
-                        </swiper-slide>
-                    </swiper>
+                     class="overflow-hidden col-span-12 sm:col-span-6 lg:col-span-3 text-gray-900">
+                    <Link :href="route('admin-post.edit', post.id)">
+                        <div class="flex">
+                            <div>
+                                <p>Марка: {{ post.brand }} {{ post.model }}</p>
+                                <p>Vin: {{ post.vin }}</p>
+                            </div>
+                        </div>
+                        <swiper
+                            :pagination="{clickable: true}"
+                            :space-between="50"
+                            :modules="modules"
+                            class="mySwiper swiper">
+                            <swiper-slide v-for="img in post.images" :key="img.id" class="hover:grow">
+                                <img :src="img.path" :alt="img.name">
+                            </swiper-slide>
+                        </swiper>
+                    </Link>
                 </div>
             </div>
             <nav v-if="posts" class="flex justify-end">

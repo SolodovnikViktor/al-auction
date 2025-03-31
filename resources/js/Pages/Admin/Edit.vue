@@ -18,16 +18,12 @@ import {ref} from "vue";
 import axios from "axios";
 
 const props = defineProps({
+    post: Object,
     colors: Array,
     drives: Array,
     bodyTypes: Array,
     transmissions: Array,
     user: Object,
-    tmpImages: Array,
-    filePositionId: {
-        type: Object,
-        default: [],
-    },
 });
 
 const FilePond = vueFilePond(FilePondPluginFileValidateType, FilePondPluginImagePreview, FilePondPluginFilePoster, FilePondPluginFileRename);
@@ -51,8 +47,8 @@ const formInputs = [
 ];
 
 const form = useForm({
-    title: '',
-    vin: '',
+    title: props.post.title,
+    vin: '222',
     brand: '',
     model: '',
     year_release: '',
@@ -118,8 +114,8 @@ function pondRestore(images) {
         });
     }
     console.log(form.images)
-    form.title = ' '
-    form.title = ''
+    // form.title = ' '
+    // form.title = ''
 }
 
 // Загружено 1 фото
@@ -195,7 +191,7 @@ function FilePondErrorLoad(error, files) {
 </script>
 
 <template>
-    <Head title="Админ панель"/>
+    <Head title="Редактирование авто"/>
 
     <IndexLayout>
         <template #adminNav>
@@ -310,83 +306,6 @@ function FilePondErrorLoad(error, files) {
     </IndexLayout>
 </template>
 
-<style>
+<style scoped>
 
-.filepond--item {
-    width: calc(50% - 0.5em);
-}
-
-.filepond--wrapper {
-    margin-bottom: -10px;
-}
-
-.filepond--credits {
-    display: none;
-}
-
-.hover\:grow {
-    transition: all 0.3s;
-    transform: scale(1);
-}
-
-.hover\:grow:hover {
-    transform: scale(1.04);
-}
 </style>
-
-<!--<div class="relative w-full shadow sm:rounded-2xl bg-white">-->
-<!--<div-->
-<!--    class="overflow-hidden grid grid-cols-12 gap-4 pb-4 mb-4 border-b border-gray-600">-->
-<!--    <div class="col-span-12 p-4 lg:p-6 sm:col-span-3 text-gray-900 ">-->
-<!--        <input v-model="form.title" type="text" class="mb-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Имя" required>-->
-
-<!--        <div class="flex items-center justify-center w-full">-->
-<!--            <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">-->
-<!--                <div class="flex flex-col items-center justify-center pt-5 pb-6">-->
-<!--                    <svg class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">-->
-<!--                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>-->
-<!--                    </svg>-->
-<!--                    <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>-->
-<!--                    <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>-->
-<!--                </div>-->
-<!--                <input id="dropzone-file" type="file" class="hidden" />-->
-<!--            </label>-->
-<!--        </div>-->
-
-<!--        <progress v-if="form.progress" :value="form.progress.percentage" max="100">-->
-<!--            {{ form.progress.percentage }}%-->
-<!--        </progress>-->
-
-<!--        Фото машин-->
-<!--    </div>-->
-
-<!--</div>-->
-<!--<nav class="flex justify-end pb-4 px-4" >-->
-<!--    <button @click="store" class="text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-300 font-medium rounded-lg text-sm px-5 py-2.5">-->
-<!--        Отправить-->
-<!--    </button>-->
-<!--</nav>-->
-<!--</div>-->
-
-
-// const images = new FormData();
-// files.forEach(file => {
-//     images.append('images[]', file)
-// })
-// form.title = 'form.title';
-
-<!--<div class="col-span-12 p-4 lg:p-6 sm:col-span-3 text-gray-900 ">-->
-<!--<input v-model="form.title" type="text" class="mb-4 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="Имя" required>-->
-<!--<div ref="dropzone" class="min-h-[300px]  rounded-2xl text-center  hover:grow hover:shadow-lg bg-gray-200">-->
-<!--    Перетащить фото или нажать-->
-<!--</div>-->
-<!--<progress v-if="form.progress" :value="form.progress.percentage" max="100">-->
-<!--    {{ form.progress.percentage }}%-->
-<!--</progress>-->
-
-<!--Фото машин-->
-<!--</div>-->
-
-<!--<progress v-if="form.progress" :value="form.progress.percentage" max="100">-->
-<!--{{ form.progress.percentage }}%-->
-<!--</progress>-->
