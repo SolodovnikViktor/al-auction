@@ -21,6 +21,7 @@ Route::middleware(['auth', 'verified', 'roles:admin'])->group(function () {
     Route::post('/admin/post/create', [AdminPostController::class, 'store'])->name('admin-post.store');
     Route::post('/admin/tmp-upload', [ImageController::class, 'store']);
     Route::get('/admin/tmp-restore', [ImageController::class, 'restore']);
+    Route::post('/admin/tmp-reorder', [ImageController::class, 'reorder']);
     Route::delete('/admin/tmp-revert', [ImageController::class, 'destroy']);
 });
 

@@ -25,6 +25,11 @@ const props = defineProps({
     transmissions: Array,
     user: Object,
     tmpImages: Array,
+    filePositionId: {
+        type: Object,
+        required: true,
+        default: [],
+    },
 });
 
 const FilePond = vueFilePond(FilePondPluginFileValidateType, FilePondPluginImagePreview, FilePondPluginFilePoster, FilePondPluginFileRename);
@@ -68,28 +73,37 @@ const form = useForm({
 
 let myFiles = []
 let errorLoadFiles = ref(false);
+let errorMessage = ref(false);
 
- function getImages() {
+// let filePositionId = props.filePositionId.position
+// console.log(filePositionId)
+
+function getImages() {
     axios.get('/admin/tmp-restore')
         .then(response => {
             pondRestore(response.data)
         })
         .catch(error => {
+            errorMessage = error.response.data.message;
+            console.log(error.response.data.message);
+            console.log(error.response.data);
+            console.log(error.response);
+            console.log(error.message);
             console.log(error);
         });
 }
 
-function pondRestore(images){
+function pondRestore(images) {
     myFiles = []
     form.images = []
     errorLoadFiles.value = false;
-    // router.reload({only: ['tmpImages']})
-    // router.visit('create', {only: ['tmpImages'],})
+
+    console.log(images)
+
     for (const image of images) {
         form.images.push(image.id.toString())
-        console.log(form.images)
         myFiles.push({
-            source: image.fullFolder,
+            source: image.path,
             options: {
                 type: 'limbo',
                 // type: 'local',
@@ -97,49 +111,66 @@ function pondRestore(images){
                     name: image.filename,
                     size: image.size,
                     type: 'webp',
+                    id: image.id,
                 },
                 metadata: {
-                    poster: image.fullFolder
+                    poster: image.path
                 }
             }
         });
     }
-    // console.log(props.tmpImages)
     form.title = ' '
     form.title = ''
 }
 
 // Загружено 1 фото
 function handleFilePondLoad(id) {
-    form.images.push(id)
-    console.log('load')
+    // form.images.push(id)
+    // console.log('load')
     // router.visit('create', {only: ['tmpImages'],})
     // router.reload({only: ['tmpImages']})
-    // getImages()
-    // handleFilePondInit()
     return id;
 }
+
+// Удалить фото
 function handleFilePondRevert(id, load, error) {
     form.images = form.images.filter((image) => image !== id);
-    // getImages()
-    // router.reload({only: ['tmpImages']})
-    // console.log(props.tmpImages)
     errorLoadFiles.value = false;
+
+    // filePositionId = filePositionId.replace(',' + id, '');
 }
 
-
+// Переименовать
 function fileRenameFunction(file) {
     const random = Math.random().toString(36).substring(2).toUpperCase();
     return random + file.extension;
 }
 
+// Клик по фото
 function activateFile(i) {
-    console.log(i)
+    console.log(i.file)
 }
 
 // Перетаскивание
-function reorderFiles(i, files) {
+function reorderFiles(files, origin, target) {
+    console.log(files[0].file.name);
+    console.log(origin, target)
+    form.images = []
+    let filePositionId = ''
+    files.forEach(function (file) {
+        form.images.push(file.file.id.toString())
+        filePositionId = filePositionId + ',' + file.file.id
+    })
+    console.log(filePositionId)
+
+    axios.post('/admin/tmp-reorder', filePositionId)
+        .then((response) => {
+        })
+        .catch((error) => {
+            console.log(error);
+        });
 }
+
 // Вызывается по готовности FilePond
 function handleFilePondInit() {
     getImages()
@@ -147,12 +178,12 @@ function handleFilePondInit() {
 
 // Вызывается, когда все файлы в списке были обработаны
 function handleFilePondSuccess() {
-    console.log('function handleFilePondSuccess')
     getImages()
 }
 
+//Ошибка  при загрузки
 function FilePondErrorLoad(error, files) {
-    errorLoadFiles.value = error
+    // errorLoadFiles.value = error
     console.log(error)
     console.log(files)
 }
