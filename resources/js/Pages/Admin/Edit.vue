@@ -195,7 +195,7 @@ function FilePondErrorLoad(error, files) {
 
     <IndexLayout>
         <template #adminNav>
-            <AdminNav/>
+            <AdminNav :post/>
         </template>
 
         <div class="p-2 lg:p-4 max-w-2xl mx-auto shadow sm:rounded-2xl bg-white">

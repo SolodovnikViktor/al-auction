@@ -10,7 +10,8 @@ import {Link} from '@inertiajs/vue3';
 const showingNavigationDropdown = ref(false);
 
 let adminActive = false;
-if (route().current('admin-post.index') || route().current('admin-post.create')) {
+if (route().current('admin-post.index') || route().current('admin-post.create')
+    || route().current('admin-post.show') || route().current('admin-post.edit')) {
     adminActive = true;
 }
 </script>

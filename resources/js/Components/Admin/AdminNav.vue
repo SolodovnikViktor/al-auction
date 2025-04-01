@@ -1,5 +1,5 @@
 <script setup>
-
+defineProps(['post'])
 import NavLink from "@/Components/NavLink.vue";
 </script>
 
@@ -21,10 +21,19 @@ import NavLink from "@/Components/NavLink.vue";
                 :active="route().current('contact')">
                 Список пользователей
             </NavLink>
+            <template
+                v-if="route().current('admin-post.edit') || route().current('admin-post.show')">
+                <NavLink
+                    :href="route('admin-post.show',post.id)"
+                    :active="route().current('admin-post.show')">
+                    Карточка товара
+                </NavLink>
+                <NavLink
+                    :href="route('admin-post.edit',post.id)"
+                    :active="route().current('admin-post.edit')">
+                    Редактировать
+                </NavLink>
+            </template>
         </div>
     </div>
 </template>
-
-<style scoped>
-
-</style>

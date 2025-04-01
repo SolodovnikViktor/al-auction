@@ -94,6 +94,9 @@ class AdminPostController extends Controller
 
     public function show(Post $post): Response
     {
+        return Inertia::render('Admin/Show', [
+            'post' => $post,
+        ]);
     }
 
     public function edit(Post $post): Response

@@ -29,13 +29,20 @@ console.log(props.postsPaginate)
             <div class="grid grid-cols-12 gap-4 pb-4 mb-4 border-b border-gray-200">
                 <div v-for="post in posts"
                      class="overflow-hidden col-span-12 sm:col-span-6 lg:col-span-3 text-gray-900">
-                    <Link :href="route('admin-post.edit', post.id)">
-                        <div class="flex">
-                            <div>
+                    <div class="flex justify-between">
+                        <div>
+                            <Link :href="route('admin-post.show', post.id)">
                                 <p>Марка: {{ post.brand }} {{ post.model }}</p>
                                 <p>Vin: {{ post.vin }}</p>
-                            </div>
+                            </Link>
                         </div>
+                        <div>
+                            <Link :href="route('admin-post.edit', post.id)">
+                                Редактировать
+                            </Link>
+                        </div>
+                    </div>
+                    <Link :href="route('admin-post.show', post.id)">
                         <swiper
                             :pagination="{clickable: true}"
                             :space-between="50"
