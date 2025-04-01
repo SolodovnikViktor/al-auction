@@ -227,6 +227,7 @@ function FilePondErrorLoad(error, files) {
                             labelTapToCancel="Остановить"
                             labelTapToUndo=""
 
+
                             labelFileTypeNotAllowed='Только фотографии'
                             fileValidateTypeLabelExpectedTypes='{allButLastType} и {lastType}'
 
@@ -235,7 +236,6 @@ function FilePondErrorLoad(error, files) {
                             itemInsertLocation="after"
 
                             force-revert="true"
-
 
                             label-idle='<span class="filepond--label-action"> Нажать </span> или перетащить фото
                                 <svg class="w-15 h-8 inline text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">

@@ -18,8 +18,10 @@ Route::middleware(['auth', 'verified', 'roles:admin'])->group(function () {
     Route::get('/admin/posts', [AdminPostController::class, 'index'])->name('admin-post.index');
     Route::get('/admin/post/create', [AdminPostController::class, 'create'])->name('admin-post.create');
     Route::post('/admin/post/create', [AdminPostController::class, 'store'])->name('admin-post.store');
-    Route::get('/admin/{post}/edit', [AdminPostController::class, 'edit'])->name('admin-post.edit');
     Route::get('/admin/{post}/show', [AdminPostController::class, 'show'])->name('admin-post.show');
+    Route::get('/admin/{post}/edit', [AdminPostController::class, 'edit'])->name('admin-post.edit');
+    Route::patch('/admin/{post}', [AdminPostController::class, 'update'])->name('admin-post.update');
+    Route::delete('/admin/{post}', [AdminPostController::class, 'destroy'])->name('admin-post.destroy');
 
     Route::post('/admin/tmp-upload', [ImageController::class, 'store']);
     Route::get('/admin/tmp-restore', [ImageController::class, 'restore']);
@@ -33,4 +35,4 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

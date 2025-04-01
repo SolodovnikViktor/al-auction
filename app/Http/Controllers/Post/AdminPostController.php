@@ -119,7 +119,9 @@ class AdminPostController extends Controller
     {
     }
 
-    public function destroy(Post $post): Response
+    public function destroy(Post $post)
     {
+//        return $post;
+        return to_route('home')->with('message', 'Category Deleted Successfully');
     }
 }

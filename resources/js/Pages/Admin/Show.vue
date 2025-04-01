@@ -14,9 +14,10 @@ const props = defineProps({
     <IndexLayout>
         <template #adminNav>
             <AdminNav :post/>
-            <!--            <AdminNav/>-->
         </template>
-        {{ post }}
+        <div class="w-full p-2 lg:p-6 max-w-screen-2xl mx-auto shadow sm:rounded-2xl bg-white">
+            {{ post }}
+        </div>
     </IndexLayout>
 </template>
 

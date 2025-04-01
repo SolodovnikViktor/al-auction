@@ -1,5 +1,5 @@
 <script setup>
-import {Head, useForm,} from '@inertiajs/vue3';
+import {Head, router, useForm,} from '@inertiajs/vue3';
 import IndexLayout from "@/Layouts/IndexLayout.vue";
 import vueFilePond from 'vue-filepond';
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
@@ -13,9 +13,14 @@ import InputError from "@/Components/InputError.vue";
 import AdminNav from "@/Components/Admin/AdminNav.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import MyInput from "@/Components/Options/MyInput.vue";
-import {ref} from "vue";
+import {nextTick, ref} from "vue";
 
 import axios from "axios";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import DangerButton from "@/Components/DangerButton.vue";
+import TextInput from "@/Components/TextInput.vue";
+import Modal from "@/Components/Modal.vue";
 
 const props = defineProps({
     post: Object,
@@ -188,6 +193,37 @@ function FilePondErrorLoad(error, files) {
     console.log(files)
 }
 
+const confirmingPostDeletion = ref(false);
+
+const confirmPostDeletion = () => {
+    confirmingPostDeletion.value = true;
+};
+
+// const deletePost = () => {
+//     form.delete(route('admin-post.destroy'), {
+//         preserveScroll: true,
+//         onSuccess: () => closeModal(),
+//         onFinish: () => form.reset(),
+//     });
+// };
+// const deletePost = () => {
+//     console.log(222)
+//     // router.delete(`/admin/${props.post.id}`, 11);
+//     route('admin-post.destroy', props.post.id)
+// };
+function deletePost(id) {
+    console.log(222)
+
+    route('admin-post.destroy', 11)
+}
+
+const closeModal = () => {
+    confirmingPostDeletion.value = false;
+
+    form.clearErrors();
+    form.reset();
+};
+
 </script>
 
 <template>
@@ -199,6 +235,16 @@ function FilePondErrorLoad(error, files) {
         </template>
 
         <div class="p-2 lg:p-4 max-w-2xl mx-auto shadow sm:rounded-2xl bg-white">
+            <div class="flex justify-between pb-2">
+                <div class="flex items-center"><p>Post ID: {{ post.id }}</p></div>
+                <div>
+                    <SecondaryButton class="mr-5">Скрыть</SecondaryButton>
+                    <DangerButton @click="confirmPostDeletion">
+                        Удалить
+                    </DangerButton>
+                </div>
+
+            </div>
 
             <form :disabled="form.processing" @submit.prevent="$event => form.post(route('admin-post.store'))">
                 <div class="overflow-hidden max-w-2xl pb-4 mb-4 border-b border-gray-200">
@@ -231,7 +277,7 @@ function FilePondErrorLoad(error, files) {
                             itemInsertLocation="after"
 
                             force-revert="true"
-
+                            credits=""
 
                             label-idle='<span class="filepond--label-action"> Нажать </span> или перетащить фото
                                 <svg class="w-15 h-8 inline text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
@@ -302,6 +348,32 @@ function FilePondErrorLoad(error, files) {
                 </nav>
             </form>
         </div>
+        <Modal :show="confirmingPostDeletion" @close="closeModal">
+            <div class="p-6">
+                <h2
+                    class="text-lg font-medium text-gray-900"
+                >
+                    Хотите удалить карточку автомобиля?
+                </h2>
+
+                <p class="mt-1 text-sm text-gray-600">
+                    Все данные и фотографии будут удалены.
+                </p>
+
+                <div class="mt-6 flex justify-end">
+                    <SecondaryButton @click="closeModal">
+                        Закрыть
+                    </SecondaryButton>
+
+                    <DangerButton
+                        class="ms-3"
+                        @click="deletePost(post.id)"
+                    >
+                        Удалить
+                    </DangerButton>
+                </div>
+            </div>
+        </Modal>
 
     </IndexLayout>
 </template>

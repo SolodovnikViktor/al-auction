@@ -29,7 +29,7 @@ console.log(props.postsPaginate)
             <div class="grid grid-cols-12 gap-4 pb-4 mb-4 border-b border-gray-200">
                 <div v-for="post in posts"
                      class="overflow-hidden col-span-12 sm:col-span-6 lg:col-span-3 text-gray-900">
-                    <div class="flex justify-between">
+                    <div class="flex relative justify-between">
                         <div>
                             <Link :href="route('admin-post.show', post.id)">
                                 <p>Марка: {{ post.brand }} {{ post.model }}</p>
@@ -37,7 +37,7 @@ console.log(props.postsPaginate)
                             </Link>
                         </div>
                         <div>
-                            <Link :href="route('admin-post.edit', post.id)">
+                            <Link :href="route('admin-post.edit', post.id)" class="absolute top-0 right-0">
                                 Редактировать
                             </Link>
                         </div>
