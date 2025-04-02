@@ -60,7 +60,7 @@ class AdminPostController extends Controller
 
         foreach ($temporaryImages as $temporaryImage) {
             $imageName = $temporaryImage->filename;
-            $folder = '/images/' . 'posts/' . 'PostID-' . $post->id . '/' . uniqid('image-', true);
+            $folder = '/images/posts/' . 'PostID-' . $post->id . '/' . uniqid('image-', true);
             $pathTmp = $temporaryImage->folder . '/' . $imageName;
             $pathNew = $folder . '/' . $imageName;
             $pathNewMin = $folder . '/' . 'min_' . $imageName;
@@ -121,7 +121,12 @@ class AdminPostController extends Controller
 
     public function destroy(Post $post)
     {
-//        return $post;
-        return to_route('home')->with('message', 'Category Deleted Successfully');
+        $images = Image::where('post_id', $post->id)->get();
+        foreach ($images as $image) {
+            Storage::deleteDirectory($image->folder);
+            $image->delete();
+        }
+        $post->delete();
+        return to_route('admin-post.index')->with('message', 'Category Deleted Successfully');
     }
 }

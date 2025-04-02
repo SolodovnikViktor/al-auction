@@ -199,23 +199,18 @@ const confirmPostDeletion = () => {
     confirmingPostDeletion.value = true;
 };
 
-// const deletePost = () => {
-//     form.delete(route('admin-post.destroy'), {
-//         preserveScroll: true,
-//         onSuccess: () => closeModal(),
-//         onFinish: () => form.reset(),
-//     });
-// };
+const deletePost = (id) => {
+    router.delete(route('admin-post.destroy', id), {
+        preserveScroll: true,
+        onSuccess: () => closeModal(),
+        onFinish: () => form.reset(),
+    });
+};
 // const deletePost = () => {
 //     console.log(222)
 //     // router.delete(`/admin/${props.post.id}`, 11);
 //     route('admin-post.destroy', props.post.id)
 // };
-function deletePost(id) {
-    console.log(222)
-
-    route('admin-post.destroy', 11)
-}
 
 const closeModal = () => {
     confirmingPostDeletion.value = false;

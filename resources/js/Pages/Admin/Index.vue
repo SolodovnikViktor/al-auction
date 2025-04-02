@@ -27,6 +27,9 @@ console.log(props.postsPaginate)
 
         <div class="w-full p-2 lg:p-6 max-w-screen-2xl mx-auto shadow sm:rounded-2xl bg-white">
             <div class="grid grid-cols-12 gap-4 pb-4 mb-4 border-b border-gray-200">
+                <template v-if="posts === []">
+                    Вы не добавили ни одной машины {{ posts }}
+                </template>
                 <div v-for="post in posts"
                      class="overflow-hidden col-span-12 sm:col-span-6 lg:col-span-3 text-gray-900">
                     <div class="flex relative justify-between">
