@@ -53,21 +53,21 @@ const formInputs = [
 
 const form = useForm({
     title: props.post.title,
-    vin: '222',
-    brand: '',
-    model: '',
-    year_release: '',
-    color_id: '',
-    mileage: '',
-    fuel: '',
-    drive_id: '',
-    body_type_id: '',
-    transmission_id: '',
-    engine_capacity: '',
-    horsepower: '',
-    price: '',
-    description: '',
-    images: [],
+    vin: props.post.vin,
+    brand: props.post.brand,
+    model: props.post.model,
+    year_release: props.post.year_release,
+    color_id: props.post.color_id,
+    mileage: props.post.mileage,
+    fuel: props.post.fuel,
+    drive_id: props.post.drive_id,
+    body_type_id: props.post.body_type_id,
+    transmission_id: props.post.transmission_id,
+    engine_capacity: props.post.engine_capacity,
+    horsepower: props.post.horsepower,
+    price: props.post.price,
+    description: props.post.description,
+    images: props.post.images,
 });
 
 let myFiles = []
@@ -206,11 +206,6 @@ const deletePost = (id) => {
         onFinish: () => form.reset(),
     });
 };
-// const deletePost = () => {
-//     console.log(222)
-//     // router.delete(`/admin/${props.post.id}`, 11);
-//     route('admin-post.destroy', props.post.id)
-// };
 
 const closeModal = () => {
     confirmingPostDeletion.value = false;
@@ -218,6 +213,8 @@ const closeModal = () => {
     form.clearErrors();
     form.reset();
 };
+
+let toggle = ref(props.post.is_published);
 
 </script>
 
@@ -231,7 +228,27 @@ const closeModal = () => {
 
         <div class="p-2 lg:p-4 max-w-2xl mx-auto shadow sm:rounded-2xl bg-white">
             <div class="flex justify-between pb-2">
-                <div class="flex items-center"><p>Post ID: {{ post.id }}</p></div>
+                <div class="flex items-center">
+                    <div class="flex mr-2">
+                        <p class="mr-3">Post id: {{ post.id }}</p>
+                        <p v-if="post.is_published">Опубликовано</p>
+                        <p v-else>Скрыто</p>
+                    </div>
+
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input
+                            type="checkbox"
+                            v-model="toggle"
+                            :true-value="1"
+                            :false-value="0"
+                            class="sr-only peer">
+                        <div
+                            class="w-9 h-5 bg-gray-200 hover:bg-gray-300 peer-focus:outline-0 peer-focus:ring-transparent rounded-full peer transition-all ease-in-out duration-500 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600 hover:peer-checked:bg-indigo-700">
+                        </div>
+                        {{ toggle }} gg
+
+                    </label>
+                </div>
                 <div>
                     <SecondaryButton class="mr-5">Скрыть</SecondaryButton>
                     <DangerButton @click="confirmPostDeletion">
@@ -241,7 +258,7 @@ const closeModal = () => {
 
             </div>
 
-            <form :disabled="form.processing" @submit.prevent="$event => form.post(route('admin-post.store'))">
+            <form :disabled="form.processing" @submit.prevent="$event => form.post(route('admin-post.update'))">
                 <div class="overflow-hidden max-w-2xl pb-4 mb-4 border-b border-gray-200">
                     <div class="h-full text-gray-900">
                         <!-- dropOnPage - FilePond будет перехватывать все файлы, размещенные на веб-странице
@@ -338,7 +355,7 @@ const closeModal = () => {
                 <nav class="flex justify-end">
                     <button type="submit"
                             class="text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-300 font-medium rounded-lg text-sm px-5 py-2.5">
-                        Отправить
+                        Сохранить
                     </button>
                 </nav>
             </form>

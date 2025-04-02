@@ -88,6 +88,7 @@ class AdminPostController extends Controller
 //            ], 404);
 //            Storage::copy($pathTmp, $pathNew);
         }
+        DB::table('temporary_reorder')->where('userId', $post->userId)->delete();
         $request->session()->flash('message_form', 'Автомобиль успешно добавлен22');
         return to_route('admin-post.index')->with('message', 'Category Created Successfully');
     }
