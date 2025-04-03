@@ -5,7 +5,7 @@ import NavLink from "@/Components/NavLink.vue";
 
 <template>
     <div class="flex h-10 justify-between">
-        <div class="flex space-x-3 lg:space-x-5 sm:-my-px mx-2 lg:mx-5">
+        <div class="flex space-x-3 lg:space-x-5 sm:-my-px mx-3 lg:mx-5">
             <NavLink
                 :href="route('admin-post.index')"
                 :active="route().current('admin-post.index')">

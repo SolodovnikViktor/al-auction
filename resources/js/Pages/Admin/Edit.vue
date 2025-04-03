@@ -216,6 +216,15 @@ const closeModal = () => {
 
 let toggle = ref(props.post.is_published);
 
+function updatePublished() {
+    console.log(toggle)
+
+    axios.patch(`/admin/post/${1}`)
+        .catch((error) => {
+            console.log(error);
+        });
+}
+
 </script>
 
 <template>
@@ -229,14 +238,10 @@ let toggle = ref(props.post.is_published);
         <div class="p-2 lg:p-4 max-w-2xl mx-auto shadow sm:rounded-2xl bg-white">
             <div class="flex justify-between pb-2">
                 <div class="flex items-center">
-                    <div class="flex mr-2">
-                        <p class="mr-3">Post id: {{ post.id }}</p>
-                        <p v-if="post.is_published">Опубликовано</p>
-                        <p v-else>Скрыто</p>
-                    </div>
-
-                    <label class="relative inline-flex items-center cursor-pointer">
+                    <p class="mr-3">Post id: {{ post.id }}</p>
+                    <label class="relative mr-3 inline-flex items-center cursor-pointer">
                         <input
+                            @click="updatePublished"
                             type="checkbox"
                             v-model="toggle"
                             :true-value="1"
@@ -245,9 +250,11 @@ let toggle = ref(props.post.is_published);
                         <div
                             class="w-9 h-5 bg-gray-200 hover:bg-gray-300 peer-focus:outline-0 peer-focus:ring-transparent rounded-full peer transition-all ease-in-out duration-500 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-indigo-600 hover:peer-checked:bg-indigo-700">
                         </div>
-                        {{ toggle }} gg
-
                     </label>
+                    <p v-if="toggle">Опубликовано</p>
+                    <p v-else>Скрыто</p>
+
+
                 </div>
                 <div>
                     <SecondaryButton class="mr-5">Скрыть</SecondaryButton>

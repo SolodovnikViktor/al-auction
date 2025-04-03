@@ -31,7 +31,7 @@ class ImageController extends Controller
                 ]);
 
                 if ($tempReorder = DB::table('temporary_reorder')->where('userId', $userId)
-                    ->value('position')){
+                    ->value('position')) {
                     DB::table('temporary_reorder')->where('userId', $userId)->delete();
                     DB::table('temporary_reorder')->insert([
                         'userId' => $userId,
@@ -80,7 +80,7 @@ class ImageController extends Controller
         $userId = auth()->id();
         $image = request()->getContent();
         $tmpFile = TemporaryFile::where('id', $image)->orWhere('path', $image)->first();
-        if($tmpReorder = DB::table('temporary_reorder')->where('userId', $userId)->first()){
+        if ($tmpReorder = DB::table('temporary_reorder')->where('userId', $userId)->first()) {
             $tmpReorderUserId = str_replace($tmpFile->id, '', $tmpReorder->position);
             $tmpReorderUserId = ltrim($tmpReorderUserId, ',');
             $tmpReorderUserId = rtrim($tmpReorderUserId, ',');

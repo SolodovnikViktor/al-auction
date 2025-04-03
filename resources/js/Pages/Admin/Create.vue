@@ -69,7 +69,8 @@ const form = useForm({
     images: [],
 });
 
-let myFiles = []
+let myFiles = [];
+let key = ref(0);
 let errorLoadFiles = ref(false);
 let errorMessage = ref(false);
 
@@ -77,6 +78,7 @@ let errorMessage = ref(false);
 // console.log(filePositionId)
 
 function getImages() {
+
     axios.get('/admin/tmp-restore')
         .then(response => {
             pondRestore(response.data)
@@ -118,8 +120,8 @@ function pondRestore(images) {
         });
     }
     console.log(form.images)
-    form.title = ' '
-    form.title = ''
+    key.value = 1
+    key.value = 0
 }
 
 // Загружено 1 фото
@@ -135,6 +137,7 @@ function handleFilePondLoad(id) {
 function handleFilePondRevert(id, load, error) {
     form.images = form.images.filter((image) => image !== id);
     errorLoadFiles.value = false;
+    console.log(id)
 
     // filePositionId = filePositionId.replace(',' + id, '');
 }
@@ -221,6 +224,7 @@ function FilePondErrorLoad(error, files) {
                         <file-pond
                             name="imageFilePond"
                             ref="pond"
+                            :key
                             class-name="my-pond"
                             labelFileProcessing="Загрузка"
                             labelFileProcessingComplete="Загружен"
