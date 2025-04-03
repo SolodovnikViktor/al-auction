@@ -118,8 +118,12 @@ class AdminPostController extends Controller
 
     public function update(Request $request, Post $post)
     {
-        dd('7788');
-        return 555556677;
+        $request->getContent();
+//        dd($post->id, $request->id);
+        return $post;
+//        return $request->getContent();
+
+        $post->update($request);
     }
 
     public function destroy(Post $post)

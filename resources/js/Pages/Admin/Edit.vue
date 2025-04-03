@@ -217,13 +217,18 @@ const closeModal = () => {
 let toggle = ref(props.post.is_published);
 
 function updatePublished() {
-    console.log(toggle)
-
-    axios.patch(`/admin/post/${1}`)
+    console.log(toggle.value)
+    axios.patch(`/admin/post/${props.post.id}`, {id: toggle.value})
         .catch((error) => {
             console.log(error);
         });
+
+    // router.patch(route('admin-post.update', props.post.id), {
+    //     id: toggle.value,
+    //     onSuccess: () => closeModal(),
+    // })
 }
+
 
 </script>
 
@@ -241,7 +246,7 @@ function updatePublished() {
                     <p class="mr-3">Post id: {{ post.id }}</p>
                     <label class="relative mr-3 inline-flex items-center cursor-pointer">
                         <input
-                            @click="updatePublished"
+                            @change="updatePublished"
                             type="checkbox"
                             v-model="toggle"
                             :true-value="1"
