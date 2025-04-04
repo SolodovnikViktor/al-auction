@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Post;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Post\PostStoreRequest;
+use App\Http\Requests\Post\PostRequest;
 use App\Http\Resources\PostResource;
 use App\Models\BodyType;
 use App\Models\Color;
@@ -51,7 +51,7 @@ class AdminPostController extends Controller
         ]);
     }
 
-    public function store(PostStoreRequest $request)
+    public function store(PostRequest $request)
     {
         $validated = $request->validated();
         $post = Post::create($validated);
@@ -102,6 +102,8 @@ class AdminPostController extends Controller
 
     public function edit(Post $post): Response
     {
+//        $post = PostResource::collection(Post::first());
+
         $userId = auth()->id();
         $colors = Color::all()->select('id', 'title');
         $drives = Drive::all()->select('id', 'title');
@@ -116,14 +118,23 @@ class AdminPostController extends Controller
         ]);
     }
 
-    public function update(Request $request, Post $post)
+    public function updatePublished(Request $request, Post $post)
     {
-        $request->getContent();
-//        dd($post->id, $request->id);
-        return $post;
-//        return $request->getContent();
+        $validated = $request->validate([
+            'is_published' => ['required'],
+        ]);
+        $post->update($validated);
+        $request->session()->flash('message', 'Видимость изменена');
+//        return 2233;
+    }
 
-        $post->update($request);
+    public function update(PostRequest $request, Post $post): \Illuminate\Http\RedirectResponse
+    {
+        return $post;
+        $validated = $request->validated();
+        $post->update($validated);
+        return to_route('admin-post.show', $post)->with('message', 'Объявление изменено');
+//        return redirect()->route('admin-post.index')->with('message', 'Category Updated Successfully');
     }
 
     public function destroy(Post $post)
@@ -134,6 +145,6 @@ class AdminPostController extends Controller
             $image->delete();
         }
         $post->delete();
-        return to_route('admin-post.index')->with('message', 'Category Deleted Successfully');
+        return to_route('admin-post.index')->with('message', 'Объявление удалено');
     }
 }

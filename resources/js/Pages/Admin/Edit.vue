@@ -52,6 +52,8 @@ const formInputs = [
 ];
 
 const form = useForm({
+    image_position: props.post.image_position,
+    image_preview: props.post.images,
     title: props.post.title,
     vin: props.post.vin,
     brand: props.post.brand,
@@ -67,7 +69,7 @@ const form = useForm({
     horsepower: props.post.horsepower,
     price: props.post.price,
     description: props.post.description,
-    images: props.post.images,
+    is_published: props.post.is_published,
 });
 
 let myFiles = []
@@ -214,19 +216,20 @@ const closeModal = () => {
     form.reset();
 };
 
-let toggle = ref(props.post.is_published);
+let toggle = ref();
+toggle.value = props.post.is_published;
 
 function updatePublished() {
-    console.log(toggle.value)
-    axios.patch(`/admin/post/${props.post.id}`, {id: toggle.value})
-        .catch((error) => {
-            console.log(error);
-        });
+    // axios.patch(`/admin/post/${props.post.id}`, {is_published: toggle.value})
+    //     .catch((error) => {
+    //         console.log(error);
+    //     });
+    form.is_published = toggle.value
+    router.patch(route('admin-post.updatePublished', props.post.id), {
+        is_published: toggle.value,
+        onSuccess: () => closeModal(),
+    })
 
-    // router.patch(route('admin-post.update', props.post.id), {
-    //     id: toggle.value,
-    //     onSuccess: () => closeModal(),
-    // })
 }
 
 
@@ -270,7 +273,7 @@ function updatePublished() {
 
             </div>
 
-            <form :disabled="form.processing" @submit.prevent="$event => form.post(route('admin-post.update'))">
+            <form :disabled="form.processing" @submit.prevent="$event => form.patch(route('admin-post.update'))">
                 <div class="overflow-hidden max-w-2xl pb-4 mb-4 border-b border-gray-200">
                     <div class="h-full text-gray-900">
                         <!-- dropOnPage - FilePond будет перехватывать все файлы, размещенные на веб-странице

@@ -21,6 +21,8 @@ Route::middleware(['auth', 'verified', 'roles:admin'])->group(function () {
     Route::get('/admin/post/{post}/show', [AdminPostController::class, 'show'])->name('admin-post.show');
     Route::get('/admin/post/{post}/edit', [AdminPostController::class, 'edit'])->name('admin-post.edit');
     Route::patch('/admin/post/{post}', [AdminPostController::class, 'update'])->name('admin-post.update');
+    Route::patch('/admin/post/update-published/{post}', [AdminPostController::class, 'updatePublished'])->name('admin-post.updatePublished');
+
     Route::delete('/admin/post/{post}', [AdminPostController::class, 'destroy'])->name('admin-post.destroy');
 
     Route::post('/admin/tmp-upload', [ImageController::class, 'store']);

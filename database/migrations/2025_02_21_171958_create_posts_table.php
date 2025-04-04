@@ -10,7 +10,8 @@ return new class extends Migration {
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
-            $table->string('imagePosition');
+            $table->string('image_position');
+            $table->string('image_preview')->nullable();
             $table->string('title');
             $table->string('vin');
             $table->string('brand');
@@ -28,7 +29,6 @@ return new class extends Migration {
             $table->unsignedMediumInteger('price');//0 до 16 777 215
             $table->unsignedMediumInteger('up_price')->nullable();
             $table->text('description'); // описание
-            $table->string('preview_image')->nullable();
             $table->foreignId('user_id')->index();
             $table->boolean('is_published')->default(true);
             $table->timestamps();

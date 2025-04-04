@@ -13,7 +13,8 @@ class Post extends Model
 
     protected $table = 'posts';
     protected $fillable = [
-        'imagePosition',
+        'image_position',
+        'image_preview',
         'title',
         'vin',
         'brand',
@@ -30,7 +31,6 @@ class Post extends Model
         'price',
         'up_price',
         'description',
-        'preview_image',
         'user_id',
         'is_published',
     ];

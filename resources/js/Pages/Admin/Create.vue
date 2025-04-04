@@ -66,7 +66,7 @@ const form = useForm({
     horsepower: '',
     price: '',
     description: '',
-    images: [],
+    image_position: [],
 });
 
 let myFiles = [];
@@ -93,15 +93,15 @@ function getImages() {
         });
 }
 
-function pondRestore(images) {
+function pondRestore(image_position) {
     myFiles = []
-    form.images = []
+    form.image_position = []
     errorLoadFiles.value = false;
 
-    console.log(images)
+    console.log(image_position)
 
-    for (const image of images) {
-        form.images.push(image.id.toString())
+    for (const image of image_position) {
+        form.image_position.push(image.id.toString())
         myFiles.push({
             source: image.path,
             options: {
@@ -119,14 +119,14 @@ function pondRestore(images) {
             }
         });
     }
-    console.log(form.images)
+    console.log(form.image_position)
     key.value = 1
     key.value = 0
 }
 
 // Загружено 1 фото
 function handleFilePondLoad(id) {
-    // form.images.push(id)
+    // form.image_position.push(id)
     // console.log('load')
     // router.visit('create', {only: ['tmpImages'],})
     // router.reload({only: ['tmpImages']})
@@ -135,7 +135,7 @@ function handleFilePondLoad(id) {
 
 // Удалить фото
 function handleFilePondRevert(id, load, error) {
-    form.images = form.images.filter((image) => image !== id);
+    form.image_position = form.image_position.filter((image) => image !== id);
     errorLoadFiles.value = false;
     console.log(id)
 
@@ -156,10 +156,10 @@ function activateFile(i) {
 // Перетаскивание
 function reorderFiles(files, origin, target) {
     console.log(files[0].file.name);
-    form.images = []
+    form.image_position = []
     let filePositionId = ''
     files.forEach(function (file) {
-        form.images.push(file.file.id.toString())
+        form.image_position.push(file.file.id.toString())
         if (filePositionId === '') {
             filePositionId = filePositionId + file.file.id
         } else {
@@ -168,7 +168,7 @@ function reorderFiles(files, origin, target) {
 
     })
     console.log(filePositionId)
-    console.log(form.images)
+    console.log(form.image_position)
 
     axios.post('/admin/tmp-reorder', filePositionId)
         .then((response) => {
@@ -280,7 +280,7 @@ function FilePondErrorLoad(error, files) {
                             v-on:processfiles="handleFilePondSuccess"
 
                         />
-                        <InputError class="mt-2" :message="form.errors.images"/>
+                        <InputError class="mt-2" :message="form.errors.image_position"/>
                     </div>
                     <div v-for="(input, index) in formInputs" :key=index
                          class=" p-1 sm:col-span-3 lg:col-span-2 text-gray-900">
@@ -373,9 +373,9 @@ function FilePondErrorLoad(error, files) {
 <!--</div>-->
 
 
-// const images = new FormData();
+// const image_position = new FormData();
 // files.forEach(file => {
-//     images.append('images[]', file)
+//     image_position.append('image_position[]', file)
 // })
 // form.title = 'form.title';
 
