@@ -273,7 +273,8 @@ function updatePublished() {
 
             </div>
 
-            <form :disabled="form.processing" @submit.prevent="$event => form.patch(route('admin-post.update'))">
+            <form :disabled="form.processing"
+                  @submit.prevent="$event => form.patch(route('admin-post.update', post.id))">
                 <div class="overflow-hidden max-w-2xl pb-4 mb-4 border-b border-gray-200">
                     <div class="h-full text-gray-900">
                         <!-- dropOnPage - FilePond будет перехватывать все файлы, размещенные на веб-странице

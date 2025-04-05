@@ -56,7 +56,7 @@ class AdminPostController extends Controller
         $validated = $request->validated();
         $post = Post::create($validated);
 
-        $temporaryImages = TemporaryFile::whereIn('id', $request->images)->get();
+        $temporaryImages = TemporaryFile::whereIn('id', $request->image)->get();
 
         foreach ($temporaryImages as $temporaryImage) {
             $imageName = $temporaryImage->filename;
@@ -88,6 +88,7 @@ class AdminPostController extends Controller
 //            ], 404);
 //            Storage::copy($pathTmp, $pathNew);
         }
+
         DB::table('temporary_reorder')->where('userId', $post->userId)->delete();
         $request->session()->flash('message_form', 'Автомобиль успешно добавлен22');
         return to_route('admin-post.index')->with('message', 'Category Created Successfully');
@@ -130,7 +131,6 @@ class AdminPostController extends Controller
 
     public function update(PostRequest $request, Post $post): \Illuminate\Http\RedirectResponse
     {
-        return $post;
         $validated = $request->validated();
         $post->update($validated);
         return to_route('admin-post.show', $post)->with('message', 'Объявление изменено');

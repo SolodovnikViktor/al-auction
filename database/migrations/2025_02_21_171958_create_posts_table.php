@@ -10,7 +10,7 @@ return new class extends Migration {
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
-            $table->string('image_position');
+            $table->string('image_position')->nullable();
             $table->string('image_preview')->nullable();
             $table->string('title');
             $table->string('vin');
