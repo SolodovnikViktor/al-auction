@@ -14,7 +14,6 @@ import AdminNav from "@/Components/Admin/AdminNav.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import MyInput from "@/Components/Options/MyInput.vue";
 import {ref} from "vue";
-
 import axios from "axios";
 
 const props = defineProps({
@@ -51,6 +50,8 @@ const formInputs = [
 ];
 
 const form = useForm({
+    image_position: '',
+    image_preview: '',
     title: '',
     vin: '',
     brand: '',
@@ -66,7 +67,7 @@ const form = useForm({
     horsepower: '',
     price: '',
     description: '',
-    image: [],
+    images_arr: [],
 });
 
 let myFiles = [];
@@ -95,13 +96,13 @@ function getImages() {
 
 function pondRestore(images) {
     myFiles = []
-    form.image = []
+    form.images_arr = []
     errorLoadFiles.value = false;
 
     console.log(images)
 
     for (const image of images) {
-        form.image.push(image.id.toString())
+        form.images_arr.push(image.id.toString())
         myFiles.push({
             source: image.path,
             options: {
@@ -119,14 +120,14 @@ function pondRestore(images) {
             }
         });
     }
-    console.log(form.image)
+    console.log(form.images_arr)
     key.value = 1
     key.value = 0
 }
 
 // Загружено 1 фото
 function handleFilePondLoad(id) {
-    // form.image.push(id)
+    // form.images_arr.push(id)
     // console.log('load')
     // router.visit('create', {only: ['tmpImages'],})
     // router.reload({only: ['tmpImages']})
@@ -135,7 +136,7 @@ function handleFilePondLoad(id) {
 
 // Удалить фото
 function handleFilePondRevert(id, load, error) {
-    form.image = form.image.filter((image) => image !== id);
+    form.images_arr = form.images_arr.filter((image) => image !== id);
     errorLoadFiles.value = false;
     console.log(id)
 
@@ -156,10 +157,10 @@ function activateFile(i) {
 // Перетаскивание
 function reorderFiles(files, origin, target) {
     console.log(files[0].file.name);
-    form.image = []
+    form.images_arr = []
     let filePositionId = ''
     files.forEach(function (file) {
-        form.image.push(file.file.id.toString())
+        form.images_arr.push(file.file.id.toString())
         if (filePositionId === '') {
             filePositionId = filePositionId + file.file.id
         } else {
@@ -168,7 +169,7 @@ function reorderFiles(files, origin, target) {
 
     })
     console.log(filePositionId)
-    console.log(form.image)
+    console.log(form.images_arr)
 
     axios.post('/admin/tmp-reorder', filePositionId)
         .then((response) => {

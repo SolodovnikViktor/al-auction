@@ -13,13 +13,10 @@ import InputError from "@/Components/InputError.vue";
 import AdminNav from "@/Components/Admin/AdminNav.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import MyInput from "@/Components/Options/MyInput.vue";
-import {nextTick, ref} from "vue";
-
+import {ref} from "vue";
 import axios from "axios";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
 import DangerButton from "@/Components/DangerButton.vue";
-import TextInput from "@/Components/TextInput.vue";
 import Modal from "@/Components/Modal.vue";
 
 const props = defineProps({
@@ -53,7 +50,7 @@ const formInputs = [
 
 const form = useForm({
     image_position: props.post.image_position,
-    image_preview: props.post.images,
+    image_preview: props.post.image_preview,
     title: props.post.title,
     vin: props.post.vin,
     brand: props.post.brand,
@@ -70,9 +67,11 @@ const form = useForm({
     price: props.post.price,
     description: props.post.description,
     is_published: props.post.is_published,
+    images_arr: [],
 });
 
 let myFiles = []
+let key = ref(0);
 let errorLoadFiles = ref(false);
 let errorMessage = ref(false);
 
@@ -96,13 +95,13 @@ function getImages() {
 
 function pondRestore(images) {
     myFiles = []
-    form.images = []
+    form.images_arr = []
     errorLoadFiles.value = false;
 
     console.log(images)
 
     for (const image of images) {
-        form.images.push(image.id.toString())
+        form.images_arr.push(image.id.toString())
         myFiles.push({
             source: image.path,
             options: {
@@ -120,14 +119,14 @@ function pondRestore(images) {
             }
         });
     }
-    console.log(form.images)
-    // form.title = ' '
-    // form.title = ''
+    console.log(form.images_arr)
+    key.value = 1
+    key.value = 0
 }
 
 // Загружено 1 фото
 function handleFilePondLoad(id) {
-    // form.images.push(id)
+    // form.images_arr.push(id)
     // console.log('load')
     // router.visit('create', {only: ['tmpImages'],})
     // router.reload({only: ['tmpImages']})
@@ -136,7 +135,7 @@ function handleFilePondLoad(id) {
 
 // Удалить фото
 function handleFilePondRevert(id, load, error) {
-    form.images = form.images.filter((image) => image !== id);
+    form.images_arr = form.images_arr.filter((image) => image !== id);
     errorLoadFiles.value = false;
 
     // filePositionId = filePositionId.replace(',' + id, '');
@@ -156,10 +155,10 @@ function activateFile(i) {
 // Перетаскивание
 function reorderFiles(files, origin, target) {
     console.log(files[0].file.name);
-    form.images = []
+    form.images_arr = []
     let filePositionId = ''
     files.forEach(function (file) {
-        form.images.push(file.file.id.toString())
+        form.images_arr.push(file.file.id.toString())
         if (filePositionId === '') {
             filePositionId = filePositionId + file.file.id
         } else {
@@ -168,7 +167,7 @@ function reorderFiles(files, origin, target) {
 
     })
     console.log(filePositionId)
-    console.log(form.images)
+    console.log(form.images_arr)
 
     axios.post('/admin/tmp-reorder', filePositionId)
         .then((response) => {
@@ -346,7 +345,7 @@ function updatePublished() {
                             v-on:processfiles="handleFilePondSuccess"
 
                         />
-                        <InputError class="mt-2" :message="form.errors.images"/>
+                        <InputError class="mt-2" :message="form.errors.images_arr"/>
                     </div>
                     <div v-for="(input, index) in formInputs" :key=index
                          class=" p-1 sm:col-span-3 lg:col-span-2 text-gray-900">
