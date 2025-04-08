@@ -79,7 +79,7 @@ class AdminPostController extends Controller
                     'name' => $imageName,
                     'folder' => $folder,
                     'path' => '/storage' . $pathNew,
-                    'pathMin' => '/storage' . $pathNewMin,
+                    'path_min' => '/storage' . $pathNewMin,
                     'size' => $temporaryImage->size,
                 ]);
 //                DB::table('temporary_reorder')->where('userId', $userId)->delete();
@@ -99,7 +99,7 @@ class AdminPostController extends Controller
         }
         $post->image_position = $imagePosition;
         $post->save();
-        DB::table('temporary_reorder')->where('userId', $userId)->delete();
+        DB::table('temporary_reorder')->where('user_id', $userId)->delete();
         $request->session()->flash('message_form', 'Автомобиль успешно добавлен22');
 //        return to_route('admin-post.index')->with('message', 'Category Created Successfully');
     }

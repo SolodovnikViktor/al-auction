@@ -112,7 +112,7 @@ function pondRestore(images) {
                 type: 'limbo',
                 // type: 'local',
                 file: {
-                    name: image.filename,
+                    name: image.name,
                     size: image.size,
                     type: 'webp',
                     id: image.id,

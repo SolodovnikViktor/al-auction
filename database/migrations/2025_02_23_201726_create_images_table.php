@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->string('name');
             $table->string('folder');
             $table->string('path');
-            $table->string('pathMin');
+            $table->string('path_min');
             $table->integer('size');
             $table->timestamps();
         });

@@ -27,22 +27,22 @@ class ImageController extends Controller
                 $imageId = TemporaryFile::create([
                     'path' => '/storage' . $folder . '/' . $filename,
                     'folder' => $folder,
-                    'filename' => $filename,
-                    'id_user' => $userId,
+                    'name' => $filename,
+                    'user_id' => $userId,
                     'size' => $size,
                 ]);
 
-                if ($tempReorder = DB::table('temporary_reorder')->where('userId', $userId)
+                if ($tempReorder = DB::table('temporary_reorder')->where('user_id', $userId)
                     ->value('position')) {
-                    DB::table('temporary_reorder')->where('userId', $userId)->delete();
+                    DB::table('temporary_reorder')->where('user_id', $userId)->delete();
                     DB::table('temporary_reorder')->insert([
-                        'userId' => $userId,
+                        'user_id' => $userId,
                         'position' => $tempReorder . ',' . $imageId->id,
                     ]);
                 } else {
-                    DB::table('temporary_reorder')->where('userId', $userId)->delete();
+                    DB::table('temporary_reorder')->where('user_id', $userId)->delete();
                     DB::table('temporary_reorder')->insert([
-                        'userId' => $userId,
+                        'user_id' => $userId,
                         'position' => $imageId->id,
                     ]);
                 }
@@ -69,8 +69,8 @@ class ImageController extends Controller
                 $imageId = TemporaryFile::create([
                     'path' => '/storage' . $folder . '/' . $filename,
                     'folder' => $folder,
-                    'filename' => $filename,
-                    'id_user' => $userId,
+                    'name' => $filename,
+                    'user_id' => $userId,
                     'size' => $size,
                 ]);
                 if ($post->image_position !== '') {
@@ -92,9 +92,9 @@ class ImageController extends Controller
     public function restore()
     {
         $userId = auth()->id();
-        $tmpFile = TemporaryFile::where('id_user', $userId)->get();
+        $tmpFile = TemporaryFile::where('user_id', $userId)->get();
 
-        if ($tempReorder = DB::table('temporary_reorder')->where('userId', $userId)->first()) {
+        if ($tempReorder = DB::table('temporary_reorder')->where('user_id', $userId)->first()) {
             if ($tempReorder->position !== '') {
                 $tempReorderArr = explode(',', $tempReorder->position);
                 $tmpFileReorder = TemporaryFile::whereIn('id', $tempReorderArr)->orderByRaw(
@@ -110,12 +110,14 @@ class ImageController extends Controller
     {
         $positionArr = explode(',', $post->image_position);
 
-        $imagePost = Image::whereIn('id', $positionArr)->orderByRaw("FIELD (id, $post->image_position) ASC")->get();
-        $tmpPosition = TemporaryFile::whereIn('id', $positionArr)->orderByRaw(
-            "FIELD (id, $post->image_position) ASC"
-        )->get();
-//        return $tmpPosition;
-        return $imagePost->merge($tmpPosition);
+//        $imagePost = Image::whereIn('id', $positionArr)->orderByRaw("FIELD (id, $post->image_position) ASC")->get();
+//        $tmpPosition = TemporaryFile::whereIn('id', $positionArr)->orderByRaw(
+//            "FIELD (id, $post->image_position) ASC"
+//        )->get();
+//        return $imagePost->merge($tmpPosition);
+
+        $tmpPosition = Image::whereIn('id', $positionArr)->get();
+        return $tmpPosition;
     }
 
     public function destroy()
@@ -123,11 +125,11 @@ class ImageController extends Controller
         $userId = auth()->id();
         $image = request()->getContent();
         $tmpFile = TemporaryFile::where('id', $image)->orWhere('path', $image)->first();
-        if ($tmpReorder = DB::table('temporary_reorder')->where('userId', $userId)->first()) {
+        if ($tmpReorder = DB::table('temporary_reorder')->where('user_id', $userId)->first()) {
             $tmpReorderId = str_replace($tmpFile->id, '', $tmpReorder->position);
             $tmpReorderId = preg_replace('/,{2,}/', ',', trim($tmpReorderId, ','));
 
-            DB::table('temporary_reorder')->where('userId', $userId)->update([
+            DB::table('temporary_reorder')->where('user_id', $userId)->update([
                 'position' => $tmpReorderId,
             ]);
         }
@@ -146,20 +148,40 @@ class ImageController extends Controller
     public function reorder(Request $request)
     {
         $userId = auth()->id();
-        DB::table('temporary_reorder')->where('userId', $userId)->delete();
+        DB::table('temporary_reorder')->where('user_id', $userId)->delete();
         DB::table('temporary_reorder')->insert([
-            'userId' => $userId,
+            'user_id' => $userId,
             'position' => $request->getContent(),
         ]);
 
-//        $tmpImages = TemporaryFile::where('id_user', $userId)->get();
+//        $tmpImages = TemporaryFile::where('user_id', $userId)->get();
 //    return response()->json($tmpImages);
         return [];
     }
 
     public function postReorder(Request $request, Post $post)
     {
-        $post->image_position = $request->getContent();
-        $post->save();
+        $positionArr = explode(',', $request->getContent());
+        $positionStr = $request->getContent();
+//        $images = Image::whereIn('id', $positionArr)->orderByRaw(
+//            "FIELD (id, $positionStr) ASC"
+//        )->select('id')->get();
+        $images = Image::where('post_id', $post->id)->get();
+//        return $images;
+        $tic = 0;
+
+//        dd($request->getContent(), $positionArr, $images);
+        
+        foreach ($images as $keyImage => $image) {
+            foreach ($positionArr as $keyPosition => $position) {
+                if ($keyImage == $keyPosition) {
+                    $image->id = $position;
+                    $image->save();
+                }
+            }
+        }
+
+//        $post->image_position = $request->getContent();
+//        $post->save();
     }
 }

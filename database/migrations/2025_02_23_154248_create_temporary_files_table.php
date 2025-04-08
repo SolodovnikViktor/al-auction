@@ -11,15 +11,15 @@ return new class extends Migration {
             $table->id();
             $table->string('folder');
             $table->string('path');
-            $table->string('filename');
-            $table->string('id_user');
+            $table->string('name');
+            $table->string('user_id');
             $table->string('size');
             $table->timestamps();
         });
 
         Schema::create('temporary_reorder', function (Blueprint $table) {
             $table->id();
-            $table->integer('userId');
+            $table->integer('user_id');
             $table->string('position');
         });
     }

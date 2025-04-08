@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 class TemporaryFile extends Model
 {
     protected $table = 'temporary_files';
-    protected $fillable = ['id', 'folder', 'filename', 'id_user', 'path', 'size'];
+    protected $fillable = ['id', 'folder', 'name', 'user_id', 'path', 'size'];
 }
