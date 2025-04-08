@@ -33,30 +33,32 @@ class AdminPostController extends Controller
 
     public function create(): Response
     {
-        $userId = auth()->id();
-        $filePositionId = DB::table('temporary_reorder')->where('userId', $userId)->select('position')->first();
+//        $userId = auth()->id();
+//        $filePositionId = DB::table('temporary_reorder')->where('userId', $userId)->select('position')->first();
         $colors = Color::all()->select('id', 'title');
         $drives = Drive::all()->select('id', 'title');
         $bodyTypes = BodyType::all()->select('id', 'title');
         $transmissions = Transmission::all()->select('id', 'title');
-        $tmpImages = TemporaryFile::where('id_user', $userId)->get();
+//        $tmpImages = TemporaryFile::where('id_user', $userId)->get();
 
         return Inertia::render('Admin/Create', [
             'colors' => $colors,
             'drives' => $drives,
             'bodyTypes' => $bodyTypes,
             'transmissions' => $transmissions,
-            'tmpImages' => $tmpImages,
-            'filePositionId' => $filePositionId,
+//            'tmpImages' => $tmpImages,
+//            'filePositionId' => $filePositionId,
         ]);
     }
 
     public function store(PostRequest $request)
     {
+        $userId = auth()->id();
         $validated = $request->validated();
         $post = Post::create($validated);
+        $imagePosition = '';
 
-        $temporaryImages = TemporaryFile::whereIn('id', $request->image)->get();
+        $temporaryImages = TemporaryFile::whereIn('id', $request->images_arr)->get();
 
         foreach ($temporaryImages as $temporaryImage) {
             $imageName = $temporaryImage->filename;
@@ -72,7 +74,7 @@ class AdminPostController extends Controller
                 );
                 $imageMin->save('storage/' . $pathNewMin);
 
-                Image::create([
+                $image = Image::create([
                     'post_id' => $post->id,
                     'name' => $imageName,
                     'folder' => $folder,
@@ -80,18 +82,26 @@ class AdminPostController extends Controller
                     'pathMin' => '/storage' . $pathNewMin,
                     'size' => $temporaryImage->size,
                 ]);
+//                DB::table('temporary_reorder')->where('userId', $userId)->delete();
                 Storage::deleteDirectory($temporaryImage->folder);
                 $temporaryImage->delete();
+                if ($imagePosition === '') {
+                    $imagePosition = $image->id;
+                } else {
+                    $imagePosition = $imagePosition . ',' . $image->id;
+                }
             }
+
 //            return response()->json([
 //                'message' => 'Record not found.'
 //            ], 404);
 //            Storage::copy($pathTmp, $pathNew);
         }
-
-        DB::table('temporary_reorder')->where('userId', $post->userId)->delete();
+        $post->image_position = $imagePosition;
+        $post->save();
+        DB::table('temporary_reorder')->where('userId', $userId)->delete();
         $request->session()->flash('message_form', 'Автомобиль успешно добавлен22');
-        return to_route('admin-post.index')->with('message', 'Category Created Successfully');
+//        return to_route('admin-post.index')->with('message', 'Category Created Successfully');
     }
 
     public function show(Post $post): Response
@@ -126,7 +136,6 @@ class AdminPostController extends Controller
         ]);
         $post->update($validated);
         $request->session()->flash('message', 'Видимость изменена');
-//        return 2233;
     }
 
     public function update(PostRequest $request, Post $post): \Illuminate\Http\RedirectResponse

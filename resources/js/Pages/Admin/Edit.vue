@@ -79,7 +79,7 @@ let errorMessage = ref(false);
 // console.log(filePositionId)
 
 function getImages() {
-    axios.get('/admin/tmp-restore')
+    axios.get(`/admin/post/tmp-restore/${props.post.id}`)
         .then(response => {
             pondRestore(response.data)
         })
@@ -108,7 +108,7 @@ function pondRestore(images) {
                 type: 'limbo',
                 // type: 'local',
                 file: {
-                    name: image.filename,
+                    name: image.name,
                     size: image.size,
                     type: 'webp',
                     id: image.id,
@@ -154,7 +154,6 @@ function activateFile(i) {
 
 // Перетаскивание
 function reorderFiles(files, origin, target) {
-    console.log(files[0].file.name);
     form.images_arr = []
     let filePositionId = ''
     files.forEach(function (file) {
@@ -169,7 +168,7 @@ function reorderFiles(files, origin, target) {
     console.log(filePositionId)
     console.log(form.images_arr)
 
-    axios.post('/admin/tmp-reorder', filePositionId)
+    axios.post(`/admin/post/tmp-reorder/${props.post.id}`, filePositionId)
         .then((response) => {
         })
         .catch((error) => {
@@ -210,7 +209,6 @@ const deletePost = (id) => {
 
 const closeModal = () => {
     confirmingPostDeletion.value = false;
-
     form.clearErrors();
     form.reset();
 };
@@ -228,10 +226,7 @@ function updatePublished() {
         is_published: toggle.value,
         onSuccess: () => closeModal(),
     })
-
 }
-
-
 </script>
 
 <template>
@@ -260,8 +255,6 @@ function updatePublished() {
                     </label>
                     <p v-if="toggle">Опубликовано</p>
                     <p v-else>Скрыто</p>
-
-
                 </div>
                 <div>
                     <SecondaryButton class="mr-5">Скрыть</SecondaryButton>
@@ -290,22 +283,19 @@ function updatePublished() {
                         <file-pond
                             name="imageFilePond"
                             ref="pond"
+                            :key
                             class-name="my-pond"
                             labelFileProcessing="Загрузка"
                             labelFileProcessingComplete="Загружен"
                             labelTapToCancel="Остановить"
                             labelTapToUndo=""
-
                             labelFileTypeNotAllowed='Только фотографии'
                             fileValidateTypeLabelExpectedTypes='{allButLastType} и {lastType}'
-
                             dropOnPage="true"
                             allow-reorder="true"
                             itemInsertLocation="after"
-
                             force-revert="true"
                             credits=""
-
                             label-idle='<span class="filepond--label-action"> Нажать </span> или перетащить фото
                                 <svg class="w-15 h-8 inline text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
@@ -323,16 +313,16 @@ function updatePublished() {
 
                             :server="{
                                 url:'',
-                                timeout: 7000,
+                                timeout: 120000,
                                 process:{
-                                    url: '/admin/tmp-upload',
+                                    url: `/admin/post/tmp-upload/${props.post.id}`,
                                     method: 'POST',
                                     withCredentials: false,
                                     onerror: FilePondErrorLoad,
                                     onload: handleFilePondLoad,
                                     },
                                 revert:{
-                                    url: '/admin/tmp-revert',
+                                    url: `/admin/post/tmp-revert/${props.post.id}`,
                                     method: 'DELETE',
                                     onload: handleFilePondRevert
                                 },
@@ -405,6 +395,25 @@ function updatePublished() {
     </IndexLayout>
 </template>
 
-<style scoped>
+<style>
+.filepond--item {
+    width: calc(50% - 0.5em);
+}
 
+.filepond--wrapper {
+    margin-bottom: -10px;
+}
+
+.filepond--credits {
+    display: none;
+}
+
+.hover\:grow {
+    transition: all 0.3s;
+    transform: scale(1);
+}
+
+.hover\:grow:hover {
+    transform: scale(1.04);
+}
 </style>

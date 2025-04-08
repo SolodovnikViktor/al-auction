@@ -22,11 +22,11 @@ const props = defineProps({
     bodyTypes: Array,
     transmissions: Array,
     user: Object,
-    tmpImages: Array,
-    filePositionId: {
-        type: Object,
-        default: [],
-    },
+    // tmpImages: Array,
+    // imagePosition: {
+    //     type: Object,
+    //     default: [],
+    // },
 });
 
 const FilePond = vueFilePond(FilePondPluginFileValidateType, FilePondPluginImagePreview, FilePondPluginFilePoster, FilePondPluginFileRename);
@@ -74,12 +74,9 @@ let myFiles = [];
 let key = ref(0);
 let errorLoadFiles = ref(false);
 let errorMessage = ref(false);
-
-// let filePositionId = props.filePositionId.position
-// console.log(filePositionId)
+let imagePosition = ''
 
 function getImages() {
-
     axios.get('/admin/tmp-restore')
         .then(response => {
             pondRestore(response.data)
@@ -97,12 +94,18 @@ function getImages() {
 function pondRestore(images) {
     myFiles = []
     form.images_arr = []
+    imagePosition = ''
     errorLoadFiles.value = false;
 
     console.log(images)
 
     for (const image of images) {
         form.images_arr.push(image.id.toString())
+        if (imagePosition === '') {
+            imagePosition = imagePosition + image.id
+        } else {
+            imagePosition = imagePosition + ',' + image.id
+        }
         myFiles.push({
             source: image.path,
             options: {
@@ -120,9 +123,33 @@ function pondRestore(images) {
             }
         });
     }
-    console.log(form.images_arr)
+    console.log('images_arr', form.images_arr)
+    console.log('image_position', imagePosition)
     key.value = 1
     key.value = 0
+}
+
+// Перетаскивание
+function reorderFiles(files, origin, target) {
+    form.images_arr = []
+    imagePosition = ''
+    files.forEach(function (file) {
+        form.images_arr.push(file.file.id.toString())
+        if (imagePosition === '') {
+            imagePosition = imagePosition + file.file.id
+        } else {
+            imagePosition = imagePosition + ',' + file.file.id
+        }
+    })
+    console.log(imagePosition)
+    console.log(form.images_arr)
+
+    axios.post('/admin/tmp-reorder', imagePosition)
+        .then((response) => {
+        })
+        .catch((error) => {
+            console.log(error);
+        });
 }
 
 // Загружено 1 фото
@@ -139,8 +166,14 @@ function handleFilePondRevert(id, load, error) {
     form.images_arr = form.images_arr.filter((image) => image !== id);
     errorLoadFiles.value = false;
     console.log(id)
+    console.log(imagePosition)
+    imagePosition = imagePosition.replace(id, '');
 
-    // filePositionId = filePositionId.replace(',' + id, '');
+    imagePosition = imagePosition.replace(/(^[,\s]+)|([,\s]+$)/g, '');
+    imagePosition = imagePosition.replace(',,', ',');
+    console.log(imagePosition)
+
+    // imagePosition = imagePosition.replace(',' + id, '');
 }
 
 // Переименовать
@@ -154,30 +187,6 @@ function activateFile(i) {
     console.log(i.file)
 }
 
-// Перетаскивание
-function reorderFiles(files, origin, target) {
-    console.log(files[0].file.name);
-    form.images_arr = []
-    let filePositionId = ''
-    files.forEach(function (file) {
-        form.images_arr.push(file.file.id.toString())
-        if (filePositionId === '') {
-            filePositionId = filePositionId + file.file.id
-        } else {
-            filePositionId = filePositionId + ',' + file.file.id
-        }
-
-    })
-    console.log(filePositionId)
-    console.log(form.images_arr)
-
-    axios.post('/admin/tmp-reorder', filePositionId)
-        .then((response) => {
-        })
-        .catch((error) => {
-            console.log(error);
-        });
-}
 
 // Вызывается по готовности FilePond
 function handleFilePondInit() {
@@ -195,7 +204,6 @@ function FilePondErrorLoad(error, files) {
     console.log(error)
     console.log(files)
 }
-
 </script>
 
 <template>
@@ -231,17 +239,13 @@ function FilePondErrorLoad(error, files) {
                             labelFileProcessingComplete="Загружен"
                             labelTapToCancel="Остановить"
                             labelTapToUndo=""
-
-
                             labelFileTypeNotAllowed='Только фотографии'
                             fileValidateTypeLabelExpectedTypes='{allButLastType} и {lastType}'
-
                             dropOnPage="true"
                             allow-reorder="true"
                             itemInsertLocation="after"
-
                             force-revert="true"
-
+                            credits=""
                             label-idle='<span class="filepond--label-action"> Нажать </span> или перетащить фото
                                 <svg class="w-15 h-8 inline text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
@@ -259,7 +263,7 @@ function FilePondErrorLoad(error, files) {
 
                             :server="{
                                 url:'',
-                                timeout: 7000,
+                                timeout: 120000,
                                 process:{
                                     url: '/admin/tmp-upload',
                                     method: 'POST',
@@ -279,9 +283,8 @@ function FilePondErrorLoad(error, files) {
                             v-on:activatefile="activateFile"
                             v-on:reorderfiles="reorderFiles"
                             v-on:processfiles="handleFilePondSuccess"
-
                         />
-                        <InputError class="mt-2" :message="form.errors.image"/>
+                        <InputError class="mt-2" :message="form.errors.images_arr"/>
                     </div>
                     <div v-for="(input, index) in formInputs" :key=index
                          class=" p-1 sm:col-span-3 lg:col-span-2 text-gray-900">

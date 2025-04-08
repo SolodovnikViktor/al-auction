@@ -24,13 +24,16 @@ Route::middleware(['auth', 'verified', 'roles:admin'])->group(function () {
     Route::patch('/admin/post/update-published/{post}', [AdminPostController::class, 'updatePublished'])->name(
         'admin-post.updatePublished'
     );
-
     Route::delete('/admin/post/{post}', [AdminPostController::class, 'destroy'])->name('admin-post.destroy');
 
     Route::post('/admin/tmp-upload', [ImageController::class, 'store']);
+    Route::post('/admin/post/tmp-upload/{post}', [ImageController::class, 'postStore']);
     Route::get('/admin/tmp-restore', [ImageController::class, 'restore']);
+    Route::get('/admin/post/tmp-restore/{post}', [ImageController::class, 'postRestore']);
     Route::post('/admin/tmp-reorder', [ImageController::class, 'reorder']);
+    Route::post('/admin/post/tmp-reorder/{post}', [ImageController::class, 'postReorder']);
     Route::delete('/admin/tmp-revert', [ImageController::class, 'destroy']);
+    Route::delete('/admin/post/tmp-revert/{post}', [ImageController::class, 'postDestroy']);
 });
 
 Route::middleware('auth')->group(function () {
