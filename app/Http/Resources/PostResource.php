@@ -13,6 +13,13 @@ class PostResource extends JsonResource
     {
         $positionArr = explode(',', $this->image_position);
         $positionStr = $this->image_position;
+        if ($this->image_position !== null && $this->image_position !== '') {
+//            dd($this->image_position);
+            $image = Image::whereIn('id', $positionArr)->orderByRaw("FIELD (id, $positionStr) ASC")->get();
+        } else {
+            $image = Image::whereIn('id', $positionArr)->get();
+        }
+
 
         return [
             'id' => $this->id,
@@ -38,9 +45,7 @@ class PostResource extends JsonResource
             'is_published' => $this->is_published,
 
 //            'images' => ImageResource::collection($this->images),
-            'images' => ImageResource::collection(
-                Image::whereIn('id', $positionArr)->orderByRaw("FIELD (id, $positionStr) ASC")->get()
-            ),
+            'images' => ImageResource::collection($image),
 //            'images' => Image::whereIn('id', $positionArr)->get(),
 
             'bets' => BetResource::collection($this->bets),

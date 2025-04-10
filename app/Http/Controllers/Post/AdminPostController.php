@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
+use function Laravel\Prompts\error;
 
 class AdminPostController extends Controller
 {
@@ -61,11 +62,11 @@ class AdminPostController extends Controller
         $temporaryImages = TemporaryFile::whereIn('id', $request->images_arr)->get();
 
         foreach ($temporaryImages as $temporaryImage) {
-            $imageName = $temporaryImage->filename;
-            $folder = '/images/posts/' . 'PostID-' . $post->id . '/' . uniqid('image-', true);
+            $imageName = $temporaryImage->name;
+            $folder = 'PostID-' . $post->id . '/' . uniqid('image-', true);
             $pathTmp = $temporaryImage->folder . '/' . $imageName;
-            $pathNew = $folder . '/' . $imageName;
-            $pathNewMin = $folder . '/' . 'min_' . $imageName;
+            $pathNew = '/images/posts/' . $folder . '/' . $imageName;
+            $pathNewMin = '/images/posts/' . $folder . '/' . 'min_' . $imageName;
 
             if (Storage::copy($pathTmp, $pathNew)) {
                 $imageMin = \Intervention\Image\Laravel\Facades\Image::read(Storage::get($pathTmp))->scaleDown(
@@ -90,18 +91,17 @@ class AdminPostController extends Controller
                 } else {
                     $imagePosition = $imagePosition . ',' . $image->id;
                 }
+            } else {
+//                return response()->json(['errors' => 'Error msg'], 404);
+                return back()->with('message_form', 'Фотографии не сохранены');
             }
-
-//            return response()->json([
-//                'message' => 'Record not found.'
-//            ], 404);
 //            Storage::copy($pathTmp, $pathNew);
         }
         $post->image_position = $imagePosition;
         $post->save();
         DB::table('temporary_reorder')->where('user_id', $userId)->delete();
         $request->session()->flash('message_form', 'Автомобиль успешно добавлен22');
-//        return to_route('admin-post.index')->with('message', 'Category Created Successfully');
+        return to_route('admin-post.index')->with('message', 'Category Created Successfully');
     }
 
     public function show(Post $post): Response

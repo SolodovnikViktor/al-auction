@@ -216,7 +216,9 @@ function FilePondErrorLoad(error, files) {
 
         <div class="p-2 lg:p-4 max-w-2xl mx-auto shadow sm:rounded-2xl bg-white">
 
-            <form :disabled="form.processing" @submit.prevent="$event => form.post(route('admin-post.store'))">
+            <form :disabled="form.processing" @submit.prevent="$event => form.post(route('admin-post.store'),{
+                onError: error => {console.log(error)},
+            })">
                 <div class="overflow-hidden max-w-2xl pb-4 mb-4 border-b border-gray-200">
                     <div class="h-full text-gray-900">
                         <!-- dropOnPage - FilePond будет перехватывать все файлы, размещенные на веб-странице
@@ -307,7 +309,7 @@ function FilePondErrorLoad(error, files) {
 
                 </div>
                 <nav class="flex justify-end">
-                    <button type="submit"
+                    <button type="submit" :disabled="form.processing"
                             class="text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-300 font-medium rounded-lg text-sm px-5 py-2.5">
                         Отправить
                     </button>
