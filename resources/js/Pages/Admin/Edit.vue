@@ -72,8 +72,8 @@ const form = useForm({
 
 let myFiles = []
 let key = ref(0);
-let errorLoadFiles = ref(false);
-let errorMessage = ref(false);
+let errorLoadFiles = ref('');
+let errorMessage = ref('');
 
 // let filePositionId = props.filePositionId.position
 // console.log(filePositionId)
@@ -84,19 +84,17 @@ function getImages() {
             pondRestore(response.data)
         })
         .catch(error => {
-            errorMessage = error.response.data.message;
+            errorMessage.value = error.response.data.message;
             console.log(error.response.data.message);
             console.log(error.response.data);
-            console.log(error.response);
             console.log(error.message);
-            console.log(error);
         });
 }
 
 function pondRestore(images) {
     myFiles = []
     form.images_arr = []
-    errorLoadFiles.value = false;
+    errorLoadFiles.value = '';
 
     console.log(images)
 
@@ -238,6 +236,12 @@ function updatePublished() {
         </template>
 
         <div class="p-2 lg:p-4 max-w-2xl mx-auto shadow sm:rounded-2xl bg-white">
+            <div v-if="errorLoadFiles">
+                <p class="text-red-500">Ошибка загрузки файла {{ errorLoadFiles }}</p>
+            </div>
+            <div v-if="errorMessage">
+                <p class="text-red-500">Ошибка загрузки {{ errorMessage }}</p>
+            </div>
             <div class="flex justify-between pb-2">
                 <div class="flex items-center">
                     <p class="mr-3">Post id: {{ post.id }}</p>
@@ -276,10 +280,6 @@ function updatePublished() {
 
                              forceRevert - Установите значение true, чтобы потребовать успешного возврата файла перед продолжением
                               -->
-                        <div v-if="errorLoadFiles">
-                            <p>Ошибка загрузки файла {{ errorLoadFiles }}</p>
-                        </div>
-
                         <file-pond
                             name="imageFilePond"
                             ref="pond"

@@ -86,7 +86,7 @@ class ImageController extends Controller
 //        session(['message_form' => 'value']);
 //        $request->session()->forget('message_form');
 //        return App::abort(403, 'Файл не загружен.');
-        return response()->json(['message' => 'Record not found.'], 404);
+        return response()->json(['message' => 'Файл не загружен.'], 404);
     }
 
     public function restore()
@@ -100,7 +100,8 @@ class ImageController extends Controller
                 $tmpImages = TemporaryFile::whereIn('id', $tmpReorderArr)->orderByRaw(
                     "FIELD (id, $tmpReorder->position) ASC"
                 )->get();
-                return $tmpImages->merge($tmpFile);
+                return $tmpImages;
+//                return $tmpImages->merge($tmpFile);
             }
         }
         return $tmpFile;
@@ -109,11 +110,15 @@ class ImageController extends Controller
     public function postRestore(Post $post)
     {
         $positionArr = explode(',', $post->image_position);
-        $postImages = Image::whereIn('id', $positionArr)->orderByRaw("FIELD (id, $post->image_position) ASC")->get();
-        $tmpImages = TemporaryFile::whereIn('id', $positionArr)->orderByRaw(
-            "FIELD (id, $post->image_position) ASC"
-        )->get();
-        return $postImages->merge($tmpImages);
+        if ($post->image_position) {
+            $postImages = Image::whereIn('id', $positionArr)->orderByRaw("FIELD (id, $post->image_position) ASC")->get(
+            );
+            $tmpImages = TemporaryFile::whereIn('id', $positionArr)->orderByRaw(
+                "FIELD (id, $post->image_position) ASC"
+            )->get();
+            return $postImages->merge($tmpImages);
+        }
+        return Image::where('post_id', $post->id)->get();
     }
 
 
@@ -152,9 +157,9 @@ class ImageController extends Controller
 //                }
 //            }
 //        }
-
-        $post->image_position = $request->getContent();
-        $post->save();
+        $post->update(['image_position' => $request->getContent()]);
+//        $post->image_position = $request->getContent();
+//        $post->save();
     }
 
     public function destroy()
@@ -179,6 +184,16 @@ class ImageController extends Controller
 
     public function postDestroy(Request $request, Post $post)
     {
-        dd($request->getContent(), $post);
+        $image = $request->getContent();
+        if ($tmpImage = TemporaryFile::where('id', $image)->orWhere('path', $image)->first()) {
+        }
+        if ($tmpImage = Image::where('path', $image)->first()) {
+        }
+        $tmpReorderId = str_replace($tmpImage->id, '', $post->image_position);
+        $tmpReorderId = preg_replace('/,{2,}/', ',', trim($tmpReorderId, ','));
+        $post->update(['image_position' => $tmpReorderId]);
+        Storage::deleteDirectory($tmpImage->folder);
+        $tmpImage->delete();
+        return $tmpImage->id;
     }
 }

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Image extends Model
 {
     protected $table = 'images';
-    protected $fillable = ['id', 'post_id', 'name', 'folder', 'path', 'size', 'path_min'];
+    protected $fillable = ['post_id', 'name', 'folder', 'path', 'size', 'path_min'];
 
     public function post(): BelongsTo
     {
