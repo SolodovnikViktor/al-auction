@@ -104,6 +104,7 @@ class ImageController extends Controller
 //                return $tmpImages->merge($tmpFile);
             }
         }
+//        $request->session()->flash('message', 'Видимость изменена');
         return $tmpFile;
     }
 
@@ -111,12 +112,16 @@ class ImageController extends Controller
     {
         $positionArr = explode(',', $post->image_position);
         if ($post->image_position) {
-            $postImages = Image::whereIn('id', $positionArr)->orderByRaw("FIELD (id, $post->image_position) ASC")->get(
-            );
-            $tmpImages = TemporaryFile::whereIn('id', $positionArr)->orderByRaw(
-                "FIELD (id, $post->image_position) ASC"
-            )->get();
-            return $postImages->merge($tmpImages);
+            $postImages = Image::whereIn('id', $positionArr)->orderByRaw("FIELD (id, $post->image_position) ASC")->get();
+            if (count($positionArr) > $postImages->count()) {
+                $tmpImages = TemporaryFile::whereIn('id', $positionArr)->orderByRaw(
+                    "FIELD (id, $post->image_position) ASC"
+                )->get();
+                return $postImages->merge($tmpImages);
+            } else {
+                return $postImages;
+            }
+
         }
         return Image::where('post_id', $post->id)->get();
     }
@@ -185,9 +190,12 @@ class ImageController extends Controller
     public function postDestroy(Request $request, Post $post)
     {
         $image = $request->getContent();
-        if ($tmpImage = TemporaryFile::where('id', $image)->orWhere('path', $image)->first()) {
+
+        if (TemporaryFile::where('id', $image)->orWhere('path', $image)->first()) {
+            $tmpImage = TemporaryFile::where('id', $image)->orWhere('path', $image)->first();
         }
-        if ($tmpImage = Image::where('path', $image)->first()) {
+        if (Image::where('path', $image)->first()) {
+            $tmpImage = Image::where('path', $image)->first();
         }
         $tmpReorderId = str_replace($tmpImage->id, '', $post->image_position);
         $tmpReorderId = preg_replace('/,{2,}/', ',', trim($tmpReorderId, ','));

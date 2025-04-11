@@ -221,8 +221,7 @@ function updatePublished() {
     //     });
     form.is_published = toggle.value
     router.patch(route('admin-post.updatePublished', props.post.id), {
-        is_published: toggle.value,
-        onSuccess: () => closeModal(),
+        is_published: toggle.value
     })
 }
 </script>

@@ -13,7 +13,7 @@ return new class extends Migration {
             $table->string('path');
             $table->string('name');
             $table->string('user_id');
-            $table->string('size');
+            $table->integer('size');
             $table->timestamps();
         });
 

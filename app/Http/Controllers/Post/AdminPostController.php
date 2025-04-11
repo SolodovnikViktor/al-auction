@@ -100,7 +100,7 @@ class AdminPostController extends Controller
         $post->image_position = $imagePosition;
         $post->save();
         DB::table('temporary_reorder')->where('user_id', $userId)->delete();
-        $request->session()->flash('message_form', 'Автомобиль успешно добавлен22');
+        $request->session()->flash('message_form', 'Автомобиль успешно добавлен message_form');
         return to_route('admin-post.index')->with('message', 'Category Created Successfully');
     }
 
@@ -142,7 +142,52 @@ class AdminPostController extends Controller
     {
         $validated = $request->validated();
         $post->update($validated);
-        return to_route('admin-post.show', $post)->with('message', 'Объявление изменено');
+
+
+        $imagePosition = $post->image_position;
+        $temporaryImages = TemporaryFile::whereIn('id', $request->images_arr)->get();
+        foreach ($temporaryImages as $temporaryImage) {
+            $imageName = $temporaryImage->name;
+            $folder = 'PostID-' . $post->id . '/' . uniqid('image-', true);
+            $pathTmp = $temporaryImage->folder . '/' . $imageName;
+            $pathNew = '/images/posts/' . $folder . '/' . $imageName;
+            $pathNewMin = '/images/posts/' . $folder . '/' . 'min_' . $imageName;
+
+            if (Storage::copy($pathTmp, $pathNew)) {
+                $imageMin = \Intervention\Image\Laravel\Facades\Image::read(Storage::get($pathTmp))->scaleDown(
+                    300,
+                    200
+                );
+                $imageMin->save('storage/' . $pathNewMin);
+
+                $image = Image::create([
+                    'post_id' => $post->id,
+                    'name' => $imageName,
+                    'folder' => $folder,
+                    'path' => '/storage' . $pathNew,
+                    'path_min' => '/storage' . $pathNewMin,
+                    'size' => $temporaryImage->size,
+                ]);
+//                DB::table('temporary_reorder')->where('userId', $userId)->delete();
+                Storage::deleteDirectory($temporaryImage->folder);
+                $temporaryImage->delete();
+                if ($imagePosition === '') {
+                    $imagePosition = $image->id;
+                } else {
+                    $imagePosition = str_replace($temporaryImage->id, $image->id, $imagePosition);
+                }
+            } else {
+//                return response()->json(['errors' => 'Error msg'], 404);
+                return back()->with('message_form', 'Фотографии не сохранены');
+            }
+//            Storage::copy($pathTmp, $pathNew);
+        }
+        $post->update(['image_position' => $imagePosition]);
+
+//        $post->image_position = $imagePosition;
+//        $post->save();
+
+        return to_route('admin-post.show', $post)->with('message', 'Обновлено');
 //        return redirect()->route('admin-post.index')->with('message', 'Category Updated Successfully');
     }
 
