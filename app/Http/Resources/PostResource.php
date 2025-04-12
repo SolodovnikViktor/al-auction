@@ -3,7 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Http\Resources\User\UserResource;
-use App\Models\Image;
+use App\Models\Photo;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -15,9 +15,9 @@ class PostResource extends JsonResource
         $positionStr = $this->image_position;
         if ($this->image_position !== null && $this->image_position !== '') {
 //            dd($this->image_position);
-            $image = Image::whereIn('id', $positionArr)->orderByRaw("FIELD (id, $positionStr) ASC")->get();
+            $image = Photo::whereIn('id', $positionArr)->orderByRaw("FIELD (id, $positionStr) ASC")->get();
         } else {
-            $image = Image::whereIn('id', $positionArr)->get();
+            $image = Photo::whereIn('id', $positionArr)->get();
         }
 
 
@@ -46,7 +46,7 @@ class PostResource extends JsonResource
 
 //            'images' => ImageResource::collection($this->images),
             'images' => ImageResource::collection($image),
-//            'images' => Image::whereIn('id', $positionArr)->get(),
+//            'images' => Photo::whereIn('id', $positionArr)->get(),
 
             'bets' => BetResource::collection($this->bets),
             'user' => UserResource::make($this->user),

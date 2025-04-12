@@ -1,7 +1,8 @@
 <?php
 
 use App\Http\Controllers\Post\AdminPostController;
-use App\Http\Controllers\Post\ImageController;
+use App\Http\Controllers\Post\PhotoController;
+use App\Http\Controllers\Post\PhotoPostController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -26,14 +27,14 @@ Route::middleware(['auth', 'verified', 'roles:admin'])->group(function () {
     );
     Route::delete('/admin/post/{post}', [AdminPostController::class, 'destroy'])->name('admin-post.destroy');
 
-    Route::post('/admin/tmp-upload', [ImageController::class, 'store']);
-    Route::post('/admin/post/tmp-upload/{post}', [ImageController::class, 'postStore']);
-    Route::get('/admin/tmp-restore', [ImageController::class, 'restore']);
-    Route::get('/admin/post/tmp-restore/{post}', [ImageController::class, 'postRestore']);
-    Route::post('/admin/tmp-reorder', [ImageController::class, 'reorder']);
-    Route::post('/admin/post/tmp-reorder/{post}', [ImageController::class, 'postReorder']);
-    Route::delete('/admin/tmp-revert', [ImageController::class, 'destroy']);
-    Route::delete('/admin/post/tmp-revert/{post}', [ImageController::class, 'postDestroy']);
+    Route::post('/admin/tmp-upload', [PhotoController::class, 'store']);
+    Route::get('/admin/tmp-restore', [PhotoController::class, 'restore']);
+    Route::post('/admin/tmp-reorder', [PhotoController::class, 'reorder']);
+    Route::delete('/admin/tmp-revert', [PhotoController::class, 'destroy']);
+    Route::post('/admin/post/tmp-upload/{post}', [PhotoPostController::class, 'store']);
+    Route::get('/admin/post/tmp-restore/{post}', [PhotoPostController::class, 'restore']);
+    Route::post('/admin/post/tmp-reorder/{post}', [PhotoPostController::class, 'reorder']);
+    Route::delete('/admin/post/tmp-revert/{post}', [PhotoPostController::class, 'destroy']);
 });
 
 Route::middleware('auth')->group(function () {

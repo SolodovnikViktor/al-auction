@@ -32,15 +32,15 @@ if (props.id === 'transmission_id') {
 }
 
 
-onMounted(() => {
-    if (props.id === 'title') {
-        input.value.setAttribute('autofocus', 'true');
-        if (input.value.hasAttribute('autofocus')) {
-            input.value.focus();
-        }
-    }
-});
-defineExpose({focus: () => input.value.focus()});
+// onMounted(() => {
+//     if (props.id === 'title') {
+//         input.value.setAttribute('autofocus', 'true');
+//         if (input.value.hasAttribute('autofocus')) {
+//             input.value.focus();
+//         }
+//     }
+// });
+// defineExpose({focus: () => input.value.focus()});
 </script>
 
 <template>

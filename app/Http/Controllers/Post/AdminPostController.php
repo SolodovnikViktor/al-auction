@@ -8,15 +8,16 @@ use App\Http\Resources\PostResource;
 use App\Models\BodyType;
 use App\Models\Color;
 use App\Models\Drive;
-use App\Models\Image;
+use App\Models\Photo;
 use App\Models\Post;
-use App\Models\TemporaryFile;
+use App\Models\PhotoPosition;
 use App\Models\Transmission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
+use Intervention\Image\Laravel\Facades\Image;
 use function Laravel\Prompts\error;
 
 class AdminPostController extends Controller
@@ -25,7 +26,6 @@ class AdminPostController extends Controller
     {
         $postsPaginate = Post::with('user', 'images', 'imagesPath')->paginate(15);
         $posts = PostResource::collection(Post::paginate(15));
-
         return Inertia::render('Admin/Index', [
             'posts' => $posts,
             'postsPaginate' => $postsPaginate,
@@ -34,21 +34,15 @@ class AdminPostController extends Controller
 
     public function create(): Response
     {
-//        $userId = auth()->id();
-//        $filePositionId = DB::table('temporary_reorder')->where('userId', $userId)->select('position')->first();
         $colors = Color::all()->select('id', 'title');
         $drives = Drive::all()->select('id', 'title');
         $bodyTypes = BodyType::all()->select('id', 'title');
         $transmissions = Transmission::all()->select('id', 'title');
-//        $tmpImages = TemporaryFile::where('id_user', $userId)->get();
-
         return Inertia::render('Admin/Create', [
             'colors' => $colors,
             'drives' => $drives,
             'bodyTypes' => $bodyTypes,
             'transmissions' => $transmissions,
-//            'tmpImages' => $tmpImages,
-//            'filePositionId' => $filePositionId,
         ]);
     }
 
@@ -57,35 +51,37 @@ class AdminPostController extends Controller
         $userId = auth()->id();
         $validated = $request->validated();
         $post = Post::create($validated);
+        $photoPosition = PhotoPosition::where('user_id', $userId)->where('post_id', null)->firstOrFail();
+        $photoPositionArr = explode(',', $photoPosition->position);
+
+        //
         $imagePosition = '';
+        //
+        $photos = Photo::whereIn('id', $photoPositionArr)->get();
 
-        $temporaryImages = TemporaryFile::whereIn('id', $request->images_arr)->get();
-
-        foreach ($temporaryImages as $temporaryImage) {
-            $imageName = $temporaryImage->name;
+        foreach ($photos as $photo) {
+            $photoName = $photo->name;
             $folder = 'PostID-' . $post->id . '/' . uniqid('image-', true);
-            $pathTmp = $temporaryImage->folder . '/' . $imageName;
-            $pathNew = '/images/posts/' . $folder . '/' . $imageName;
-            $pathNewMin = '/images/posts/' . $folder . '/' . 'min_' . $imageName;
+            $pathTmp = $photo->folder . '/' . $photoName;
+            $pathNew = '/images/posts/' . $folder . '/' . $photoName;
+            $pathNewMin = '/images/posts/' . $folder . '/' . 'min_' . $photoName;
 
             if (Storage::copy($pathTmp, $pathNew)) {
-                $imageMin = \Intervention\Image\Laravel\Facades\Image::read(Storage::get($pathTmp))->scaleDown(
+                $photoMin = Image::read(Storage::get($pathTmp))->scaleDown(
                     300,
                     200
                 );
-                $imageMin->save('storage/' . $pathNewMin);
+                $photoMin->save('storage/' . $pathNewMin);
 
-                $image = Image::create([
+                $photo->update([
                     'post_id' => $post->id,
-                    'name' => $imageName,
                     'folder' => $folder,
                     'path' => '/storage' . $pathNew,
                     'path_min' => '/storage' . $pathNewMin,
-                    'size' => $temporaryImage->size,
                 ]);
 //                DB::table('temporary_reorder')->where('userId', $userId)->delete();
-                Storage::deleteDirectory($temporaryImage->folder);
-                $temporaryImage->delete();
+                Storage::deleteDirectory($photo->folder);
+                $photo->delete();
                 if ($imagePosition === '') {
                     $imagePosition = $image->id;
                 } else {
@@ -145,36 +141,36 @@ class AdminPostController extends Controller
 
 
         $imagePosition = $post->image_position;
-        $temporaryImages = TemporaryFile::whereIn('id', $request->images_arr)->get();
-        foreach ($temporaryImages as $temporaryImage) {
-            $imageName = $temporaryImage->name;
+        $photos = PhotoPosition::whereIn('id', $request->images_arr)->get();
+        foreach ($photos as $photo) {
+            $photoName = $photo->name;
             $folder = 'PostID-' . $post->id . '/' . uniqid('image-', true);
-            $pathTmp = $temporaryImage->folder . '/' . $imageName;
-            $pathNew = '/images/posts/' . $folder . '/' . $imageName;
-            $pathNewMin = '/images/posts/' . $folder . '/' . 'min_' . $imageName;
+            $pathTmp = $photo->folder . '/' . $photoName;
+            $pathNew = '/images/posts/' . $folder . '/' . $photoName;
+            $pathNewMin = '/images/posts/' . $folder . '/' . 'min_' . $photoName;
 
             if (Storage::copy($pathTmp, $pathNew)) {
-                $imageMin = \Intervention\Image\Laravel\Facades\Image::read(Storage::get($pathTmp))->scaleDown(
+                $photoMin = \Intervention\Image\Laravel\Facades\Image::read(Storage::get($pathTmp))->scaleDown(
                     300,
                     200
                 );
-                $imageMin->save('storage/' . $pathNewMin);
+                $photoMin->save('storage/' . $pathNewMin);
 
-                $image = Image::create([
+                $image = Photo::create([
                     'post_id' => $post->id,
-                    'name' => $imageName,
+                    'name' => $photoName,
                     'folder' => $folder,
                     'path' => '/storage' . $pathNew,
                     'path_min' => '/storage' . $pathNewMin,
-                    'size' => $temporaryImage->size,
+                    'size' => $photo->size,
                 ]);
 //                DB::table('temporary_reorder')->where('userId', $userId)->delete();
-                Storage::deleteDirectory($temporaryImage->folder);
-                $temporaryImage->delete();
+                Storage::deleteDirectory($photo->folder);
+                $photo->delete();
                 if ($imagePosition === '') {
                     $imagePosition = $image->id;
                 } else {
-                    $imagePosition = str_replace($temporaryImage->id, $image->id, $imagePosition);
+                    $imagePosition = str_replace($photo->id, $image->id, $imagePosition);
                 }
             } else {
 //                return response()->json(['errors' => 'Error msg'], 404);
@@ -193,7 +189,7 @@ class AdminPostController extends Controller
 
     public function destroy(Post $post)
     {
-        $images = Image::where('post_id', $post->id)->get();
+        $images = Photo::where('post_id', $post->id)->get();
         foreach ($images as $image) {
             Storage::deleteDirectory($image->folder);
             $image->delete();

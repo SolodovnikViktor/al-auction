@@ -23,7 +23,7 @@ const props = defineProps({
     transmissions: Array,
     user: Object,
     // tmpImages: Array,
-    // imagePosition: {
+    // photoPosition: {
     //     type: Object,
     //     default: [],
     // },
@@ -32,7 +32,7 @@ const props = defineProps({
 const FilePond = vueFilePond(FilePondPluginFileValidateType, FilePondPluginImagePreview, FilePondPluginFilePoster, FilePondPluginFileRename);
 
 const formInputs = [
-    {title: "title", value: 'Заголовок', type: "text", autofocus: true},
+    {title: "title", value: 'Заголовок', type: "text", placeholder: 'Краткое описание'},
     {title: "vin", value: 'VIN', type: "text"},
     {title: "brand", value: 'Бренд', type: "text"},
     {title: "model", value: 'Модель', type: "text"},
@@ -50,8 +50,6 @@ const formInputs = [
 ];
 
 const form = useForm({
-    image_position: '',
-    image_preview: '',
     title: '',
     vin: '',
     brand: '',
@@ -67,14 +65,15 @@ const form = useForm({
     horsepower: '',
     price: '',
     description: '',
-    images_arr: [],
+    // photos_arr: [],
 });
 
 let myFiles = [];
 let key = ref(0);
-let errorLoadFiles = ref(false);
+let errorLoadFiles = ref('');
 let errorMessage = ref(false);
-let imagePosition = ''
+
+// let photoPosition = ''
 
 function getImages() {
     axios.get('/admin/tmp-restore')
@@ -91,62 +90,58 @@ function getImages() {
         });
 }
 
-function pondRestore(images) {
+function pondRestore(photos) {
     myFiles = []
-    form.images_arr = []
-    imagePosition = ''
-    errorLoadFiles.value = false;
+    form.photos_arr = []
+    // photoPosition = ''
+    errorLoadFiles.value = '';
 
-    console.log(images)
+    console.log(photos)
 
-    for (const image of images) {
-        form.images_arr.push(image.id.toString())
-        if (imagePosition === '') {
-            imagePosition = imagePosition + image.id
-        } else {
-            imagePosition = imagePosition + ',' + image.id
-        }
+    for (const photo of photos) {
+        // form.photos_arr.push(photo.id.toString())
+        // if (photoPosition === '') {
+        //     photoPosition = photoPosition + photo.id
+        // } else {
+        //     photoPosition = photoPosition + ',' + photo.id
+        // }
         myFiles.push({
-            source: image.path,
+            source: photo.path,
             options: {
                 type: 'limbo',
                 // type: 'local',
                 file: {
-                    name: image.name,
-                    size: image.size,
+                    name: photo.name,
+                    size: photo.size,
                     type: 'webp',
-                    id: image.id,
+                    id: photo.id,
                 },
                 metadata: {
-                    poster: image.path
+                    poster: photo.path
                 }
             }
         });
     }
-    console.log('images_arr', form.images_arr)
-    console.log('image_position', imagePosition)
     key.value = 1
     key.value = 0
 }
 
 // Перетаскивание
 function reorderFiles(files, origin, target) {
-    form.images_arr = []
-    imagePosition = ''
+    // form.photos_arr = []
+    let photoPosition = ''
     files.forEach(function (file) {
-        form.images_arr.push(file.file.id.toString())
-        if (imagePosition === '') {
-            imagePosition = imagePosition + file.file.id
+        // form.photos_arr.push(file.file.id.toString())
+        if (photoPosition === '') {
+            photoPosition = photoPosition + file.file.id
         } else {
-            imagePosition = imagePosition + ',' + file.file.id
+            photoPosition = photoPosition + ',' + file.file.id
         }
     })
-    console.log(imagePosition)
-    console.log(form.images_arr)
+    console.log(photoPosition)
+    console.log(form.photos_arr)
 
-    axios.post('/admin/tmp-reorder', imagePosition)
-        .then((response) => {
-        })
+    axios.post('/admin/tmp-reorder', photoPosition)
         .catch((error) => {
             console.log(error);
         });
@@ -154,7 +149,7 @@ function reorderFiles(files, origin, target) {
 
 // Загружено 1 фото
 function handleFilePondLoad(id) {
-    // form.images_arr.push(id)
+    // form.photos_arr.push(id)
     // console.log('load')
     // router.visit('create', {only: ['tmpImages'],})
     // router.reload({only: ['tmpImages']})
@@ -163,17 +158,17 @@ function handleFilePondLoad(id) {
 
 // Удалить фото
 function handleFilePondRevert(id, load, error) {
-    form.images_arr = form.images_arr.filter((image) => image !== id);
-    errorLoadFiles.value = false;
+    // form.photos_arr = form.photos_arr.filter((photo) => photo !== id);
+    errorLoadFiles.value = '';
     console.log(id)
-    console.log(imagePosition)
-    imagePosition = imagePosition.replace(id, '');
+    // console.log(photoPosition)
+    // photoPosition = photoPosition.replace(id, '');
+    //
+    // photoPosition = photoPosition.replace(/(^[,\s]+)|([,\s]+$)/g, '');
+    // photoPosition = photoPosition.replace(',,', ',');
+    // console.log(photoPosition)
 
-    imagePosition = imagePosition.replace(/(^[,\s]+)|([,\s]+$)/g, '');
-    imagePosition = imagePosition.replace(',,', ',');
-    console.log(imagePosition)
-
-    // imagePosition = imagePosition.replace(',' + id, '');
+    // photoPosition = photoPosition.replace(',' + id, '');
 }
 
 // Переименовать
@@ -198,7 +193,7 @@ function handleFilePondSuccess() {
     getImages()
 }
 
-//Ошибка  при загрузки
+//Ошибка  при загрузке
 function FilePondErrorLoad(error, files) {
     // errorLoadFiles.value = error
     console.log(error)
@@ -228,12 +223,8 @@ function FilePondErrorLoad(error, files) {
 
                              forceRevert - Установите значение true, чтобы потребовать успешного возврата файла перед продолжением
                               -->
-                        <div v-if="errorLoadFiles">
-                            <p>Ошибка загрузки файла {{ errorLoadFiles }}</p>
-                        </div>
-
                         <file-pond
-                            name="imageFilePond"
+                            name="photoFilePond"
                             ref="pond"
                             :key
                             class-name="my-pond"
@@ -286,7 +277,7 @@ function FilePondErrorLoad(error, files) {
                             v-on:reorderfiles="reorderFiles"
                             v-on:processfiles="handleFilePondSuccess"
                         />
-                        <InputError class="mt-2" :message="form.errors.images_arr"/>
+                        <InputError class="mt-2" :message="errorLoadFiles"/>
                     </div>
                     <div v-for="(input, index) in formInputs" :key=index
                          class=" p-1 sm:col-span-3 lg:col-span-2 text-gray-900">
@@ -379,9 +370,9 @@ function FilePondErrorLoad(error, files) {
 <!--</div>-->
 
 
-// const image = new FormData();
+// const photo = new FormData();
 // files.forEach(file => {
-//     image.append('image[]', file)
+//     photo.append('photo[]', file)
 // })
 // form.title = 'form.title';
 

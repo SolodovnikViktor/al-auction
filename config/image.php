@@ -4,15 +4,15 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Image Driver
+    | Photo Driver
     |--------------------------------------------------------------------------
     |
-    | Intervention Image supports “GD Library” and “Imagick” to process images
+    | Intervention Photo supports “GD Library” and “Imagick” to process images
     | internally. Depending on your PHP setup, you can choose one of them.
     |
     | Included options:
-    |   - \Intervention\Image\Drivers\Gd\Driver::class
-    |   - \Intervention\Image\Drivers\Imagick\Driver::class
+    |   - \Intervention\Photo\Drivers\Gd\Driver::class
+    |   - \Intervention\Photo\Drivers\Imagick\Driver::class
     |
     */
 
@@ -23,7 +23,7 @@ return [
     | Configuration Options
     |--------------------------------------------------------------------------
     |
-    | These options control the behavior of Intervention Image.
+    | These options control the behavior of Intervention Photo.
     |
     | - "autoOrientation" controls whether an imported image should be
     |    automatically rotated according to any existing Exif data.

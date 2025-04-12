@@ -40,12 +40,12 @@ class Post extends Model
 
     public function imagesPath(): HasMany
     {
-        return $this->hasMany(Image::class)->select(['id', 'path', 'post_id']);
+        return $this->hasMany(Photo::class)->select(['id', 'path', 'post_id']);
     }
 
     public function images(): HasMany
     {
-        return $this->hasMany(Image::class);
+        return $this->hasMany(Photo::class);
     }
 
     public function bets(): HasMany

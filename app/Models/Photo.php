@@ -5,10 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Image extends Model
+class Photo extends Model
 {
-    protected $table = 'images';
-    protected $fillable = ['post_id', 'name', 'folder', 'path', 'size', 'path_min'];
+    protected $table = 'photos';
+    protected $fillable = [
+        'post_id',
+        'user_id',
+        'name',
+        'folder',
+        'path',
+        'path_min',
+        'size',
+    ];
 
     public function post(): BelongsTo
     {
