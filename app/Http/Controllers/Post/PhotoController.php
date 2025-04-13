@@ -21,7 +21,7 @@ class PhotoController extends Controller
         if ($request->hasFile('photoFilePond')) {
             $photo = $request->file('photoFilePond');
             $filename = Str::random() . '.webp';
-            $folder = '/images/tmp/' . 'UserID-' . $userId . '/' . uniqid('image-', true);
+            $folder = '/images/tmp/UserID-' . $userId . '/' . uniqid('image-', true);
             $photoTmp = Image::read($photo)->scaleDown(1200, 900)->toWebp(70);
             if (Storage::put($folder . '/' . $filename, $photoTmp)) {
                 $size = Storage::size($folder . '/' . $filename);
@@ -32,17 +32,21 @@ class PhotoController extends Controller
                     'path' => '/storage' . $folder . '/' . $filename,
                     'size' => $size,
                 ]);
-
-                if ($photoPosition = PhotoPosition::where('user_id', $userId)->firstOrFail()) {
+                if ($photoPosition = PhotoPosition::where('user_id', $userId)->where('post_id', null)
+                    ->whereNot('position', '')->first()) {
                     $photoPosition->update([
                         'position' => $photoPosition->position . ',' . $photo->id,
                     ]);
+                } elseif ($photoPosition = PhotoPosition::where('user_id', $userId)->where('post_id', null)
+                    ->where('position', '')->first()) {
+                    $photoPosition->update([
+                        'position' => $photoPosition->position . $photo->id,
+                    ]);
                 } else {
                     PhotoPosition::create([
-                            'user_id' => $userId,
-                            'position' => $photo->id,
-                        ]
-                    );
+                        'user_id' => $userId,
+                        'position' => $photo->id,
+                    ]);
                 }
                 return $photo->id;
             }
@@ -57,9 +61,13 @@ class PhotoController extends Controller
     public function restore()
     {
         $userId = auth()->id();
-        $photoPosition = PhotoPosition::where('user_id', $userId)->where('post_id', null)->firstOrFail();
-        $photoPositionArr = explode(',', $photoPosition->position);
-        return Photo::whereIn('id', $photoPositionArr)->orderByRaw("FIELD (id, $photoPosition->position) ASC")->get();
+        if ($photoPosition = PhotoPosition::where('user_id', $userId)->where('post_id', null)
+            ->whereNot('position', '')->first()) {
+            $photoPositionArr = explode(',', $photoPosition->position);
+            return Photo::whereIn('id', $photoPositionArr)->orderByRaw("FIELD (id, $photoPosition->position) ASC")->get(
+            );
+        }
+        return [];
     }
 
     public function reorder(Request $request)

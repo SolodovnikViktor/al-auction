@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Http\Resources\User\UserResource;
 use App\Models\Photo;
+use App\Models\PhotoPosition;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -11,16 +12,14 @@ class PostResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        $positionArr = explode(',', $this->image_position);
-        $positionStr = $this->image_position;
-        if ($this->image_position !== null && $this->image_position !== '') {
-//            dd($this->image_position);
-            $image = Photo::whereIn('id', $positionArr)->orderByRaw("FIELD (id, $positionStr) ASC")->get();
+        if ($positionStr = PhotoPosition::where('post_id', $this->id)->whereNot('position', '')->first()) {
+            $positionArr = explode(',', $positionStr->position);
+            $photos = (Photo::whereIn('id', $positionArr)->whereNot('path_min', null)->orderByRaw(
+                "FIELD (id, $positionStr->position) ASC"
+            )->get() ?: []);
         } else {
-            $image = Photo::whereIn('id', $positionArr)->get();
+            $photos = [];
         }
-
-
         return [
             'id' => $this->id,
             'image_position' => $this->image_position,
@@ -43,11 +42,8 @@ class PostResource extends JsonResource
             'description' => $this->description,
             'user_id' => $this->user_id,
             'is_published' => $this->is_published,
-
-//            'images' => ImageResource::collection($this->images),
-            'images' => ImageResource::collection($image),
-//            'images' => Photo::whereIn('id', $positionArr)->get(),
-
+//            'photos' => PhotoResource::collection($this->photos),
+            'photos' => PhotoResource::collection($photos),
             'bets' => BetResource::collection($this->bets),
             'user' => UserResource::make($this->user),
 //            'userWhenLoaded' => UserResource::make($this->whenLoaded('user')),

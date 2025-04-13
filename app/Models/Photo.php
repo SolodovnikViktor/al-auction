@@ -23,8 +23,13 @@ class Photo extends Model
         return $this->belongsTo(Post::class);
     }
 
-    public function getImageUrlAttribute(): string
+    public function getPhotoUrlAttribute(): string
     {
         return url($this->attributes['path']);
+    }
+
+    public function getPhotoMinUrlAttribute(): string
+    {
+        return url($this->attributes['path_min']);
     }
 }

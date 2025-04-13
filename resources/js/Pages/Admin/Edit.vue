@@ -49,8 +49,6 @@ const formInputs = [
 ];
 
 const form = useForm({
-    image_position: props.post.image_position,
-    image_preview: props.post.image_preview,
     title: props.post.title,
     vin: props.post.vin,
     brand: props.post.brand,
@@ -67,7 +65,6 @@ const form = useForm({
     price: props.post.price,
     description: props.post.description,
     is_published: props.post.is_published,
-    images_arr: [],
 });
 
 let myFiles = []
@@ -75,10 +72,7 @@ let key = ref(0);
 let errorLoadFiles = ref('');
 let errorMessage = ref('');
 
-// let filePositionId = props.filePositionId.position
-// console.log(filePositionId)
-
-function getImages() {
+function getPhotos() {
     axios.get(`/admin/post/tmp-restore/${props.post.id}`)
         .then(response => {
             pondRestore(response.data)
@@ -91,40 +85,36 @@ function getImages() {
         });
 }
 
-function pondRestore(images) {
+function pondRestore(photos) {
     myFiles = []
-    form.images_arr = []
     errorLoadFiles.value = '';
 
-    console.log(images)
+    console.log(photos)
 
-    for (const image of images) {
-        form.images_arr.push(image.id.toString())
+    for (const photo of photos) {
         myFiles.push({
-            source: image.path,
+            source: photo.path,
             options: {
                 type: 'limbo',
                 // type: 'local',
                 file: {
-                    name: image.name,
-                    size: image.size,
+                    name: photo.name,
+                    size: photo.size,
                     type: 'webp',
-                    id: image.id,
+                    id: photo.id,
                 },
                 metadata: {
-                    poster: image.path
+                    poster: photo.path
                 }
             }
         });
     }
-    console.log(form.images_arr)
     key.value = 1
     key.value = 0
 }
 
 // Загружено 1 фото
 function handleFilePondLoad(id) {
-    // form.images_arr.push(id)
     // console.log('load')
     // router.visit('create', {only: ['tmpImages'],})
     // router.reload({only: ['tmpImages']})
@@ -133,8 +123,7 @@ function handleFilePondLoad(id) {
 
 // Удалить фото
 function handleFilePondRevert(id, load, error) {
-    form.images_arr = form.images_arr.filter((image) => image !== id);
-    errorLoadFiles.value = false;
+    errorLoadFiles.value = '';
 
     // filePositionId = filePositionId.replace(',' + id, '');
 }
@@ -152,10 +141,10 @@ function activateFile(i) {
 
 // Перетаскивание
 function reorderFiles(files, origin, target) {
-    form.images_arr = []
+
     let filePositionId = ''
     files.forEach(function (file) {
-        form.images_arr.push(file.file.id.toString())
+
         if (filePositionId === '') {
             filePositionId = filePositionId + file.file.id
         } else {
@@ -164,7 +153,6 @@ function reorderFiles(files, origin, target) {
 
     })
     console.log(filePositionId)
-    console.log(form.images_arr)
 
     axios.post(`/admin/post/tmp-reorder/${props.post.id}`, filePositionId)
         .then((response) => {
@@ -176,12 +164,12 @@ function reorderFiles(files, origin, target) {
 
 // Вызывается по готовности FilePond
 function handleFilePondInit() {
-    getImages()
+    getPhotos()
 }
 
 // Вызывается, когда все файлы в списке были обработаны
 function handleFilePondSuccess() {
-    getImages()
+    getPhotos()
 }
 
 //Ошибка  при загрузки
@@ -280,7 +268,7 @@ function updatePublished() {
                              forceRevert - Установите значение true, чтобы потребовать успешного возврата файла перед продолжением
                               -->
                         <file-pond
-                            name="imageFilePond"
+                            name="photoFilePond"
                             ref="pond"
                             :key
                             class-name="my-pond"
@@ -332,9 +320,8 @@ function updatePublished() {
                             v-on:activatefile="activateFile"
                             v-on:reorderfiles="reorderFiles"
                             v-on:processfiles="handleFilePondSuccess"
-
                         />
-                        <InputError class="mt-2" :message="form.errors.images_arr"/>
+                        <InputError class="mt-2" :message="errorLoadFiles"/>
                     </div>
                     <div v-for="(input, index) in formInputs" :key=index
                          class=" p-1 sm:col-span-3 lg:col-span-2 text-gray-900">

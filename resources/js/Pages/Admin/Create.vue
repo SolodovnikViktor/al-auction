@@ -65,7 +65,6 @@ const form = useForm({
     horsepower: '',
     price: '',
     description: '',
-    // photos_arr: [],
 });
 
 let myFiles = [];
@@ -73,9 +72,7 @@ let key = ref(0);
 let errorLoadFiles = ref('');
 let errorMessage = ref(false);
 
-// let photoPosition = ''
-
-function getImages() {
+function getPhotos() {
     axios.get('/admin/tmp-restore')
         .then(response => {
             pondRestore(response.data)
@@ -84,16 +81,12 @@ function getImages() {
             errorMessage = error.response.data.message;
             console.log(error.response.data.message);
             console.log(error.response.data);
-            console.log(error.response);
             console.log(error.message);
-            console.log(error);
         });
 }
 
 function pondRestore(photos) {
     myFiles = []
-    form.photos_arr = []
-    // photoPosition = ''
     errorLoadFiles.value = '';
 
     console.log(photos)
@@ -129,6 +122,7 @@ function pondRestore(photos) {
 // Перетаскивание
 function reorderFiles(files, origin, target) {
     // form.photos_arr = []
+    console.log(files)
     let photoPosition = ''
     files.forEach(function (file) {
         // form.photos_arr.push(file.file.id.toString())
@@ -139,7 +133,6 @@ function reorderFiles(files, origin, target) {
         }
     })
     console.log(photoPosition)
-    console.log(form.photos_arr)
 
     axios.post('/admin/tmp-reorder', photoPosition)
         .catch((error) => {
@@ -185,12 +178,12 @@ function activateFile(i) {
 
 // Вызывается по готовности FilePond
 function handleFilePondInit() {
-    getImages()
+    getPhotos()
 }
 
 // Вызывается, когда все файлы в списке были обработаны
 function handleFilePondSuccess() {
-    getImages()
+    getPhotos()
 }
 
 //Ошибка  при загрузке
