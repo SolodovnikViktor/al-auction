@@ -44,39 +44,37 @@ if (props.id === 'transmission_id') {
 </script>
 
 <template>
-    <div>
-        <input v-if="type === 'text'"
-               class="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-               v-model="model"
-               :type
-               :id
-               :autocomplete="id"
-               ref="input"
-               :placeholder
-        />
-        <input v-if="type === 'number'"
-               class="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-               v-model="model"
-               :type
-               :inputmode
-               min='0'
-               step="0.01"
-               :id
-               :autocomplete="id"
-               ref="input"
-        />
-        <textarea v-if="type === 'textarea'"
-                  class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                  v-model="model"
-                  rows="5"
-                  :id
-                  ref="textarea"
-        />
-        <select v-else-if="type === 'select'"
-                class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                v-model="model"
-                :id>
-            <option v-for="option in options" :value="option.id">{{ option.title }}</option>
-        </select>
-    </div>
+    <input v-if="type === 'text'"
+           class="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+           v-model="model"
+           :type
+           :id
+           :autocomplete="id"
+           ref="input"
+           :placeholder
+    />
+    <input v-if="type === 'number'"
+           class="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+           v-model="model"
+           :type
+           :inputmode
+           min='0'
+           step="0.01"
+           :id
+           :autocomplete="id"
+           ref="input"
+    />
+    <textarea v-if="type === 'textarea'"
+              class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              v-model="model"
+              rows="5"
+              :id
+              ref="textarea"
+    />
+    <select v-else-if="type === 'select'"
+            class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            v-model="model"
+            :id>
+        <option v-for="option in options" :value="option.id">{{ option.title }}</option>
+    </select>
 </template>

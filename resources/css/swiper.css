@@ -6,14 +6,17 @@
 
     border-radius: 1rem;
 }
+
 .swiper-wrapper {
     display: flex;
 }
+
 .swiper-slide {
     flex-shrink: 0;
     padding-bottom: 52.8%;
     position: relative;
 }
+
 .swiper-slide img {
     position: absolute;
     top: 0;
@@ -25,15 +28,17 @@
 
     border-radius: 1rem;
 }
+
 .swiper-pagination {
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
-    padding:  0.625rem 15px 0.625rem;
+    padding: 0.625rem 15px 0.625rem;
     display: flex;
     gap: 0.3125rem;
 }
+
 .swiper-pagination-bullet {
     height: 0.3125rem;
     flex: 1 1 auto;
@@ -42,9 +47,11 @@
 
     border-radius: 2rem;
 }
+
 .swiper-pagination-bullet-active {
     background-color: rgb(100, 200, 200);
 }
+
 .swiper-pagination-lock {
     display: none;
 }

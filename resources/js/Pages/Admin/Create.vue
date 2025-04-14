@@ -175,7 +175,6 @@ function activateFile(i) {
     console.log(i.file)
 }
 
-
 // Вызывается по готовности FilePond
 function handleFilePondInit() {
     getPhotos()
@@ -212,8 +211,9 @@ function FilePondErrorLoad(error, files) {
                         <!-- dropOnPage - FilePond будет перехватывать все файлы, размещенные на веб-странице
                              allow-reorder - Разрешить пользователям изменять порядок файлов с помощью перетаскивания.                    Обратите внимание, что это работает только в режиме одного столбца.
                               Это также работает только в браузерах, поддерживающих события указателя.
-                             itemInsertLocation - Задайте 'after' для добавления файлов в конец списка (при перетаскивании в начало списка или добавлении с помощью поиска или вставки), задайте 'before' для добавления файлов в начало списка.
-
+                             itemInsertLocation - Задайте 'after' для добавления файлов в конец списка (при перетаскивании в
+                              начало списка или добавлении с помощью поиска или вставки), задайте 'before' для добавления файлов в
+                              начало списка.
                              forceRevert - Установите значение true, чтобы потребовать успешного возврата файла перед продолжением
                               -->
                         <file-pond
@@ -239,14 +239,11 @@ function FilePondErrorLoad(error, files) {
                             accepted-file-types="image/jpeg, image/png"
                             allow-multiple="true"
                             checkValidity="true"
-
                             imagePreviewMaxHeight="230"
                             filePosterMaxHeight="230"
                             maxFiles="40"
-
                             allowFileRename="true"
                             :fileRenameFunction="fileRenameFunction"
-
                             :server="{
                                 url:'',
                                 timeout: 120000,

@@ -3,6 +3,12 @@ import {Head, Link} from '@inertiajs/vue3';
 import IndexLayout from "@/Layouts/IndexLayout.vue";
 import AdminNav from "@/Components/Admin/AdminNav.vue";
 
+import {Navigation, Pagination} from 'swiper/modules';
+import {Swiper, SwiperSlide} from 'swiper/vue';
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import {onMounted} from "vue";
+
+const modules = [Navigation, Pagination];
 const props = defineProps(
     ['posts', 'postsPaginate']
 );
@@ -11,19 +17,43 @@ console.log(posts)
 console.log(props.posts)
 console.log(props.postsPaginate)
 
-import {ref} from 'vue'
-import Slider from "@/Components/Options/Slider.vue";
+// import '@/Js/swiper.js';
 
-const SIZE = 10;
+function sliderMouseSlideInit() {
+    console.log("sliderMouseSlideInit");
+    document.addEventListener('mousemove', function (e) {
 
-const currentKey = ref(0);
+        const targetElement = e.target;
+        if (targetElement.closest('[data-mousemove-swipe]')) {
+            const sliderElement = targetElement.closest('[data-mousemove-swipe]');
+            console.log('hhhh', sliderElement)
+            const sliderItem = swiper[getIndex(sliderElement)];
+            const sliderLength = sliderItem.slides.length;
+            if (sliderLength > 0) {
+                const sliderWidth = sliderItem.width;
+                const sliderPath = Math.round(sliderWidth / sliderLength);
+                const sliderMousePos = e.clientX - sliderElement.offsetLeft;
+                const sliderSlide = Math.floor(sliderMousePos / sliderPath);
+                sliderItem.slideTo(sliderSlide);
+            }
+        }
+    });
 
-function onMouseLeave() {
+    function getIndex(el) {
+        return Array.from(el.parentNode.children).indexOf(el);
+    }
 }
 
-function onMouseEnter(key) {
-    currentKey.value = key;
+if (document.querySelector('[data-mousemove-swipe]')) {
+    console.log("13");
+    sliderMouseSlideInit();
 }
+onMounted(() => {
+    console.log(`компонент теперь примонтирован.`)
+    sliderMouseSlideInit();
+
+})
+
 </script>
 
 <template>
@@ -56,30 +86,19 @@ function onMouseEnter(key) {
                         </div>
                     </div>
                     <Link :href="route('admin-post.show', post.id)">
-                        <div
-                            v-if="post.photos.length > 0"
-                            class="slider">
-                            <div class="slider__element slider__element--main active">6</div>
-                            <div class="slider__elements">
-                                <div v-for="key in SIZE" :key="key" class="slider__element"
-                                     :class="{ active: key === currentKey }">{{
-                                        key
-                                    }}
-                                </div>
-                            </div>
-                            <div class="slider__ghosts">
-                                <div
-                                    v-for="key in SIZE"
-                                    :key="key"
-                                    @mouseenter="onMouseEnter(key)"
-                                    @mouseleave="onMouseLeave"
-                                    class="slider__ghost"
-                                    :class="{ active: key === currentKey }"
-                                    :style="{width: 100 / SIZE + '%'}">
-                                </div>
-                            </div>
-                        </div>
 
+                        <swiper
+                            data-mousemove-swipe
+                            v-if="post.photos.length > 0"
+                            :pagination="{clickable: true}"
+                            :space-between="50"
+                            :modules="modules"
+                            class="mySwiper swiper">
+                            <swiper-slide v-for="photo in post.photos" :key="photo.id" class="hover:grow">
+                                <img :src="photo.pathMin" :alt="photo.name">
+                            </swiper-slide>
+
+                        </swiper>
                         <img
                             v-else
                             src="/storage/images/service/not_photo.jpg"
@@ -104,68 +123,5 @@ function onMouseEnter(key) {
 
 .hover\:grow:hover {
     transform: scale(1.02);
-}
-
-.slider {
-    height: 300px;
-    width: 300px;
-    background-color: red;
-    position: relative;
-    display: flex;
-}
-
-.slider__elements {
-    display: none;
-}
-
-.slider:hover .slider__elements {
-    display: block;
-}
-
-.slider__element {
-    color: #fff;
-    font-size: 30px;
-    height: 100%;
-    width: 100%;
-    display: none;
-    position: absolute;
-    top: 0;
-    left: 0;
-    align-items: center;
-    justify-content: center;
-}
-
-.slider__element.slider__element--main {
-    display: flex;
-}
-
-.slider:hover .slider__element.slider__element--main {
-    display: none;
-}
-
-.slider__element.active {
-    display: flex;
-}
-
-.slider:hover .slider__ghosts {
-    display: flex;
-}
-
-.slider__ghosts {
-    display: flex;
-    padding: 0 5px;
-    width: 100%;
-    gap: 5px;
-    display: none;
-}
-
-.slider__ghost {
-    position: relative;
-    border-bottom: 4px solid rgba(255, 255, 255, .5);
-    height: calc(100% - 8px);
-}
-
-.slider__ghost.active {
-    border-bottom-color: #00ffff;
 }
 </style>
