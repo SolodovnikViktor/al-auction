@@ -1,7 +1,7 @@
 import '../css/app.css';
 import './bootstrap';
 
-import '../css/swiper.css';
+// import '../css/swiper.css';
 
 import {createInertiaApp} from '@inertiajs/vue3';
 import {resolvePageComponent} from 'laravel-vite-plugin/inertia-helpers';

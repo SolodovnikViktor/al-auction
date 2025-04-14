@@ -2,6 +2,7 @@
 import {Head, Link} from '@inertiajs/vue3';
 import IndexLayout from "@/Layouts/IndexLayout.vue";
 import AdminNav from "@/Components/Admin/AdminNav.vue";
+import {ref} from 'vue'
 
 const props = defineProps(
     ['posts', 'postsPaginate']
@@ -11,19 +12,20 @@ console.log(posts)
 console.log(props.posts)
 console.log(props.postsPaginate)
 
-import {ref} from 'vue'
-import Slider from "@/Components/Options/Slider.vue";
-
-const SIZE = 10;
-
 const currentKey = ref(0);
+console.log(posts[0].photos[0].id)
 
 function onMouseLeave() {
+    // currentKey.value = 0;
+    console.log(currentKey.value)
 }
 
 function onMouseEnter(key) {
     currentKey.value = key;
+    console.log(currentKey.value);
 }
+
+
 </script>
 
 <template>
@@ -39,7 +41,6 @@ function onMouseEnter(key) {
                 Вы не добавили машины!
             </div>
             <div class="grid grid-cols-12 gap-4 pb-4 mb-4 border-b border-gray-200">
-
                 <div v-for="post in posts"
                      class="overflow-hidden col-span-12 sm:col-span-6 lg:col-span-3 text-gray-900">
                     <div class="flex relative justify-between">
@@ -57,25 +58,29 @@ function onMouseEnter(key) {
                     </div>
                     <Link :href="route('admin-post.show', post.id)">
                         <div
+                            @mouseleave="onMouseLeave"
                             v-if="post.photos.length > 0"
                             class="slider">
-                            <div class="slider__element slider__element--main active">6</div>
+
+                            <img class="slider__element slider__element--main active"
+                                 :src="post.photos[0].path" :alt="post.photos[0].name">
+
                             <div class="slider__elements">
-                                <div v-for="key in SIZE" :key="key" class="slider__element"
-                                     :class="{ active: key === currentKey }">{{
-                                        key
-                                    }}
-                                </div>
+                                <template v-for="photo in post.photos" :key="photo.id">
+                                    <img class="slider__element"
+                                         :class="{ active: photo.id === currentKey  }"
+                                         :src="photo.path" :alt="photo.name">
+                                </template>
                             </div>
                             <div class="slider__ghosts">
                                 <div
-                                    v-for="key in SIZE"
-                                    :key="key"
-                                    @mouseenter="onMouseEnter(key)"
-                                    @mouseleave="onMouseLeave"
-                                    class="slider__ghost"
-                                    :class="{ active: key === currentKey }"
-                                    :style="{width: 100 / SIZE + '%'}">
+                                    v-for="key in post.photos" :key="key.id"
+                                    @mouseenter.prevent="onMouseEnter(key.id)"
+
+                                    class="slider__ghost text-cyan-50"
+                                    :class="{active: key.id === currentKey || 0 === currentKey && key.id === post.photos[0].id}"
+                                    :style="{width: 100 / post.photos.length + '%'}">
+                                    {{ key.id }}{{ currentKey }}
                                 </div>
                             </div>
                         </div>
@@ -107,11 +112,12 @@ function onMouseEnter(key) {
 }
 
 .slider {
+    max-width: 50rem;
     height: 300px;
-    width: 300px;
-    background-color: red;
     position: relative;
     display: flex;
+    justify-content: center;
+
 }
 
 .slider__elements {
@@ -132,37 +138,32 @@ function onMouseEnter(key) {
     top: 0;
     left: 0;
     align-items: center;
-    justify-content: center;
 }
 
 .slider__element.slider__element--main {
     display: flex;
 }
 
-.slider:hover .slider__element.slider__element--main {
-    display: none;
-}
 
 .slider__element.active {
     display: flex;
 }
 
-.slider:hover .slider__ghosts {
-    display: flex;
-}
-
 .slider__ghosts {
     display: flex;
-    padding: 0 5px;
-    width: 100%;
+
+    width: 90%;
     gap: 5px;
-    display: none;
 }
 
 .slider__ghost {
     position: relative;
     border-bottom: 4px solid rgba(255, 255, 255, .5);
-    height: calc(100% - 8px);
+    height: calc(100% - 5px);
+}
+
+.slider__ghost:hover .slider__element.slider__element--main {
+    display: none;
 }
 
 .slider__ghost.active {

@@ -36,7 +36,8 @@ function onMouseEnter(key) {
         </div>
     </div>
 </template>
-<style>
+
+<style scoped>
 .slider {
     height: 300px;
     width: 300px;
