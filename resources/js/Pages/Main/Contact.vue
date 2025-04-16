@@ -1,7 +1,6 @@
 <script setup>
 import {Head} from "@inertiajs/vue3";
 import IndexLayout from "@/Layouts/IndexLayout.vue";
-import Slider from "@/Components/Options/Slider.vue";
 
 </script>
 
@@ -15,9 +14,7 @@ import Slider from "@/Components/Options/Slider.vue";
                 </h2>
                 <p>+7 (958) 555-32-36</p>
             </div>
-
         </template>
-
         <div class="py-6">
             <div class="mx-auto sm:px-6 lg:px-8">
                 <div
@@ -28,6 +25,5 @@ import Slider from "@/Components/Options/Slider.vue";
                 </div>
             </div>
         </div>
-        <Slider></Slider>
     </IndexLayout>
 </template>

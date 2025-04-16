@@ -3,6 +3,11 @@ import {Head, Link} from '@inertiajs/vue3';
 import IndexLayout from "@/Layouts/IndexLayout.vue";
 import AdminNav from "@/Components/Admin/AdminNav.vue";
 import {ref} from 'vue'
+import {Swiper, SwiperSlide} from "swiper/vue";
+import {Navigation, Pagination} from 'swiper/modules';
+
+
+const modules = [Navigation, Pagination];
 
 const props = defineProps(
     ['posts', 'postsPaginate']
@@ -12,16 +17,28 @@ console.log(posts)
 console.log(props.posts)
 console.log(props.postsPaginate)
 
-const currentKey = ref(0);
-console.log(posts[0].photos[0].id)
+const currentKey = ref([]);
+
+posts.forEach(function (post) {
+    currentKey.value.push({postId: post.id, photoId: post.photos[0].id})
+    console.log(currentKey.value)
+})
+
 
 function onMouseLeave() {
     // currentKey.value = 0;
-    console.log(currentKey.value)
+    // console.log(currentKey.value)
 }
 
-function onMouseEnter(key) {
-    currentKey.value = key;
+function onMouseEnter(photoId, postId) {
+    console.log(photoId, postId)
+    for (let object of currentKey.value) {
+        console.log(object)
+        if (object.postId === postId) {
+            object.photoId = photoId;
+        }
+    }
+
     console.log(currentKey.value);
 }
 
@@ -41,55 +58,63 @@ function onMouseEnter(key) {
                 Вы не добавили машины!
             </div>
             <div class="grid grid-cols-12 gap-4 pb-4 mb-4 border-b border-gray-200">
-                <div v-for="post in posts"
-                     class="overflow-hidden col-span-12 sm:col-span-6 lg:col-span-3 text-gray-900">
-                    <div class="flex relative justify-between">
-                        <div>
-                            <p>{{ post.brand }} {{ post.model }}</p>
-                            <p>Vin: {{ post.vin }}</p>
-                        </div>
-                        <!--class="inline-flex items-center rounded-md border border-transparent bg-gray-800 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900"-->
-                        <div>
-                            <Link :href="route('admin-post.edit', post.id)"
-                                  class="absolute top-0 right-0 bg-gray-200 rounded-md px-1 border-transparent border-b-2 transition focus:outline-none focus:border-indigo-400 hover:bg-gray-300">
-                                Редактировать
-                            </Link>
-                        </div>
-                    </div>
+                <div v-for="(post, postIndex) in posts"
+                     class="overflow-hidden col-span-12 sm:col-span-6 lg:col-span-4 text-gray-900">
                     <Link :href="route('admin-post.show', post.id)">
                         <div
                             @mouseleave="onMouseLeave"
                             v-if="post.photos.length > 0"
-                            class="slider">
-
-                            <img class="slider__element slider__element--main active"
-                                 :src="post.photos[0].path" :alt="post.photos[0].name">
-
+                            class="slider hidden sm:flex">
                             <div class="slider__elements">
                                 <template v-for="photo in post.photos" :key="photo.id">
                                     <img class="slider__element"
-                                         :class="{ active: photo.id === currentKey  }"
+                                         :class="{ active: currentKey[postIndex].photoId === photo.id  }"
                                          :src="photo.path" :alt="photo.name">
                                 </template>
                             </div>
                             <div class="slider__ghosts">
                                 <div
-                                    v-for="key in post.photos" :key="key.id"
-                                    @mouseenter.prevent="onMouseEnter(key.id)"
-
-                                    class="slider__ghost text-cyan-50"
-                                    :class="{active: key.id === currentKey || 0 === currentKey && key.id === post.photos[0].id}"
+                                    v-for="photo in post.photos" :key="photo.id"
+                                    @mouseenter.prevent="onMouseEnter(photo.id, post.id)"
+                                    class="slider__ghost"
+                                    :class="{active: currentKey[postIndex].photoId === photo.id}"
                                     :style="{width: 100 / post.photos.length + '%'}">
-                                    {{ key.id }}{{ currentKey }}
                                 </div>
                             </div>
                         </div>
-
+                        <swiper
+                            data-mousemove-swipe
+                            v-if="post.photos.length > 0"
+                            :pagination="{clickable: true}"
+                            :space-between="50"
+                            :modules="modules"
+                            class="mySwiper swiper sm:hidden">
+                            <swiper-slide v-for="photo in post.photos" :key="photo.id" class="hover:grow">
+                                <img :src="photo.pathMin" :alt="photo.name">
+                            </swiper-slide>
+                        </swiper>
                         <img
                             v-else
                             src="/storage/images/service/not_photo.jpg"
                             alt="Фото отсутствует">
                     </Link>
+                    <div class="flex relative justify-between pt-4 px-2 text-gray-500">
+                        <div>
+                            <h2 class="text-lg text-black">
+                                {{ post.brand }} {{ post.model }} <span class="text-gray-500">{{
+                                    post.year_release
+                                }}</span>
+                            </h2>
+                            <p>Vin: {{ post.vin }}</p>
+                        </div>
+                        <div>
+                            <Link :href="route('admin-post.edit', post.id)"
+                                  class="bg-gray-200 rounded-md px-1 border-transparent border-b-2 transition focus:outline-none focus:border-indigo-400 hover:bg-gray-300">
+                                Редактировать
+                            </Link>
+                        </div>
+                    </div>
+
                 </div>
             </div>
             <nav v-if="posts" class="flex justify-end">
@@ -112,27 +137,27 @@ function onMouseEnter(key) {
 }
 
 .slider {
-    max-width: 50rem;
-    height: 300px;
+    width: 100%;
+    height: 277px;
     position: relative;
-    display: flex;
+    //display: flex;
     justify-content: center;
-
-}
-
-.slider__elements {
-    display: none;
 }
 
 .slider:hover .slider__elements {
-    display: block;
+    //display: block;
+}
+
+.slider__elements {
+    //display: none;
+    //display: flex;
 }
 
 .slider__element {
-    color: #fff;
-    font-size: 30px;
     height: 100%;
     width: 100%;
+    border-radius: 1rem;
+    object-fit: cover;
     display: none;
     position: absolute;
     top: 0;
@@ -141,9 +166,8 @@ function onMouseEnter(key) {
 }
 
 .slider__element.slider__element--main {
-    display: flex;
+    //display: flex;
 }
-
 
 .slider__element.active {
     display: flex;
@@ -151,22 +175,97 @@ function onMouseEnter(key) {
 
 .slider__ghosts {
     display: flex;
-
-    width: 90%;
+    width: 95%;
     gap: 5px;
 }
 
 .slider__ghost {
     position: relative;
-    border-bottom: 4px solid rgba(255, 255, 255, .5);
+    //border-bottom: 4px solid rgba(255, 255, 255, .3);
+    //border-bottom: 4px solid rgba(0, 0, 0, 0.40);
     height: calc(100% - 5px);
 }
 
+.slider__ghost::before {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    content: "";
+    height: 0.3125rem;
+    background-color: rgba(255, 255, 255, .3);
+    transition: all 0.2s;
+    border-radius: 2rem;
+}
+
+.slider__ghost.active.slider__ghost::before {
+    background-color: rgb(100, 200, 200);
+}
+
 .slider__ghost:hover .slider__element.slider__element--main {
-    display: none;
+    //display: none;
 }
 
 .slider__ghost.active {
-    border-bottom-color: #00ffff;
+    border-bottom-color: rgb(100, 200, 200);
 }
+
+
+.swiper {
+    max-width: 50rem;
+    overflow: hidden;
+    position: relative;
+    padding: 4px;
+
+    border-radius: 1rem;
+}
+
+.swiper-wrapper {
+    display: flex;
+}
+
+.swiper-slide {
+    flex-shrink: 0;
+    padding-bottom: 52.8%;
+    position: relative;
+}
+
+.swiper-slide img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /*object-fit: contain;*/
+
+    border-radius: 1rem;
+}
+
+.swiper-pagination {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 0.625rem 15px 0.625rem;
+    display: flex;
+    gap: 0.3125rem;
+}
+
+.swiper-pagination-bullet {
+    height: 0.3125rem;
+    flex: 1 1 auto;
+    background-color: rgba(255, 255, 255, .3);
+    transition: all 0.3s;
+    border-radius: 2rem;
+}
+
+.swiper-pagination-bullet-active {
+    background-color: rgb(100, 200, 200);
+}
+
+.swiper-pagination-lock {
+    display: none;
+}
+
 </style>
