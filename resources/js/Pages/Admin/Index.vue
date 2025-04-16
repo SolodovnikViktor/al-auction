@@ -12,14 +12,14 @@ const modules = [Navigation, Pagination];
 const props = defineProps(
     ['posts', 'postsPaginate']
 );
-const posts = props.posts.data
-console.log(posts)
+const postsData = props.posts.data
+console.log(postsData)
 // console.log(props.posts)
 // console.log(props.postsPaginate)
 
 const currentKey = ref([]);
 
-posts.forEach(function (post) {
+postsData.forEach(function (post) {
     currentKey.value.push({postId: post.id, photoId: post.photos[0].id})
 })
 
@@ -48,11 +48,11 @@ function onMouseEnter(photoId, postId) {
         </template>
 
         <div class="w-full p-2 lg:p-6 max-w-screen-2xl mx-auto shadow sm:rounded-2xl bg-white">
-            <div v-if="!posts[0]" class="text-center">
+            <div v-if="!postsData[0]" class="text-center">
                 Вы не добавили машины!
             </div>
             <div class="grid grid-cols-12 gap-4 pb-4 mb-4 border-b border-gray-200">
-                <div v-for="(post, postIndex) in posts"
+                <div v-for="(post, postIndex) in postsData" :key="post.id"
                      class="overflow-hidden col-span-12 sm:col-span-6 lg:col-span-4 text-gray-900">
                     <Link :href="route('admin-post.show', post.id)">
                         <div
@@ -121,8 +121,8 @@ function onMouseEnter(photoId, postId) {
                     </div>
                 </div>
             </div>
-            <nav v-if="posts" class="flex justify-end">
-                {{ posts.meta }}
+            <nav v-if="postsData" class="flex justify-end">
+                <!--                {{ posts.meta }}-->
                 <!--                <Pagination :links="posts.meta.links"></Pagination>-->
             </nav>
         </div>
