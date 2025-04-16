@@ -16,7 +16,6 @@ class Post extends Model
 
     protected $table = 'posts';
     protected $fillable = [
-        'image_position',
         'image_preview',
         'title',
         'vin',
@@ -46,6 +45,16 @@ class Post extends Model
     public function images(): HasMany
     {
         return $this->hasMany(Photo::class);
+    }
+
+    public function transmission(): BelongsTo
+    {
+        return $this->belongsTo(Transmission::class)->select('title');
+    }
+
+    public function drive(): BelongsTo
+    {
+        return $this->belongsTo(Drive::class)->select('title');
     }
 
     public function bets(): HasMany

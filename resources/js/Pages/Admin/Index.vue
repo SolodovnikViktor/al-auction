@@ -14,16 +14,14 @@ const props = defineProps(
 );
 const posts = props.posts.data
 console.log(posts)
-console.log(props.posts)
-console.log(props.postsPaginate)
+// console.log(props.posts)
+// console.log(props.postsPaginate)
 
 const currentKey = ref([]);
 
 posts.forEach(function (post) {
     currentKey.value.push({postId: post.id, photoId: post.photos[0].id})
-    console.log(currentKey.value)
 })
-
 
 function onMouseLeave() {
     // currentKey.value = 0;
@@ -31,15 +29,11 @@ function onMouseLeave() {
 }
 
 function onMouseEnter(photoId, postId) {
-    console.log(photoId, postId)
     for (let object of currentKey.value) {
-        console.log(object)
         if (object.postId === postId) {
             object.photoId = photoId;
         }
     }
-
-    console.log(currentKey.value);
 }
 
 
@@ -98,23 +92,33 @@ function onMouseEnter(photoId, postId) {
                             src="/storage/images/service/not_photo.jpg"
                             alt="Фото отсутствует">
                     </Link>
-                    <div class="flex relative justify-between pt-4 px-2 text-gray-500">
-                        <div>
+                    <div class="pt-4 px-2 text-gray-500">
+                        <div class="flex relative justify-between">
                             <h2 class="text-lg text-black">
-                                {{ post.brand }} {{ post.model }} <span class="text-gray-500">{{
-                                    post.year_release
-                                }}</span>
+                                {{ post.brand }} {{ post.model }} <span class="text-gray-500">
+                                {{ post.year_release }}г</span>
                             </h2>
-                            <p>Vin: {{ post.vin }}</p>
+                            <div>
+                                <Link :href="route('admin-post.edit', post.id)"
+                                      class="bg-gray-200 rounded-md px-1 border-transparent border-b-2 transition focus:outline-none focus:border-indigo-400 hover:bg-gray-300">
+                                    Редактировать
+                                </Link>
+                            </div>
                         </div>
-                        <div>
-                            <Link :href="route('admin-post.edit', post.id)"
-                                  class="bg-gray-200 rounded-md px-1 border-transparent border-b-2 transition focus:outline-none focus:border-indigo-400 hover:bg-gray-300">
-                                Редактировать
-                            </Link>
+                        <div class="flex justify-between">
+                            <div>
+                                <p>{{ post.mileage }}км</p>
+                                <p>{{ post.horsepower }}лс</p>
+                                <p>{{ post.engine_capacity }}л</p>
+                            </div>
+                            <div class="">
+                                <p>Vin: {{ post.vin }}</p>
+                                <p>{{ post.transmission }}</p>
+                                <p>{{ post.drive }}</p>
+                            </div>
                         </div>
+                        <div class="bg-lime-200 rounded-md text-lg">{{ post.price }}₽</div>
                     </div>
-
                 </div>
             </div>
             <nav v-if="posts" class="flex justify-end">
@@ -140,17 +144,7 @@ function onMouseEnter(photoId, postId) {
     width: 100%;
     height: 277px;
     position: relative;
-    //display: flex;
     justify-content: center;
-}
-
-.slider:hover .slider__elements {
-    //display: block;
-}
-
-.slider__elements {
-    //display: none;
-    //display: flex;
 }
 
 .slider__element {
@@ -165,10 +159,6 @@ function onMouseEnter(photoId, postId) {
     align-items: center;
 }
 
-.slider__element.slider__element--main {
-    //display: flex;
-}
-
 .slider__element.active {
     display: flex;
 }
@@ -181,8 +171,6 @@ function onMouseEnter(photoId, postId) {
 
 .slider__ghost {
     position: relative;
-    //border-bottom: 4px solid rgba(255, 255, 255, .3);
-    //border-bottom: 4px solid rgba(0, 0, 0, 0.40);
     height: calc(100% - 5px);
 }
 
@@ -202,21 +190,15 @@ function onMouseEnter(photoId, postId) {
     background-color: rgb(100, 200, 200);
 }
 
-.slider__ghost:hover .slider__element.slider__element--main {
-    //display: none;
-}
-
 .slider__ghost.active {
     border-bottom-color: rgb(100, 200, 200);
 }
-
 
 .swiper {
     max-width: 50rem;
     overflow: hidden;
     position: relative;
     padding: 4px;
-
     border-radius: 1rem;
 }
 
