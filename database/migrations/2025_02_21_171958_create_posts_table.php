@@ -29,6 +29,7 @@ return new class extends Migration {
             $table->text('description'); // описание
             $table->foreignId('user_id')->index();
             $table->boolean('is_published')->default(true);
+            $table->unsignedSmallInteger('count_bets')->nullable();
             $table->timestamps();
         });
     }

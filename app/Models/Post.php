@@ -35,6 +35,7 @@ class Post extends Model
         'description',
         'user_id',
         'is_published',
+        'count_bets',
     ];
 
     public function imagesPath(): HasMany

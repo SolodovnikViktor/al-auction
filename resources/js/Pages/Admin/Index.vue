@@ -36,6 +36,9 @@ function onMouseEnter(photoId, postId) {
     }
 }
 
+function numberFilter(number) {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+}
 
 </script>
 
@@ -111,13 +114,24 @@ function onMouseEnter(photoId, postId) {
                                 <p>{{ post.horsepower }}лс</p>
                                 <p>{{ post.engine_capacity }}л</p>
                             </div>
-                            <div class="">
+                            <div class="text-end">
                                 <p>Vin: {{ post.vin }}</p>
                                 <p>{{ post.transmission }}</p>
                                 <p>{{ post.drive }}</p>
                             </div>
                         </div>
-                        <div class="bg-lime-200 rounded-md text-lg">{{ post.price }}₽</div>
+                        <div class="bg-lime-200 rounded-md text-lg mx-[-2px]">
+                            <div v-if="post.up_price === null"
+                                 class="flex justify-between px-1 bg-orange-200 rounded-md">
+                                <span>{{ numberFilter(post.price) }}₽</span>
+                                <span class="ml-3">Ставок нет</span>
+                            </div>
+                            <div v-else>
+                                <span class="line-through">{{ numberFilter(post.price) }}₽</span>
+                                <span class="ml-3">{{ numberFilter(post.up_price) }}</span>
+                                <span class="text-xl font-bold">{{ post.count_bets }}₽</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

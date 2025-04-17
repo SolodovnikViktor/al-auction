@@ -40,6 +40,7 @@ class PostResource extends JsonResource
             'up_price' => $this->up_price,
             'description' => $this->description,
             'is_published' => $this->is_published,
+            'count_bets' => $this->count_bets,
 //            'photos' => PhotoResource::collection($this->photos),
             'photos' => PhotoResource::collection($photos),
             'bets' => BetResource::collection($this->bets),
