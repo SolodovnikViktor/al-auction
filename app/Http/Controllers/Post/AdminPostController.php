@@ -4,22 +4,20 @@ namespace App\Http\Controllers\Post;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Post\PostRequest;
-use App\Http\Resources\PostResource;
+use App\Http\Resources\Admin\PostResource;
+use App\Http\Resources\Admin\PostShowResource;
 use App\Models\BodyType;
 use App\Models\Color;
 use App\Models\Drive;
 use App\Models\Photo;
-use App\Models\Post;
 use App\Models\PhotoPosition;
+use App\Models\Post;
 use App\Models\Transmission;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 use Intervention\Image\Laravel\Facades\Image;
-
-use function Laravel\Prompts\error;
 
 class AdminPostController extends Controller
 {
@@ -88,8 +86,9 @@ class AdminPostController extends Controller
 
     public function show(Post $post): Response
     {
+        $postRes = new PostShowResource($post);
         return Inertia::render('Admin/Show', [
-            'post' => $post,
+            'postRes' => $postRes,
         ]);
     }
 

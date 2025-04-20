@@ -4,8 +4,10 @@ import AdminNav from "@/Components/Admin/AdminNav.vue";
 import {Head} from "@inertiajs/vue3";
 
 const props = defineProps({
-    post: Object
+    // post: Object,
+    postRes: Object
 })
+let post = props.postRes.data
 </script>
 
 <template>

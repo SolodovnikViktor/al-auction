@@ -2,8 +2,6 @@
 
 namespace App\Http\Resources\User;
 
-use App\Http\Resources\BetResource;
-use App\Http\Resources\PostResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 

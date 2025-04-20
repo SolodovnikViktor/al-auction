@@ -38,6 +38,15 @@ class Post extends Model
         'count_bets',
     ];
 
+    public function color(): BelongsTo
+    {
+        return $this->belongsTo(Color::class)->select('title');
+    }
+
+    public function body_type(): BelongsTo
+    {
+        return $this->belongsTo(BodyType::class)->select('title');
+    }
     public function imagesPath(): HasMany
     {
         return $this->hasMany(Photo::class)->select(['id', 'path', 'post_id']);
