@@ -6,7 +6,6 @@ import {ref} from 'vue'
 import {Swiper, SwiperSlide} from "swiper/vue";
 import {Navigation, Pagination} from 'swiper/modules';
 
-
 const modules = [Navigation, Pagination];
 
 const props = defineProps(
@@ -14,8 +13,6 @@ const props = defineProps(
 );
 const postsData = props.posts.data
 console.log(postsData)
-// console.log(props.posts)
-// console.log(props.postsPaginate)
 
 const currentKey = ref([]);
 
@@ -80,12 +77,11 @@ function numberFilter(number) {
                             </div>
                         </div>
                         <swiper
-                            data-mousemove-swipe
                             v-if="post.photos.length > 0"
                             :pagination="{clickable: true}"
                             :space-between="50"
                             :modules="modules"
-                            class="mySwiper swiper sm:hidden">
+                            class="swiperIndex sm:hidden">
                             <swiper-slide v-for="photo in post.photos" :key="photo.id" class="hover:grow">
                                 <img :src="photo.pathMin" :alt="photo.name">
                             </swiper-slide>
@@ -143,17 +139,15 @@ function numberFilter(number) {
 
     </IndexLayout>
 </template>
-
+//.hover\:grow {
+//    transition: all 0.3s;
+//    transform: scale(1);
+//}
+//
+//.hover\:grow:hover {
+//    transform: scale(1.02);
+//}
 <style>
-.hover\:grow {
-    transition: all 0.3s;
-    transform: scale(1);
-}
-
-.hover\:grow:hover {
-    transform: scale(1.02);
-}
-
 .slider {
     width: 100%;
     height: 277px;
@@ -208,7 +202,7 @@ function numberFilter(number) {
     border-bottom-color: rgb(100, 200, 200);
 }
 
-.swiper {
+.swiperIndex {
     max-width: 50rem;
     overflow: hidden;
     position: relative;
@@ -216,17 +210,17 @@ function numberFilter(number) {
     border-radius: 1rem;
 }
 
-.swiper-wrapper {
+.swiperIndex .swiper-wrapper {
     display: flex;
 }
 
-.swiper-slide {
+.swiperIndex .swiper-slide {
     flex-shrink: 0;
     padding-bottom: 52.8%;
     position: relative;
 }
 
-.swiper-slide img {
+.swiperIndex .swiper-slide img {
     position: absolute;
     top: 0;
     left: 0;
