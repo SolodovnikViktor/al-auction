@@ -7,7 +7,7 @@ import {FreeMode, Navigation, Thumbs} from 'swiper/modules';
 // import 'swiper/css';
 // import 'swiper/css/free-mode';
 import 'swiper/css/navigation';
-import 'swiper/css/thumbs';
+// import 'swiper/css/thumbs';
 import {ref} from "vue";
 
 const props = defineProps({
@@ -46,7 +46,7 @@ function numberFilter(number) {
                         v-if="post.photos.length > 0"
                         :style="{'--swiper-navigation-color': '#fff','--swiper-pagination-color': '#fff'}"
                         :loop="true"
-                        :spaceBetween="10"
+                        :spaceBetween="5"
                         :navigation="true"
                         :thumbs="{ swiper: thumbsSwiper }"
                         :modules="modules"
@@ -65,6 +65,7 @@ function numberFilter(number) {
                         :watchSlidesProgress="true"
                         :modules="modules"
                         class="mySwiperDown"
+
                     >
                         <swiper-slide v-for="photo in post.photos" :key="photo.id" class="hover:grow">
                             <img :src="photo.pathMin" :alt="photo.name">
@@ -81,7 +82,7 @@ function numberFilter(number) {
                         <div class="">
                             <h2 class="text-lg text-black">
                                 {{ post.brand }} {{ post.model }} <span class="text-gray-500">
-                                {{ post.year_release }}г</span>
+                                                {{ post.year_release }}г</span>
                             </h2>
                         </div>
                         <div class="flex justify-between">
@@ -112,6 +113,7 @@ function numberFilter(number) {
                 </div>
 
             </div>
+            <div>dвапвап</div>
         </div>
     </IndexLayout>
 </template>
@@ -123,12 +125,13 @@ function numberFilter(number) {
     margin-left: auto;
     margin-right: auto;
     position: relative;
-    overflow: hidden;
+
     list-style: none;
     padding: 0;
     z-index: 1;
     display: block;
     border-radius: 1rem;
+    user-select: none;
 }
 
 .swiper-wrapper {
@@ -136,27 +139,11 @@ function numberFilter(number) {
     height: 100%;
 }
 
-.swiper-slide {
+.mySwiperUp .swiper-slide {
     flex-shrink: 0;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
     position: relative;
-}
 
-.swiper-button-prev .swiper-button-next {
-
-    top: var(50%);
-    width: calc(var(--swiper-navigation-size) / 44 * 27);
-    height: var(--swiper-navigation-size);
-
-    z-index: 10;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    height: 100%;
 }
 
 .swiper-slide img {
@@ -167,21 +154,21 @@ function numberFilter(number) {
 }
 
 .mySwiperDown {
-    height: 20%;
+    height: 9rem;
     box-sizing: border-box;
     padding: 10px 0;
-    overflow: hidden;
 }
 
 .mySwiperDown .swiper-slide {
-    width: 25%;
-    height: 100%;
-    opacity: 0.4;
+    flex-shrink: 0;
+    position: relative;
 
+    height: 100%;
 }
 
 .mySwiperDown .swiper-slide-thumb-active {
-    opacity: 1;
+    border: 1px solid #ff2d20;
+    border-radius: 1rem;
 }
 
 @font-face {

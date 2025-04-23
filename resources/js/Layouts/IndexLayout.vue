@@ -17,7 +17,7 @@ if (route().current('admin-post.index') || route().current('admin-post.create')
 </script>
 
 <template>
-    <div class="min-h-screen bg-[#0085db12] sm:p-4">
+    <div class="overflow-hidden min-h-screen bg-[#0085db12] sm:p-4">
         <div v-if="$page.props.message_form" class="alert">
             {{ $page.props.message_form }}
         </div>

@@ -79,11 +79,11 @@ function numberFilter(number) {
                         <swiper
                             v-if="post.photos.length > 0"
                             :pagination="{clickable: true}"
-                            :space-between="50"
+                            :space-between="5"
                             :modules="modules"
                             class="swiperIndex sm:hidden">
                             <swiper-slide v-for="photo in post.photos" :key="photo.id" class="hover:grow">
-                                <img :src="photo.pathMin" :alt="photo.name">
+                                <img :src="photo.path" :alt="photo.name">
                             </swiper-slide>
                         </swiper>
                         <img
