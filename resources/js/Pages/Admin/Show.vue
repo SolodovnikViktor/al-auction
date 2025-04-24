@@ -39,7 +39,7 @@ function numberFilter(number) {
         <template #adminNav>
             <AdminNav :post/>
         </template>
-        <div class="max-w-screen-2xl mx-auto">
+        <div class="max-w-screen-xl mx-auto">
             <div class="grid grid-cols-12 gap-4">
                 <div class="overflow-hidden col-span-12 lg:col-span-8">
                     <swiper
@@ -65,39 +65,27 @@ function numberFilter(number) {
                         :watchSlidesProgress="true"
                         :modules="modules"
                         class="mySwiperDown"
-
                     >
                         <swiper-slide v-for="photo in post.photos" :key="photo.id" class="hover:grow">
                             <img :src="photo.pathMin" :alt="photo.name">
                         </swiper-slide>
-
                     </swiper>
                     <img
                         v-else
                         src="/storage/images/service/not_photo.jpg"
                         alt="Фото отсутствует">
                 </div>
-                <div class="w-full hidden lg:flex p-6 shadow rounded-2xl lg:col-span-4 bg-white">
-                    <div class="pt-4 px-2 text-gray-500">
-                        <div class="">
-                            <h2 class="text-lg text-black">
-                                {{ post.brand }} {{ post.model }} <span class="text-gray-500">
-                                                {{ post.year_release }}г</span>
-                            </h2>
+                <div class="hidden px-4 py-3 lg:flex shadow rounded-2xl col-span-4 bg-white">
+                    <div class="text-gray-500 w-full">
+                        <div class="mb-3">
+                            <h4 class="text-xl font-medium text-black">
+                                {{ post.brand }} {{ post.model }}
+                                <span class="text-gray-500">
+                                    {{ post.year_release }}г
+                                </span>
+                            </h4>
                         </div>
-                        <div class="flex justify-between">
-                            <div>
-                                <p>{{ post.mileage }}км</p>
-                                <p>{{ post.horsepower }}лс</p>
-                                <p>{{ post.engine_capacity }}л</p>
-                            </div>
-                            <div class="text-end">
-                                <p>Vin: {{ post.vin }}</p>
-                                <p>{{ post.transmission }}</p>
-                                <p>{{ post.drive }}</p>
-                            </div>
-                        </div>
-                        <div class="bg-lime-200 rounded-md text-lg mx-[-2px]">
+                        <div class="bg-lime-200 rounded-md text-xl mx-[-2px] mb-5">
                             <div v-if="post.up_price === null"
                                  class="flex justify-between px-1 bg-orange-200 rounded-md">
                                 <span>{{ numberFilter(post.price) }}₽</span>
@@ -105,8 +93,49 @@ function numberFilter(number) {
                             </div>
                             <div v-else>
                                 <span class="line-through">{{ numberFilter(post.price) }}₽</span>
-                                <span class="ml-3">{{ numberFilter(post.up_price) }}</span>
-                                <span class="text-xl font-bold">{{ post.count_bets }}₽</span>
+                                <span class="ml-3">{{ numberFilter(post.up_price) }}₽</span>
+                                <span class="text-xl font-bold">{{ post.count_bets }}</span>
+                            </div>
+                        </div>
+                        <div>
+                            <h5 class="text-lg font-bold">Характеристики</h5>
+                            <div class="*:text-base">
+                                <div class="flex mb-4 *:w-1/2">
+                                    <p>VIN</p>
+                                    <p class="font-bold">{{ post.vin }}</p>
+                                </div>
+                                <div class="flex mb-4 *:w-1/2">
+                                    <p>Год выпуска</p>
+                                    <p class="font-bold">{{ post.year_release }}</p>
+                                </div>
+                                <div class="flex mb-4 *:w-1/2">
+                                    <p>Пробег</p>
+                                    <p class="font-bold">{{ numberFilter(post.mileage) }} км</p>
+                                </div>
+                                <div class="flex mb-4 *:w-1/2">
+                                    <p>Тип кузова</p>
+                                    <p class="font-bold">{{ post.body_type.title }}</p>
+                                </div>
+                                <div class="flex mb-4 *:w-1/2">
+                                    <p>Привод</p>
+                                    <p class="font-bold">{{ post.drive }}</p>
+                                </div>
+                                <div class="flex mb-4 *:w-1/2">
+                                    <p>Трансмиссия</p>
+                                    <p class="font-bold">{{ post.transmission }}</p>
+                                </div>
+                                <div class="flex mb-4 *:w-1/2">
+                                    <p>Мощность</p>
+                                    <p class="font-bold">{{ post.horsepower }} лс</p>
+                                </div>
+                                <div class="flex mb-4 *:w-1/2">
+                                    <p>Топливо</p>
+                                    <p class="font-bold">{{ post.fuel }}</p>
+                                </div>
+                                <div class="flex mb-4 *:w-1/2">
+                                    <p>Обьём</p>
+                                    <p class="font-bold">{{ post.engine_capacity }} л</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -147,6 +176,10 @@ function numberFilter(number) {
 }
 
 .swiper-slide img {
+    position: absolute;
+    top: 0;
+    left: 0;
+
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -156,7 +189,7 @@ function numberFilter(number) {
 .mySwiperDown {
     height: 9rem;
     box-sizing: border-box;
-    padding: 10px 0;
+    padding-top: 10px;
 }
 
 .mySwiperDown .swiper-slide {
