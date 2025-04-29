@@ -67,23 +67,34 @@ function numberFilter(number) {
                         class="mySwiperDown"
                     >
                         <swiper-slide v-for="photo in post.photos" :key="photo.id" class="hover:grow">
-                            <img :src="photo.pathMin" :alt="photo.name">
+                            <img :src="photo.pathMin" :alt="photo.name"
+                                 class="">
                         </swiper-slide>
                     </swiper>
                     <img
                         v-else
                         src="/storage/images/service/not_photo.jpg"
                         alt="Фото отсутствует">
+                    <div class="mt-10">
+                        <h2 class="text-3xl font-bold mb-4">Описание</h2>
+                        <div class="whitespace-pre-wrap">{{ post.description }}</div>
+                    </div>
                 </div>
-                <div class="hidden px-4 py-3 lg:flex shadow rounded-2xl col-span-4 bg-white">
-                    <div class="text-gray-500 w-full">
-                        <div class="mb-3">
+                <div class="hidden lg:block col-span-4">
+                    <div class="px-4 py-3 sticky top-7 rounded-2xl shadow bg-white text-gray-500">
+                        <div class="mb-3 flex justify-between">
                             <h4 class="text-xl font-medium text-black">
                                 {{ post.brand }} {{ post.model }}
                                 <span class="text-gray-500">
                                     {{ post.year_release }}г
                                 </span>
                             </h4>
+                            <div>
+                                <Link :href="route('admin-post.edit', post.id)"
+                                      class="bg-gray-200 rounded-md px-1 border-transparent border-b-2 transition focus:outline-none focus:border-indigo-400 hover:bg-gray-300">
+                                    Редактировать
+                                </Link>
+                            </div>
                         </div>
                         <div class="bg-lime-200 rounded-md text-xl mx-[-2px] mb-5">
                             <div v-if="post.up_price === null"
@@ -132,7 +143,7 @@ function numberFilter(number) {
                                     <p>Топливо</p>
                                     <p class="font-bold">{{ post.fuel }}</p>
                                 </div>
-                                <div class="flex mb-4 *:w-1/2">
+                                <div class="flex *:w-1/2">
                                     <p>Обьём</p>
                                     <p class="font-bold">{{ post.engine_capacity }} л</p>
                                 </div>
@@ -140,9 +151,7 @@ function numberFilter(number) {
                         </div>
                     </div>
                 </div>
-
             </div>
-            <div>dвапвап</div>
         </div>
     </IndexLayout>
 </template>
@@ -154,12 +163,10 @@ function numberFilter(number) {
     margin-left: auto;
     margin-right: auto;
     position: relative;
-
     list-style: none;
     padding: 0;
     z-index: 1;
     display: block;
-    border-radius: 1rem;
     user-select: none;
 }
 
@@ -171,7 +178,6 @@ function numberFilter(number) {
 .mySwiperUp .swiper-slide {
     flex-shrink: 0;
     position: relative;
-
     height: 100%;
 }
 
@@ -179,24 +185,34 @@ function numberFilter(number) {
     position: absolute;
     top: 0;
     left: 0;
-
     width: 100%;
     height: 100%;
     object-fit: cover;
     border-radius: 1rem;
 }
 
+@media (max-width: 640px) {
+    .mySwiperUp .swiper-slide img {
+        border-radius: 0;
+    }
+}
+
 .mySwiperDown {
     height: 9rem;
     box-sizing: border-box;
     padding-top: 10px;
+
 }
 
 .mySwiperDown .swiper-slide {
     flex-shrink: 0;
     position: relative;
-
     height: 100%;
+}
+
+.mySwiperDown .swiper-slide :hover {
+    border: 1px solid #ff2d20;
+    border-radius: 1rem;
 }
 
 .mySwiperDown .swiper-slide-thumb-active {

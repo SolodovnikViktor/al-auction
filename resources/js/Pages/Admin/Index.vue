@@ -93,10 +93,10 @@ function numberFilter(number) {
                     </Link>
                     <div class="pt-4 px-2 text-gray-500">
                         <div class="flex relative justify-between">
-                            <h2 class="text-lg text-black">
+                            <h4 class="text-lg text-black">
                                 {{ post.brand }} {{ post.model }} <span class="text-gray-500">
                                 {{ post.year_release }}г</span>
-                            </h2>
+                            </h4>
                             <div>
                                 <Link :href="route('admin-post.edit', post.id)"
                                       class="bg-gray-200 rounded-md px-1 border-transparent border-b-2 transition focus:outline-none focus:border-indigo-400 hover:bg-gray-300">

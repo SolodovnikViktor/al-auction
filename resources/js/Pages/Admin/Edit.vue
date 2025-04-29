@@ -341,7 +341,6 @@ function updatePublished() {
                             <InputError class="mt-2" :message="form.errors[input.title]"/>
                         </div>
                     </div>
-
                 </div>
                 <nav class="flex justify-end">
                     <button type="submit"
@@ -393,13 +392,13 @@ function updatePublished() {
 .filepond--credits {
     display: none;
 }
-
-.hover\:grow {
-    transition: all 0.3s;
-    transform: scale(1);
-}
-
-.hover\:grow:hover {
-    transform: scale(1.04);
-}
 </style>
+
+<!--.hover\:grow {-->
+<!--transition: all 0.3s;-->
+<!--transform: scale(1);-->
+<!--}-->
+
+<!--.hover\:grow:hover {-->
+<!--transform: scale(1.04);-->
+<!--}-->
