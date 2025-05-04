@@ -21,7 +21,17 @@ use Intervention\Image\Laravel\Facades\Image;
 
 class AdminPostController extends Controller
 {
-    public function index(): Response
+    public function indexPhoto(): Response
+    {
+        $postsPaginate = Post::with('user', 'images', 'imagesPath')->paginate(15);
+        $posts = PostResource::collection(Post::paginate(15));
+        return Inertia::render('Admin/Index', [
+            'posts' => $posts,
+            'postsPaginate' => $postsPaginate,
+        ]);
+    }
+
+    public function indexList(): Response
     {
         $postsPaginate = Post::with('user', 'images', 'imagesPath')->paginate(15);
         $posts = PostResource::collection(Post::paginate(15));
@@ -81,7 +91,7 @@ class AdminPostController extends Controller
             }
         }
         $request->session()->flash('message_form', 'Автомобиль успешно добавлен message_form');
-        return to_route('admin-post.index')->with('message', 'Category Created Successfully');
+        return to_route('admin-post.show', $post)->with('message', 'Category Created Successfully');
     }
 
     public function show(Post $post): Response
@@ -157,6 +167,6 @@ class AdminPostController extends Controller
             $image->delete();
         }
         $post->delete();
-        return to_route('admin-post.index')->with('message', 'Объявление удалено');
+        return to_route('admin-post.indexPhoto')->with('message', 'Объявление удалено');
     }
 }

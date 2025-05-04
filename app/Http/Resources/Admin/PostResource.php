@@ -28,7 +28,7 @@ class PostResource extends JsonResource
             'brand' => $this->brand,
             'model' => $this->model,
             'year_release' => $this->year_release,
-            'color_id' => $this->color_id,
+            'color' => $this->color->title,
             'mileage' => $this->mileage,
             'fuel' => $this->fuel,
             'drive' => $this->drive->title,

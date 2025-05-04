@@ -1,5 +1,5 @@
 <script setup>
-import { Head } from '@inertiajs/vue3';
+import {Head} from '@inertiajs/vue3';
 import IndexLayout from "@/Layouts/IndexLayout.vue";
 import Header from "@/Components/Main/Header.vue";
 
@@ -7,10 +7,10 @@ const title = 'Главная';
 </script>
 
 <template>
-    <Head :title = title />
+    <Head :title='title'/>
     <IndexLayout>
         <template #header>
-           <Header :title="title" />
+            <Header :title="title"/>
         </template>
         <div class="relative w-full p-4 lg:p-6 shadow sm:rounded-2xl bg-white">
             <div
@@ -29,7 +29,7 @@ const title = 'Главная';
     </IndexLayout>
 </template>
 
-<style>
+<style scoped>
 .hover\:grow {
     transition: all 0.3s;
     transform: scale(1);
@@ -38,4 +38,5 @@ const title = 'Главная';
 .hover\:grow:hover {
     transform: scale(1.04);
 }
+
 </style>

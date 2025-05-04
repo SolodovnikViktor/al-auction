@@ -65,14 +65,14 @@ if (props.id === 'transmission_id') {
            ref="input"
     />
     <textarea v-if="type === 'textarea'"
-              class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+              class="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
               v-model="model"
               rows="5"
               :id
               ref="textarea"
     />
     <select v-else-if="type === 'select'"
-            class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+            class="mt-1 w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
             v-model="model"
             :id>
         <option v-for="option in options" :value="option.id">{{ option.title }}</option>

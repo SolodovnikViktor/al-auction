@@ -47,6 +47,7 @@ class Post extends Model
     {
         return $this->belongsTo(BodyType::class)->select('title');
     }
+
     public function imagesPath(): HasMany
     {
         return $this->hasMany(Photo::class)->select(['id', 'path', 'post_id']);

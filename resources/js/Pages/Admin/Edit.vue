@@ -259,7 +259,7 @@ function updatePublished() {
             <form :disabled="form.processing"
                   @submit.prevent="$event => form.patch(route('admin-post.update', post.id))">
                 <div class="overflow-hidden max-w-2xl pb-4 mb-4 border-b border-gray-200">
-                    <div class="h-full text-gray-900">
+                    <div class="h-full mb-8 text-gray-900">
                         <!-- dropOnPage - FilePond будет перехватывать все файлы, размещенные на веб-странице
                              allow-reorder - Разрешить пользователям изменять порядок файлов с помощью перетаскивания.                    Обратите внимание, что это работает только в режиме одного столбца.
                               Это также работает только в браузерах, поддерживающих события указателя.
@@ -324,7 +324,7 @@ function updatePublished() {
                         <InputError class="mt-2" :message="errorLoadFiles"/>
                     </div>
                     <div v-for="(input, index) in formInputs" :key=index
-                         class=" p-1 sm:col-span-3 lg:col-span-2 text-gray-900">
+                         class="p-1 sm:col-span-3 lg:col-span-2 text-gray-900">
                         <div>
                             <InputLabel :for="input.title" :value="input.value"/>
                             <MyInput

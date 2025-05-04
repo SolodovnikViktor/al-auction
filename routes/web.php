@@ -16,7 +16,8 @@ Route::get('/contact', function () {
 })->name('contact');
 
 Route::middleware(['auth', 'verified', 'roles:admin'])->group(function () {
-    Route::get('/admin/posts', [AdminPostController::class, 'index'])->name('admin-post.index');
+    Route::get('/admin/posts/photos', [AdminPostController::class, 'indexPhoto'])->name('admin-post.indexPhoto');
+    Route::get('/admin/posts/list', [AdminPostController::class, 'indexList'])->name('admin-post.indexList');
     Route::get('/admin/post/create', [AdminPostController::class, 'create'])->name('admin-post.create');
     Route::post('/admin/post/create', [AdminPostController::class, 'store'])->name('admin-post.store');
     Route::get('/admin/post/{post}/show', [AdminPostController::class, 'show'])->name('admin-post.show');

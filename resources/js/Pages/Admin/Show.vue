@@ -22,7 +22,7 @@ const setThumbsSwiper = (swiper) => {
 
 let isSlidesPerView = ref(3);
 if (post.photos.length > 3) {
-    isSlidesPerView = ref(4)
+    isSlidesPerView = ref(4.2)
 }
 
 
@@ -39,9 +39,9 @@ function numberFilter(number) {
         <template #adminNav>
             <AdminNav :post/>
         </template>
-        <div class="max-w-screen-xl mx-auto">
+        <div class="max-w-screen-xl mx-auto ">
             <div class="grid grid-cols-12 gap-4">
-                <div class="overflow-hidden col-span-12 lg:col-span-8">
+                <div class="overflow-hidden col-span-12  lg:col-span-8">
                     <swiper
                         v-if="post.photos.length > 0"
                         :style="{'--swiper-navigation-color': '#fff','--swiper-pagination-color': '#fff'}"
@@ -64,7 +64,7 @@ function numberFilter(number) {
                         :freeMode="true"
                         :watchSlidesProgress="true"
                         :modules="modules"
-                        class="mySwiperDown"
+                        class="mySwiperDown p-2 sm:p-0"
                     >
                         <swiper-slide v-for="photo in post.photos" :key="photo.id" class="hover:grow">
                             <img :src="photo.pathMin" :alt="photo.name"
@@ -75,13 +75,13 @@ function numberFilter(number) {
                         v-else
                         src="/storage/images/service/not_photo.jpg"
                         alt="Фото отсутствует">
-                    <div class="mt-10">
+                    <div class="mt-10 p-2 sm:p-0">
                         <h2 class="text-3xl font-bold mb-4">Описание</h2>
                         <div class="whitespace-pre-wrap">{{ post.description }}</div>
                     </div>
                 </div>
                 <div class="hidden lg:block col-span-4">
-                    <div class="px-4 py-3 sticky top-7 rounded-2xl shadow bg-white text-gray-500">
+                    <div class="px-4 py-3 sticky top-28 rounded-2xl shadow bg-white text-gray-500">
                         <div class="mb-3 flex justify-between">
                             <h4 class="text-xl font-medium text-black">
                                 {{ post.brand }} {{ post.model }}
@@ -109,7 +109,7 @@ function numberFilter(number) {
                             </div>
                         </div>
                         <div>
-                            <h5 class="text-lg font-bold">Характеристики</h5>
+                            <h5 class="text-lg font-bold mb-2">Характеристики</h5>
                             <div class="*:text-base">
                                 <div class="flex mb-4 *:w-1/2">
                                     <p>VIN</p>
@@ -134,6 +134,10 @@ function numberFilter(number) {
                                 <div class="flex mb-4 *:w-1/2">
                                     <p>Трансмиссия</p>
                                     <p class="font-bold">{{ post.transmission }}</p>
+                                </div>
+                                <div class="flex mb-4 *:w-1/2">
+                                    <p>Цвет кузова</p>
+                                    <p class="font-bold">{{ post.color }}</p>
                                 </div>
                                 <div class="flex mb-4 *:w-1/2">
                                     <p>Мощность</p>
@@ -201,7 +205,7 @@ function numberFilter(number) {
     height: 9rem;
     box-sizing: border-box;
     padding-top: 10px;
-
+    user-select: none;
 }
 
 .mySwiperDown .swiper-slide {
