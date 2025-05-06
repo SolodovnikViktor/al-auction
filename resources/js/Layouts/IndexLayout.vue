@@ -5,14 +5,32 @@ import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import {Link} from '@inertiajs/vue3';
+import {Link, useForm} from '@inertiajs/vue3';
 
 const showingNavigationDropdown = ref(false);
 
 let adminActive = false;
-if (route().current('admin-post.indexPhoto') || route().current('admin-post.create')
+if (route().current('admin-post.index') || route().current('admin-post.create')
     || route().current('admin-post.show') || route().current('admin-post.edit')) {
     adminActive = true;
+}
+
+const form = useForm({
+    search: '',
+});
+
+function search() {
+    if (adminActive) {
+        console.log(123)
+        form.get(route('admin-post.search'), {
+            onError: error => {
+                console.log(error)
+            }
+        })
+    } else {
+        console.log(333)
+    }
+
 }
 </script>
 
@@ -43,9 +61,9 @@ if (route().current('admin-post.indexPhoto') || route().current('admin-post.crea
                                 </Link>
                             </div>
                             <div
-                                class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                                class="hidden *:text-lg space-x-8 sm:-my-px sm:ms-10 sm:flex">
                                 <NavLink
-                                    :href="route('admin-post.indexPhoto')"
+                                    :href="route('admin-post.index')"
                                     :active=adminActive>
                                     Админ панель
                                 </NavLink>
@@ -61,11 +79,32 @@ if (route().current('admin-post.indexPhoto') || route().current('admin-post.crea
                                 </NavLink>
                             </div>
                         </nav>
-                        <div class="hidden sm:ms-6 sm:flex sm:items-center">
-                            <!-- Settings Dropdown -->
-                            <div v-if="$page.props.auth.user" class="relative ms-3">
-                                <Dropdown align="right" width="48">
-                                    <template #trigger>
+                        <div class="flex">
+                            <form
+                                :disabled="form.processing"
+                                @submit.prevent="search"
+                                class="inline-flex items-center">
+                                <div class="relative">
+                                    <input type="search"
+                                           id="default-search"
+                                           v-model="form.search"
+                                           class="block w-full p-1 pr-10 text-sm text-gray-900 border border-gray-200 rounded-lg "
+                                           placeholder="Поиск" required/>
+                                    <button type="submit"
+                                            class="absolute top-0 end-0 bottom-0 focus:outline-none px-3">
+                                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                  stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </form>
+                            <div class="hidden sm:ms-2 sm:flex sm:items-center">
+                                <!-- Settings Dropdown -->
+                                <div v-if="$page.props.auth.user" class="relative">
+                                    <Dropdown align="right" width="40">
+                                        <template #trigger>
                                     <span class="inline-flex rounded-md">
                                         <button
                                             type="button"
@@ -83,36 +122,35 @@ if (route().current('admin-post.indexPhoto') || route().current('admin-post.crea
                                             </svg>
                                         </button>
                                     </span>
-                                    </template>
-                                    <template #content>
-                                        <DropdownLink
-                                            :href="route('profile.edit')">
-                                            Профиль
-                                        </DropdownLink>
-                                        <DropdownLink
-                                            :href="route('logout')"
-                                            method="post"
-                                            as="button">
-                                            Выйти
-                                        </DropdownLink>
-                                    </template>
-                                </Dropdown>
+                                        </template>
+                                        <template #content>
+                                            <DropdownLink
+                                                :href="route('profile.edit')">
+                                                Профиль
+                                            </DropdownLink>
+                                            <DropdownLink
+                                                :href="route('logout')"
+                                                method="post"
+                                                as="button">
+                                                Выйти
+                                            </DropdownLink>
+                                        </template>
+                                    </Dropdown>
+                                </div>
+                                <template v-else>
+                                    <Link
+                                        :href="route('login')"
+                                        class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20]">
+                                        Вход
+                                    </Link>
+                                    <Link
+                                        :href="route('register')"
+                                        class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20]">
+                                        Регистрация
+                                    </Link>
+                                </template>
                             </div>
-                            <template v-else>
-                                <Link
-                                    :href="route('login')"
-                                    class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20]">
-                                    Вход
-                                </Link>
-
-                                <Link
-                                    :href="route('register')"
-                                    class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20]">
-                                    Регистрация
-                                </Link>
-                            </template>
                         </div>
-
                         <!-- Hamburger -->
                         <div class="-me-2 flex items-center sm:hidden">
                             <button
@@ -146,12 +184,11 @@ if (route().current('admin-post.indexPhoto') || route().current('admin-post.crea
                     class="sm:hidden">
                     <div class="space-y-1 pb-3 pt-2">
                         <ResponsiveNavLink
-                            :href="route('admin-post.indexPhoto')"
-                            :active="route().current('admin-post.indexPhoto')">
+                            :href="route('admin-post.index')"
+                            :active="route().current('admin-post.index')">
                             Админ панель
                         </ResponsiveNavLink>
                     </div>
-
                     <!-- Responsive Settings Options -->
                     <div v-if="$page.props.auth.user"
                          class="border-t border-gray-200 pb-1 pt-4"
@@ -165,7 +202,6 @@ if (route().current('admin-post.indexPhoto') || route().current('admin-post.crea
                                 {{ $page.props.auth.user.email }}
                             </div>
                         </div>
-
                         <div class="mt-3 space-y-1">
                             <ResponsiveNavLink :href="route('profile.edit')">
                                 Профиль
@@ -180,29 +216,21 @@ if (route().current('admin-post.indexPhoto') || route().current('admin-post.crea
                     </div>
                 </div>
             </div>
-
-            <div class="">
-                <!-- Page Heading -->
-                <div v-if="$slots.header">
-                    <nav class="p-4  ">
-                        <slot name="header"/>
-                    </nav>
-                </div>
-
-                <div v-if="$slots.adminNav ">
-                    <nav
-                        class="border-gray-100 ">
-                        <slot name="adminNav"/>
-                    </nav>
-                </div>
-            </div>
-
+            <template v-if="$slots.header">
+                <nav class="p-4">
+                    <slot name="header"/>
+                </nav>
+            </template>
+            <template v-if="$slots.adminNav ">
+                <slot name="adminNav"/>
+            </template>
         </header>
         <div class="pt-[123px]"></div>
-
-
         <!-- Page Content -->
         <main>
+            <template v-if="$slots.filters">
+                <slot name="filters"/>
+            </template>
             <slot/>
         </main>
     </div>

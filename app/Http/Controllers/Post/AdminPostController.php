@@ -21,17 +21,7 @@ use Intervention\Image\Laravel\Facades\Image;
 
 class AdminPostController extends Controller
 {
-    public function indexPhoto(): Response
-    {
-        $postsPaginate = Post::with('user', 'images', 'imagesPath')->paginate(15);
-        $posts = PostResource::collection(Post::paginate(15));
-        return Inertia::render('Admin/Index', [
-            'posts' => $posts,
-            'postsPaginate' => $postsPaginate,
-        ]);
-    }
-
-    public function indexList(): Response
+    public function index(): Response
     {
         $postsPaginate = Post::with('user', 'images', 'imagesPath')->paginate(15);
         $posts = PostResource::collection(Post::paginate(15));

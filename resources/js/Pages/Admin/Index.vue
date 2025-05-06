@@ -1,16 +1,25 @@
 <script setup>
-import {Head, Link} from '@inertiajs/vue3';
+import {Head, Link, usePage} from '@inertiajs/vue3';
 import IndexLayout from "@/Layouts/IndexLayout.vue";
 import AdminNav from "@/Components/Admin/AdminNav.vue";
-import {ref} from 'vue'
+import {computed, ref} from 'vue'
 import {Swiper, SwiperSlide} from "swiper/vue";
 import {Navigation, Pagination} from 'swiper/modules';
+import Filters from "@/Components/Main/Filters.vue";
 
 const modules = [Navigation, Pagination];
+
+const page = usePage()
+const user = computed(() => page.props.auth.user)
+const catalog_view = ref(user.value.catalog_view)
+
+const catalogView = (bool) => catalog_view.value = bool
 
 const props = defineProps(
     ['posts', 'postsPaginate']
 );
+
+// Просмотр фото мышкой
 const postsData = props.posts.data
 console.log(postsData)
 
@@ -19,11 +28,6 @@ const currentKey = ref([]);
 postsData.forEach(function (post) {
     currentKey.value.push({postId: post.id, photoId: post.photos[0].id})
 })
-
-function onMouseLeave() {
-    // currentKey.value = 0;
-    // console.log(currentKey.value)
-}
 
 function onMouseEnter(photoId, postId) {
     for (let object of currentKey.value) {
@@ -46,8 +50,11 @@ function numberFilter(number) {
         <template #adminNav>
             <AdminNav/>
         </template>
+        <template #filters>
+            <Filters @checkbox="catalogView"/>
+        </template>
 
-        <div class="w-full p-2 lg:p-6 max-w-screen-2xl mx-auto shadow sm:rounded-2xl bg-white">
+        <div class="p-2 lg:p-4 max-w-screen-2xl mx-auto shadow sm:rounded-2xl bg-white">
             <div v-if="!postsData[0]" class="text-center">
                 Вы не добавили машины!
             </div>
@@ -56,7 +63,6 @@ function numberFilter(number) {
                      class="overflow-hidden col-span-12 sm:col-span-6 lg:col-span-4 text-gray-900">
                     <Link :href="route('admin-post.show', post.id)">
                         <div
-                            @mouseleave="onMouseLeave"
                             v-if="post.photos.length > 0"
                             class="slider hidden sm:flex">
                             <div class="slider__elements">
@@ -131,9 +137,11 @@ function numberFilter(number) {
                     </div>
                 </div>
             </div>
+            <div>{{ $page.props.auth.user.catalog_view }}</div>
+            <div>{{ catalog_view }}</div>
             <nav v-if="postsData" class="flex justify-end">
-                <!--                {{ posts.meta }}-->
-                <!--                <Pagination :links="posts.meta.links"></Pagination>-->
+                <!--{{ posts.meta }}-->
+                <!--<Pagination :links="posts.meta.links"></Pagination>-->
             </nav>
         </div>
 

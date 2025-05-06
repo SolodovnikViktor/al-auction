@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('role')->default('user');
+            $table->boolean('catalog_view')->default(0);
             $table->string('name');
             $table->string('surname');
             $table->string('patronymic')->nullable();

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -59,5 +60,12 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+
+    public function updateCatalogView(Request $request, User $user)
+    {
+        $validated = $request->validate(['catalog_view' => ['required']]);
+        $user->update($validated);
+//        return to_route('admin-post.index');
     }
 }

@@ -21,7 +21,6 @@ const props = defineProps({
     drives: Array,
     bodyTypes: Array,
     transmissions: Array,
-    user: Object,
     // tmpImages: Array,
     // photoPosition: {
     //     type: Object,
@@ -88,16 +87,7 @@ function getPhotos() {
 function pondRestore(photos) {
     myFiles = []
     errorLoadFiles.value = '';
-
-    console.log(photos)
-
     for (const photo of photos) {
-        // form.photos_arr.push(photo.id.toString())
-        // if (photoPosition === '') {
-        //     photoPosition = photoPosition + photo.id
-        // } else {
-        //     photoPosition = photoPosition + ',' + photo.id
-        // }
         myFiles.push({
             source: photo.path,
             options: {
@@ -121,8 +111,6 @@ function pondRestore(photos) {
 
 // Перетаскивание
 function reorderFiles(files, origin, target) {
-    // form.photos_arr = []
-    console.log(files)
     let photoPosition = ''
     files.forEach(function (file) {
         // form.photos_arr.push(file.file.id.toString())
@@ -132,8 +120,6 @@ function reorderFiles(files, origin, target) {
             photoPosition = photoPosition + ',' + file.file.id
         }
     })
-    console.log(photoPosition)
-
     axios.post('/admin/tmp-reorder', photoPosition)
         .catch((error) => {
             console.log(error);
@@ -160,7 +146,6 @@ function handleFilePondRevert(id, load, error) {
     // photoPosition = photoPosition.replace(/(^[,\s]+)|([,\s]+$)/g, '');
     // photoPosition = photoPosition.replace(',,', ',');
     // console.log(photoPosition)
-
     // photoPosition = photoPosition.replace(',' + id, '');
 }
 
@@ -204,8 +189,7 @@ function FilePondErrorLoad(error, files) {
         <div class="p-2 lg:p-4 max-w-2xl mx-auto shadow sm:rounded-2xl bg-white">
 
             <form :disabled="form.processing" @submit.prevent="$event => form.post(route('admin-post.store'),{
-                onError: error => {console.log(error)},
-            })">
+                onError: error => {console.log(error)}})">
                 <div class="overflow-hidden max-w-2xl pb-4 mb-4 border-b border-gray-200">
                     <div class="h-full text-gray-900">
                         <!-- dropOnPage - FilePond будет перехватывать все файлы, размещенные на веб-странице
@@ -252,7 +236,7 @@ function FilePondErrorLoad(error, files) {
                                     method: 'POST',
                                     withCredentials: false,
                                     onerror: FilePondErrorLoad,
-                                    onload: handleFilePondLoad,
+                                    onload: handleFilePondLoad
                                     },
                                 revert:{
                                     url: '/admin/tmp-revert',
