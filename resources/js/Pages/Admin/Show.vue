@@ -4,10 +4,7 @@ import AdminNav from "@/Components/Admin/AdminNav.vue";
 import {Head, Link} from "@inertiajs/vue3";
 import {Swiper, SwiperSlide} from "swiper/vue";
 import {FreeMode, Navigation, Thumbs} from 'swiper/modules';
-// import 'swiper/css';
-// import 'swiper/css/free-mode';
 import 'swiper/css/navigation';
-// import 'swiper/css/thumbs';
 import {ref} from "vue";
 
 const props = defineProps({
@@ -20,7 +17,7 @@ const setThumbsSwiper = (swiper) => {
     thumbsSwiper.value = swiper;
 };
 
-let isSlidesPerView = ref(3);
+let isSlidesPerView = ref(4);
 if (post.photos.length > 3) {
     isSlidesPerView = ref(4.2)
 }
@@ -212,6 +209,7 @@ function numberFilter(number) {
     flex-shrink: 0;
     position: relative;
     height: 100%;
+    width: 100%;
 }
 
 .mySwiperDown .swiper-slide :hover {
