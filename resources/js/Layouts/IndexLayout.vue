@@ -50,61 +50,60 @@ function search() {
         </div>
 
         <header
-            class="max-w-screen-2xl sm:rounded-2xl shadow mb-4 mx-auto bg-white  fixed top-0 left-0 right-0 sm:left-4 sm:right-4 z-50">
+            class="max-w-screen-2xl sm:rounded-2xl shadow mb-4 mx-auto bg-white px-4 sm:px-5 fixed top-0 left-0 right-0 sm:left-4 sm:right-4 z-50">
             <div class="border-b border-gray-100">
-                <div class="px-4 lg:px-6">
-                    <div class="flex h-16 justify-between">
-                        <nav class="flex">
-                            <div class="flex shrink-0 items-center">
-                                <Link :href="route('home')">
-                                    <ApplicationLogo class="block h-9 w-auto fill-current text-gray-800"/>
-                                </Link>
+                <div class="flex h-16 justify-between">
+                    <nav class="flex">
+                        <div class="flex shrink-0 items-center">
+                            <Link :href="route('home')">
+                                <ApplicationLogo class="block h-9 w-auto fill-current text-gray-800"/>
+                            </Link>
+                        </div>
+                        <div
+                            class="hidden *:text-lg space-x-4 lg:space-x-8 sm:-my-px mx-4 sm:flex">
+                            <NavLink
+                                :href="route('admin-post.index')"
+                                :active=adminActive>
+                                Админ панель
+                            </NavLink>
+                            <NavLink
+                                :href="route('home')"
+                                :active="route().current('home')">
+                                Аукцион
+                            </NavLink>
+                            <NavLink
+                                :href="route('contact')"
+                                :active="route().current('contact')">
+                                Контакты
+                            </NavLink>
+                        </div>
+                    </nav>
+                    <div class="flex">
+                        <form
+                            :disabled="form.processing"
+                            @submit.prevent="search"
+                            class="inline-flex items-center">
+                            <div class="relative">
+                                <input type="search"
+                                       id="default-search"
+                                       v-model="form.search"
+                                       class="block w-full p-1 pr-10 text-sm text-gray-900 border border-gray-200 rounded-lg "
+                                       placeholder="Поиск" required/>
+                                <button type="submit"
+                                        class="absolute top-0 end-0 bottom-0 focus:outline-none px-3">
+                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                              stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                                    </svg>
+                                </button>
                             </div>
-                            <div
-                                class="hidden *:text-lg space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink
-                                    :href="route('admin-post.index')"
-                                    :active=adminActive>
-                                    Админ панель
-                                </NavLink>
-                                <NavLink
-                                    :href="route('home')"
-                                    :active="route().current('home')">
-                                    Аукцион
-                                </NavLink>
-                                <NavLink
-                                    :href="route('contact')"
-                                    :active="route().current('contact')">
-                                    Контакты
-                                </NavLink>
-                            </div>
-                        </nav>
-                        <div class="flex">
-                            <form
-                                :disabled="form.processing"
-                                @submit.prevent="search"
-                                class="inline-flex items-center">
-                                <div class="relative">
-                                    <input type="search"
-                                           id="default-search"
-                                           v-model="form.search"
-                                           class="block w-full p-1 pr-10 text-sm text-gray-900 border border-gray-200 rounded-lg "
-                                           placeholder="Поиск" required/>
-                                    <button type="submit"
-                                            class="absolute top-0 end-0 bottom-0 focus:outline-none px-3">
-                                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
-                                             xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                                  stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                                        </svg>
-                                    </button>
-                                </div>
-                            </form>
-                            <div class="hidden sm:ms-2 sm:flex sm:items-center">
-                                <!-- Settings Dropdown -->
-                                <div v-if="$page.props.auth.user" class="relative">
-                                    <Dropdown align="right" width="40">
-                                        <template #trigger>
+                        </form>
+                        <div class="hidden sm:ms-2 sm:flex sm:items-center">
+                            <!-- Settings Dropdown -->
+                            <div v-if="$page.props.auth.user" class="relative">
+                                <Dropdown align="right" width="40">
+                                    <template #trigger>
                                     <span class="inline-flex rounded-md">
                                         <button
                                             type="button"
@@ -122,60 +121,59 @@ function search() {
                                             </svg>
                                         </button>
                                     </span>
-                                        </template>
-                                        <template #content>
-                                            <DropdownLink
-                                                :href="route('profile.edit')">
-                                                Профиль
-                                            </DropdownLink>
-                                            <DropdownLink
-                                                :href="route('logout')"
-                                                method="post"
-                                                as="button">
-                                                Выйти
-                                            </DropdownLink>
-                                        </template>
-                                    </Dropdown>
-                                </div>
-                                <template v-else>
-                                    <Link
-                                        :href="route('login')"
-                                        class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20]">
-                                        Вход
-                                    </Link>
-                                    <Link
-                                        :href="route('register')"
-                                        class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20]">
-                                        Регистрация
-                                    </Link>
-                                </template>
+                                    </template>
+                                    <template #content>
+                                        <DropdownLink
+                                            :href="route('profile.edit')">
+                                            Профиль
+                                        </DropdownLink>
+                                        <DropdownLink
+                                            :href="route('logout')"
+                                            method="post"
+                                            as="button">
+                                            Выйти
+                                        </DropdownLink>
+                                    </template>
+                                </Dropdown>
                             </div>
+                            <template v-else>
+                                <Link
+                                    :href="route('login')"
+                                    class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20]">
+                                    Вход
+                                </Link>
+                                <Link
+                                    :href="route('register')"
+                                    class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20]">
+                                    Регистрация
+                                </Link>
+                            </template>
                         </div>
-                        <!-- Hamburger -->
-                        <div class="-me-2 flex items-center sm:hidden">
-                            <button
-                                @click="showingNavigationDropdown =!showingNavigationDropdown"
-                                class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-none">
-                                <svg
-                                    class="h-6 w-6"
-                                    stroke="currentColor"
-                                    fill="none"
-                                    viewBox="0 0 24 24">
-                                    <path
-                                        :class="{hidden: showingNavigationDropdown,'inline-flex':!showingNavigationDropdown}"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M4 6h16M4 12h16M4 18h16"/>
-                                    <path
-                                        :class="{hidden: !showingNavigationDropdown,'inline-flex':showingNavigationDropdown}"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M6 18L18 6M6 6l12 12"/>
-                                </svg>
-                            </button>
-                        </div>
+                    </div>
+                    <!-- Hamburger -->
+                    <div class="-me-2 flex items-center sm:hidden">
+                        <button
+                            @click="showingNavigationDropdown =!showingNavigationDropdown"
+                            class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-none">
+                            <svg
+                                class="h-6 w-6"
+                                stroke="currentColor"
+                                fill="none"
+                                viewBox="0 0 24 24">
+                                <path
+                                    :class="{hidden: showingNavigationDropdown,'inline-flex':!showingNavigationDropdown}"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M4 6h16M4 12h16M4 18h16"/>
+                                <path
+                                    :class="{hidden: !showingNavigationDropdown,'inline-flex':showingNavigationDropdown}"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
                     </div>
                 </div>
                 <!-- Responsive Navigation Menu -->
