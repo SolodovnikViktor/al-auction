@@ -13,8 +13,8 @@ return new class extends Migration {
             $table->string('image_preview')->nullable();
             $table->string('title')->nullable();
             $table->string('vin');
-            $table->string('brand');
-            $table->string('model');
+            $table->foreignId('brand_id');
+            $table->foreignId('model_id');
             $table->smallInteger('year_release');
             $table->foreignId('color_id');
             $table->unsignedMediumInteger('mileage'); // пробег

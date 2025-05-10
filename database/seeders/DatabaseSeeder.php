@@ -14,6 +14,8 @@ class DatabaseSeeder extends Seeder
             DriveSeeder::class,
             TransmissionSeeder::class,
             ColorSeeder::class,
+            BrandSeeder::class,
+            CarModelSeeder::class,
         ]);
     }
 }

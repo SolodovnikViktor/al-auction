@@ -7,8 +7,11 @@ use App\Http\Requests\Post\PostRequest;
 use App\Http\Resources\Admin\PostResource;
 use App\Http\Resources\Admin\PostShowResource;
 use App\Models\BodyType;
+use App\Models\Brand;
+use App\Models\CarModel;
 use App\Models\Color;
 use App\Models\Drive;
+use App\Models\Model;
 use App\Models\Photo;
 use App\Models\PhotoPosition;
 use App\Models\Post;
@@ -38,6 +41,7 @@ class AdminPostController extends Controller
         $bodyTypes = BodyType::all()->select('id', 'title');
         $transmissions = Transmission::all()->select('id', 'title');
         return Inertia::render('Admin/Create', [
+            'brands' => Brand::all(),
             'colors' => $colors,
             'drives' => $drives,
             'bodyTypes' => $bodyTypes,

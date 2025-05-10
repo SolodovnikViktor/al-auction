@@ -328,7 +328,7 @@ function updatePublished() {
                         <div>
                             <InputLabel :for="input.title" :value="input.value"/>
                             <MyInput
-                                :id="input.title"
+                                :title="input.title"
                                 :type="input.type"
                                 :inputmode="input.inputmode"
                                 :placeholder="input.placeholder"

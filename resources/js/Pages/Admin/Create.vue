@@ -15,8 +15,11 @@ import InputLabel from "@/Components/InputLabel.vue";
 import MyInput from "@/Components/Options/MyInput.vue";
 import {ref} from "vue";
 import axios from "axios";
+import ButtonPlus from "@/Components/MyButton/ButtonPlus.vue";
 
 const props = defineProps({
+    brands: Array,
+    models: Array,
     colors: Array,
     drives: Array,
     bodyTypes: Array,
@@ -33,8 +36,8 @@ const FilePond = vueFilePond(FilePondPluginFileValidateType, FilePondPluginImage
 const formInputs = [
     {title: "title", value: 'Заголовок', type: "text", placeholder: 'Краткое описание'},
     {title: "vin", value: 'VIN', type: "text"},
-    {title: "brand", value: 'Бренд', type: "text"},
-    {title: "model", value: 'Модель', type: "text"},
+    {title: "brand", value: 'Бренд', type: "select"},
+    {title: "model", value: 'Модель', type: "select"},
     {title: "year_release", value: 'Год выпуска', type: "number"},
     {title: "color_id", value: 'Цвет кузова', type: "select"},
     {title: "mileage", value: 'Пробег', type: "number", placeholder: 'км'},
@@ -176,6 +179,8 @@ function FilePondErrorLoad(error, files) {
     console.log(error)
     console.log(files)
 }
+
+
 </script>
 
 <template>
@@ -254,22 +259,27 @@ function FilePondErrorLoad(error, files) {
                         <InputError class="mt-2" :message="errorLoadFiles"/>
                     </div>
                     <div v-for="(input, index) in formInputs" :key=index
-                         class=" p-1 sm:col-span-3 lg:col-span-2 text-gray-900">
-                        <div>
-                            <InputLabel :for="input.title" :value="input.value"/>
-                            <MyInput
-                                :id="input.title"
-                                :type="input.type"
-                                :inputmode="input.inputmode"
-                                :placeholder="input.placeholder"
-                                :colors
-                                :drives
-                                :bodyTypes
-                                :transmissions
-                                v-model="form[input.title]"
-                            />
-                            <InputError class="mt-2" :message="form.errors[input.title]"/>
+                         class="p-1 sm:col-span-3 lg:col-span-2 text-gray-900">
+                        <div class="flex justify-between relative">
+                            <InputLabel class="content-center" :for="input.title" :value="input.value"/>
+                            <div class="flex w-3/4">
+                                <MyInput
+                                    :title="input.title"
+                                    :type="input.type"
+                                    :value="input.value"
+                                    :inputmode="input.inputmode"
+                                    :placeholder="input.placeholder"
+                                    :brands
+                                    :models
+                                    :colors
+                                    :drives
+                                    :bodyTypes
+                                    :transmissions
+                                    v-model="form[input.title]"
+                                />
+                            </div>
                         </div>
+                        <InputError class="mt-2" :message="form.errors[input.title]"/>
                     </div>
 
                 </div>

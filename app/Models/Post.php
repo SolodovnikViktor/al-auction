@@ -19,8 +19,8 @@ class Post extends Model
         'image_preview',
         'title',
         'vin',
-        'brand',
-        'model',
+        'brand_id',
+        'car_model_id',
         'year_release',
         'color_id',
         'mileage',
@@ -41,6 +41,16 @@ class Post extends Model
     public function color(): BelongsTo
     {
         return $this->belongsTo(Color::class)->select('title');
+    }
+
+    public function brand(): BelongsTo
+    {
+        return $this->belongsTo(Brand::class)->select('title');
+    }
+
+    public function model(): BelongsTo
+    {
+        return $this->belongsTo(CarModel::class)->select('title');
     }
 
     public function body_type(): BelongsTo
