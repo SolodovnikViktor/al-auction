@@ -12,7 +12,7 @@ import 'filepond-plugin-file-poster/dist/filepond-plugin-file-poster.css';
 import InputError from "@/Components/InputError.vue";
 import AdminNav from "@/Components/Admin/AdminNav.vue";
 import InputLabel from "@/Components/InputLabel.vue";
-import MyInput from "@/Components/Options/MyInput.vue";
+import FormInput from "@/Components/Options/Form/FormInput.vue";
 import {ref} from "vue";
 import axios from "axios";
 import ButtonPlus from "@/Components/MyButton/ButtonPlus.vue";
@@ -263,7 +263,7 @@ function FilePondErrorLoad(error, files) {
                         <div class="flex justify-between relative">
                             <InputLabel class="content-center" :for="input.title" :value="input.value"/>
                             <div class="flex w-3/4">
-                                <MyInput
+                                <FormInput
                                     :title="input.title"
                                     :type="input.type"
                                     :value="input.value"

@@ -12,7 +12,7 @@ import 'filepond-plugin-file-poster/dist/filepond-plugin-file-poster.css';
 import InputError from "@/Components/InputError.vue";
 import AdminNav from "@/Components/Admin/AdminNav.vue";
 import InputLabel from "@/Components/InputLabel.vue";
-import MyInput from "@/Components/Options/MyInput.vue";
+import FormInput from "@/Components/Options/Form/FormInput.vue";
 import {ref} from "vue";
 import axios from "axios";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
@@ -327,7 +327,7 @@ function updatePublished() {
                          class="p-1 sm:col-span-3 lg:col-span-2 text-gray-900">
                         <div>
                             <InputLabel :for="input.title" :value="input.value"/>
-                            <MyInput
+                            <FormInput
                                 :title="input.title"
                                 :type="input.type"
                                 :inputmode="input.inputmode"
