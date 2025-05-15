@@ -73,7 +73,7 @@ class PhotoController extends Controller
     public function reorder(Request $request)
     {
         $userId = auth()->id();
-        $photoPosition = PhotoPosition::where('user_id', $userId)->where('post_id', null)->firstOrFail();
+        $photoPosition = PhotoPosition::where('user_id', $userId)->where('post_id', null)->first();
         $photoPosition->update(['position' => $request->getContent()]);
     }
 
@@ -81,8 +81,8 @@ class PhotoController extends Controller
     {
         $userId = auth()->id();
         $getPath = request()->getContent();
-        $photo = Photo::where('id', $getPath)->orWhere('path', $getPath)->firstOrFail();
-        $photoPosition = PhotoPosition::where('user_id', $userId)->where('post_id', null)->firstOrFail();
+        $photo = Photo::where('id', $getPath)->orWhere('path', $getPath)->first();
+        $photoPosition = PhotoPosition::where('user_id', $userId)->where('post_id', null)->first();
         $position = str_replace($photo->id, '', $photoPosition->position);
         $position = preg_replace('/,{2,}/', ',', trim($position, ','));
         $photoPosition->update(['position' => $position]);

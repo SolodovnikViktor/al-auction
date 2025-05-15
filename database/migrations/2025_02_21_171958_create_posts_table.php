@@ -10,11 +10,9 @@ return new class extends Migration {
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
-            $table->string('image_preview')->nullable();
-            $table->string('title')->nullable();
-            $table->string('vin');
             $table->foreignId('brand_id');
             $table->foreignId('model_id');
+            $table->string('vin');
             $table->smallInteger('year_release');
             $table->foreignId('color_id');
             $table->unsignedMediumInteger('mileage'); // пробег

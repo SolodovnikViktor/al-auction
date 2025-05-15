@@ -13,8 +13,9 @@ function onMouseEnter(key) {
 }
 
 </script>
-
 <template>
+
+    cfgbcfbcfbcgbcvbcvbcvbcvbcvbc
     <div class="slider">
         <div class="slider__element slider__element--main active">6</div>
         <div class="slider__elements">

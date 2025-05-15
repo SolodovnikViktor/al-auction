@@ -27,6 +27,10 @@ Route::middleware(['auth', 'verified', 'roles:admin'])->group(function () {
         'admin-post.updatePublished'
     );
 
+    Route::post('/admin/post/crete/get-model', [AdminPostController::class, 'getModel']);
+    Route::post('/admin/post/crete/brand', [AdminPostController::class, 'storeBrand'])->name('admin-post.storeBrand');
+    Route::post('/admin/post/crete/model', [AdminPostController::class, 'storeModel'])->name('admin-post.storeModel');
+
     Route::delete('/admin/post/{post}', [AdminPostController::class, 'destroy'])->name('admin-post.destroy');
     Route::get('/admin/posts/search', [AdminPostFilterController::class, 'adminSearch'])->name('admin-post.search');
 

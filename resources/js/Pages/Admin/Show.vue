@@ -69,6 +69,7 @@ function numberFilter(number) {
                         </swiper-slide>
                     </swiper>
                     <img
+                        class="rounded-2xl"
                         v-else
                         src="/storage/images/service/not_photo.jpg"
                         alt="Фото отсутствует">

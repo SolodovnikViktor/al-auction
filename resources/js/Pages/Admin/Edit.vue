@@ -11,48 +11,30 @@ import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css
 import 'filepond-plugin-file-poster/dist/filepond-plugin-file-poster.css';
 import InputError from "@/Components/InputError.vue";
 import AdminNav from "@/Components/Admin/AdminNav.vue";
-import InputLabel from "@/Components/InputLabel.vue";
-import FormInput from "@/Components/Options/Form/FormInput.vue";
 import {ref} from "vue";
 import axios from "axios";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import DangerButton from "@/Components/DangerButton.vue";
 import Modal from "@/Components/Modal.vue";
+import FormPost from "@/Components/Admin/Form/FormPost.vue";
 
 const props = defineProps({
     post: Object,
+    brands: Array,
     colors: Array,
     drives: Array,
     bodyTypes: Array,
     transmissions: Array,
     user: Object,
 });
+console.log(props.post)
 
 const FilePond = vueFilePond(FilePondPluginFileValidateType, FilePondPluginImagePreview, FilePondPluginFilePoster, FilePondPluginFileRename);
 
-const formInputs = [
-    {title: "title", value: 'Заголовок', type: "text", autofocus: true},
-    {title: "vin", value: 'VIN', type: "text"},
-    {title: "brand", value: 'Бренд', type: "text"},
-    {title: "model", value: 'Модель', type: "text"},
-    {title: "year_release", value: 'Год выпуска', type: "number"},
-    {title: "color_id", value: 'Цвет кузова', type: "select"},
-    {title: "mileage", value: 'Пробег', type: "number", placeholder: 'км'},
-    {title: "fuel", value: 'Топливо', type: "text"},
-    {title: "drive_id", value: 'Привод', type: "select"},
-    {title: "body_type_id", value: 'Кузов', type: "select"},
-    {title: "transmission_id", value: 'Коробка', type: "select"},
-    {title: "engine_capacity", value: 'Объём двигателя', type: "number", inputmode: "decimal"},
-    {title: "horsepower", value: 'Мощность', type: "number"},
-    {title: "price", value: 'Цена', type: "number"},
-    {title: "description", value: 'Описание', type: "textarea"},
-];
-
 const form = useForm({
-    title: props.post.title,
+    brand_id: props.post.brand_id,
+    model_id: props.post.model_id,
     vin: props.post.vin,
-    brand: props.post.brand,
-    model: props.post.model,
     year_release: props.post.year_release,
     color_id: props.post.color_id,
     mileage: props.post.mileage,
@@ -88,9 +70,6 @@ function getPhotos() {
 function pondRestore(photos) {
     myFiles = []
     errorLoadFiles.value = '';
-
-    console.log(photos)
-
     for (const photo of photos) {
         myFiles.push({
             source: photo.path,
@@ -203,10 +182,6 @@ let toggle = ref();
 toggle.value = props.post.is_published;
 
 function updatePublished() {
-    // axios.patch(`/admin/post/${props.post.id}`, {is_published: toggle.value})
-    //     .catch((error) => {
-    //         console.log(error);
-    //     });
     form.is_published = toggle.value
     router.patch(route('admin-post.updatePublished', props.post.id), {
         is_published: toggle.value
@@ -257,7 +232,7 @@ function updatePublished() {
             </div>
 
             <form :disabled="form.processing"
-                  @submit.prevent="$event => form.patch(route('admin-post.update', post.id))">
+                  @submit.prevent="form.patch(route('admin-post.update', post.id))">
                 <div class="overflow-hidden max-w-2xl pb-4 mb-4 border-b border-gray-200">
                     <div class="h-full mb-8 text-gray-900">
                         <!-- dropOnPage - FilePond будет перехватывать все файлы, размещенные на веб-странице
@@ -323,24 +298,14 @@ function updatePublished() {
                         />
                         <InputError class="mt-2" :message="errorLoadFiles"/>
                     </div>
-                    <div v-for="(input, index) in formInputs" :key=index
-                         class="p-1 sm:col-span-3 lg:col-span-2 text-gray-900">
-                        <div>
-                            <InputLabel :for="input.title" :value="input.value"/>
-                            <FormInput
-                                :title="input.title"
-                                :type="input.type"
-                                :inputmode="input.inputmode"
-                                :placeholder="input.placeholder"
-                                :colors
-                                :drives
-                                :bodyTypes
-                                :transmissions
-                                v-model="form[input.title]"
-                            />
-                            <InputError class="mt-2" :message="form.errors[input.title]"/>
-                        </div>
-                    </div>
+                    <FormPost
+                        :brands
+                        :colors
+                        :drives
+                        :bodyTypes
+                        :transmissions
+                        :form="form"
+                    />
                 </div>
                 <nav class="flex justify-end">
                     <button type="submit"

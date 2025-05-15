@@ -8,4 +8,9 @@ class CarModel extends Model
 {
     protected $table = 'car_models';
     public $timestamps = false;
+
+    protected $fillable = [
+        'title',
+        'brand_id',
+    ];
 }

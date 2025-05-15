@@ -20,7 +20,7 @@ class Post extends Model
         'title',
         'vin',
         'brand_id',
-        'car_model_id',
+        'model_id',
         'year_release',
         'color_id',
         'mileage',

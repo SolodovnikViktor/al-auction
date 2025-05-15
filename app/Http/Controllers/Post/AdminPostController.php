@@ -11,12 +11,12 @@ use App\Models\Brand;
 use App\Models\CarModel;
 use App\Models\Color;
 use App\Models\Drive;
-use App\Models\Model;
 use App\Models\Photo;
 use App\Models\PhotoPosition;
 use App\Models\Post;
 use App\Models\Transmission;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -27,26 +27,60 @@ class AdminPostController extends Controller
     public function index(): Response
     {
         $postsPaginate = Post::with('user', 'images', 'imagesPath')->paginate(15);
-        $posts = PostResource::collection(Post::paginate(15));
         return Inertia::render('Admin/Index', [
-            'posts' => $posts,
+            'posts' => PostResource::collection(Post::paginate(15)),
+            'brands' => Brand::all(),
+            'colors' => Color::all(),
+            'drives' => Drive::all(),
+            'bodyTypes' => BodyType::all(),
+            'transmissions' => Transmission::all(),
+            
             'postsPaginate' => $postsPaginate,
         ]);
     }
 
     public function create(): Response
     {
-        $colors = Color::all()->select('id', 'title');
-        $drives = Drive::all()->select('id', 'title');
-        $bodyTypes = BodyType::all()->select('id', 'title');
-        $transmissions = Transmission::all()->select('id', 'title');
         return Inertia::render('Admin/Create', [
             'brands' => Brand::all(),
-            'colors' => $colors,
-            'drives' => $drives,
-            'bodyTypes' => $bodyTypes,
-            'transmissions' => $transmissions,
+            'colors' => Color::all(),
+            'drives' => Drive::all(),
+            'bodyTypes' => BodyType::all(),
+            'transmissions' => Transmission::all(),
         ]);
+    }
+
+    public function getModel(Request $request)
+    {
+        return CarModel::where('brand_id', $request->getContent())->get();
+    }
+
+    public function storeBrand(Request $request)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|unique:brands|max:20|min:2',
+        ], [
+            'title.required' => 'Заполните поле "Бренд".',
+            'title.unique' => 'Такой Бренд уже создан.',
+            'title.max' => 'Максимум 20 символов.',
+            'title.min' => 'Минимум 2 символа.',
+        ]);
+        Brand::create($validated);
+        return Redirect::back();
+    }
+
+    public function storeModel(Request $request)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:20',
+            'brand_id' => 'required|integer|exists:brands,id',
+        ], [
+            'title.required' => 'Заполните поле "Бренд".',
+            'title.unique' => 'Такой Бренд уже создан.',
+            'title.max' => 'Максимум 20 символов.',
+        ]);
+        CarModel::create($validated);
+        return Redirect::back();
     }
 
     public function store(PostRequest $request)
@@ -55,33 +89,34 @@ class AdminPostController extends Controller
         $validated = $request->validated();
         $post = Post::create($validated);
 
-        $photoPositionStr = PhotoPosition::where('user_id', $userId)->where('post_id', null)->firstOrFail();
-        $photoPositionArr = explode(',', $photoPositionStr->position);
-        $photos = Photo::whereIn('id', $photoPositionArr)->get();
-        foreach ($photos as $photo) {
-            $photoName = $photo->name;
-            $folder = '/images/posts/PostID-' . $post->id . '/' . uniqid('image-', true);
-            $pathTmp = $photo->folder . '/' . $photoName;
-            $pathNew = $folder . '/' . $photoName;
-            $pathNewMin = $folder . '/' . 'min_' . $photoName;
-            if (Storage::copy($pathTmp, $pathNew)) {
-                $photoMin = Image::read(Storage::get($pathTmp))->scaleDown(
-                    300,
-                    200
-                );
-                $photoMin->save('storage/' . $pathNewMin);
-                Storage::deleteDirectory($photo->folder);
-                $photo->update([
-                    'post_id' => $post->id,
-                    'folder' => $folder,
-                    'path' => '/storage' . $pathNew,
-                    'path_min' => '/storage' . $pathNewMin,
-                ]);
-                $photoPositionStr->update([
-                    'post_id' => $post->id,
-                ]);
-            } else {
-                return back()->with('message_form', 'Фотографии не сохранены');
+        if ($photoPositionStr = PhotoPosition::where('user_id', $userId)->where('post_id', null)->first()) {
+            $photoPositionArr = explode(',', $photoPositionStr->position);
+            $photos = Photo::whereIn('id', $photoPositionArr)->get();
+            foreach ($photos as $photo) {
+                $photoName = $photo->name;
+                $folder = '/images/posts/PostID-' . $post->id . '/' . uniqid('image-', true);
+                $pathTmp = $photo->folder . '/' . $photoName;
+                $pathNew = $folder . '/' . $photoName;
+                $pathNewMin = $folder . '/' . 'min_' . $photoName;
+                if (Storage::copy($pathTmp, $pathNew)) {
+                    $photoMin = Image::read(Storage::get($pathTmp))->scaleDown(
+                        300,
+                        200
+                    );
+                    $photoMin->save('storage/' . $pathNewMin);
+                    Storage::deleteDirectory($photo->folder);
+                    $photo->update([
+                        'post_id' => $post->id,
+                        'folder' => $folder,
+                        'path' => '/storage' . $pathNew,
+                        'path_min' => '/storage' . $pathNewMin,
+                    ]);
+                    $photoPositionStr->update([
+                        'post_id' => $post->id,
+                    ]);
+                } else {
+                    return back()->with('message_form', 'Фотографии не сохранены');
+                }
             }
         }
         $request->session()->flash('message_form', 'Автомобиль успешно добавлен message_form');
@@ -104,6 +139,7 @@ class AdminPostController extends Controller
         $transmissions = Transmission::all()->select('id', 'title');
         return Inertia::render('Admin/Edit', [
             'post' => $post,
+            'brands' => Brand::all(),
             'colors' => $colors,
             'drives' => $drives,
             'bodyTypes' => $bodyTypes,

@@ -11,51 +11,24 @@ import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css
 import 'filepond-plugin-file-poster/dist/filepond-plugin-file-poster.css';
 import InputError from "@/Components/InputError.vue";
 import AdminNav from "@/Components/Admin/AdminNav.vue";
-import InputLabel from "@/Components/InputLabel.vue";
-import FormInput from "@/Components/Options/Form/FormInput.vue";
 import {ref} from "vue";
 import axios from "axios";
-import ButtonPlus from "@/Components/MyButton/ButtonPlus.vue";
+import FormPost from "@/Components/Admin/Form/FormPost.vue";
 
 const props = defineProps({
     brands: Array,
-    models: Array,
     colors: Array,
     drives: Array,
     bodyTypes: Array,
     transmissions: Array,
-    // tmpImages: Array,
-    // photoPosition: {
-    //     type: Object,
-    //     default: [],
-    // },
 });
 
 const FilePond = vueFilePond(FilePondPluginFileValidateType, FilePondPluginImagePreview, FilePondPluginFilePoster, FilePondPluginFileRename);
 
-const formInputs = [
-    {title: "title", value: 'Заголовок', type: "text", placeholder: 'Краткое описание'},
-    {title: "vin", value: 'VIN', type: "text"},
-    {title: "brand", value: 'Бренд', type: "select"},
-    {title: "model", value: 'Модель', type: "select"},
-    {title: "year_release", value: 'Год выпуска', type: "number"},
-    {title: "color_id", value: 'Цвет кузова', type: "select"},
-    {title: "mileage", value: 'Пробег', type: "number", placeholder: 'км'},
-    {title: "fuel", value: 'Топливо', type: "text"},
-    {title: "drive_id", value: 'Привод', type: "select"},
-    {title: "body_type_id", value: 'Кузов', type: "select"},
-    {title: "transmission_id", value: 'Коробка', type: "select"},
-    {title: "engine_capacity", value: 'Объём двигателя', type: "number", inputmode: "decimal"},
-    {title: "horsepower", value: 'Мощность', type: "number"},
-    {title: "price", value: 'Цена', type: "number"},
-    {title: "description", value: 'Описание', type: "textarea"},
-];
-
 const form = useForm({
-    title: '',
+    brand_id: '',
+    model_id: '',
     vin: '',
-    brand: '',
-    model: '',
     year_release: '',
     color_id: '',
     mileage: '',
@@ -179,8 +152,6 @@ function FilePondErrorLoad(error, files) {
     console.log(error)
     console.log(files)
 }
-
-
 </script>
 
 <template>
@@ -193,7 +164,7 @@ function FilePondErrorLoad(error, files) {
 
         <div class="p-2 lg:p-4 max-w-2xl mx-auto shadow sm:rounded-2xl bg-white">
 
-            <form :disabled="form.processing" @submit.prevent="$event => form.post(route('admin-post.store'),{
+            <form :disabled="form.processing" @submit.prevent="form.post(route('admin-post.store'),{
                 onError: error => {console.log(error)}})">
                 <div class="overflow-hidden max-w-2xl pb-4 mb-4 border-b border-gray-200">
                     <div class="h-full text-gray-900">
@@ -258,30 +229,14 @@ function FilePondErrorLoad(error, files) {
                         />
                         <InputError class="mt-2" :message="errorLoadFiles"/>
                     </div>
-                    <div v-for="(input, index) in formInputs" :key=index
-                         class="p-1 sm:col-span-3 lg:col-span-2 text-gray-900">
-                        <div class="flex justify-between relative">
-                            <InputLabel class="content-center" :for="input.title" :value="input.value"/>
-                            <div class="flex w-3/4">
-                                <FormInput
-                                    :title="input.title"
-                                    :type="input.type"
-                                    :value="input.value"
-                                    :inputmode="input.inputmode"
-                                    :placeholder="input.placeholder"
-                                    :brands
-                                    :models
-                                    :colors
-                                    :drives
-                                    :bodyTypes
-                                    :transmissions
-                                    v-model="form[input.title]"
-                                />
-                            </div>
-                        </div>
-                        <InputError class="mt-2" :message="form.errors[input.title]"/>
-                    </div>
-
+                    <FormPost
+                        :brands
+                        :colors
+                        :drives
+                        :bodyTypes
+                        :transmissions
+                        :form="form"
+                    />
                 </div>
                 <nav class="flex justify-end">
                     <button type="submit" :disabled="form.processing"

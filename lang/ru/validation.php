@@ -156,11 +156,15 @@ return [
     ],
 
     'attributes' => [
-        'brand' => 'Бренд',
-        'model' => 'Модель',
+        'brand_id' => 'Бренд',
+        'model_id' => 'Модель',
         'year_release' => 'Год выпуска',
+        'color_id' => 'Цвет',
         'mileage' => 'Пробег',
         'fuel' => 'Топливо',
+        'driver_id' => 'Привод',
+        'body_type_id' => 'Кузов',
+        'transmission_id' => 'Коробка',
         'engine_capacity' => 'Объём двигателя',
         'horsepower' => 'Мощность',
         'price' => 'Цена',
