@@ -1,8 +1,8 @@
 <script setup>
-import { computed } from 'vue';
+import {computed} from 'vue';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import PrimaryButton from '@/Components/Button/PrimaryButton.vue';
+import {Head, Link, useForm} from '@inertiajs/vue3';
 
 const props = defineProps({
     status: {
@@ -23,7 +23,7 @@ const verificationLinkSent = computed(
 
 <template>
     <GuestLayout>
-        <Head title="Email Verification" />
+        <Head title="Email Verification"/>
 
         <div class="mb-4 text-sm text-gray-600">
             Thanks for signing up! Before getting started, could you verify your
@@ -53,7 +53,8 @@ const verificationLinkSent = computed(
                     method="post"
                     as="button"
                     class="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    >Log Out</Link
+                >Log Out
+                </Link
                 >
             </div>
         </form>

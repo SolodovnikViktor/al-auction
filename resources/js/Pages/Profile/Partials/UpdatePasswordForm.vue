@@ -1,10 +1,10 @@
 <script setup>
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
+import PrimaryButton from '@/Components/Button/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
-import { useForm } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import {useForm} from '@inertiajs/vue3';
+import {ref} from 'vue';
 
 const passwordInput = ref(null);
 const currentPasswordInput = ref(null);
@@ -48,7 +48,7 @@ const updatePassword = () => {
 
         <form @submit.prevent="updatePassword" class="mt-6 space-y-6">
             <div>
-                <InputLabel for="current_password" value="Current Password" />
+                <InputLabel for="current_password" value="Current Password"/>
 
                 <TextInput
                     id="current_password"
@@ -66,7 +66,7 @@ const updatePassword = () => {
             </div>
 
             <div>
-                <InputLabel for="password" value="New Password" />
+                <InputLabel for="password" value="New Password"/>
 
                 <TextInput
                     id="password"
@@ -77,7 +77,7 @@ const updatePassword = () => {
                     autocomplete="new-password"
                 />
 
-                <InputError :message="form.errors.password" class="mt-2" />
+                <InputError :message="form.errors.password" class="mt-2"/>
             </div>
 
             <div>

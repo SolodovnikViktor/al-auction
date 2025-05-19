@@ -16,15 +16,14 @@ class Post extends Model
 
     protected $table = 'posts';
     protected $fillable = [
-        'image_preview',
-        'title',
-        'vin',
         'brand_id',
         'model_id',
+        'vin',
         'year_release',
         'color_id',
         'mileage',
-        'fuel',
+        'fuel_id',
+        'wheel_id',
         'drive_id',
         'body_type_id',
         'transmission_id',
@@ -41,6 +40,16 @@ class Post extends Model
     public function color(): BelongsTo
     {
         return $this->belongsTo(Color::class)->select('title');
+    }
+
+    public function fuel(): BelongsTo
+    {
+        return $this->belongsTo(Fuel::class)->select('title');
+    }
+
+    public function wheel(): BelongsTo
+    {
+        return $this->belongsTo(Wheel::class)->select('title');
     }
 
     public function brand(): BelongsTo

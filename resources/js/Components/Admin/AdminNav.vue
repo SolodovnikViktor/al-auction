@@ -1,14 +1,24 @@
 <script setup>
+import {ref} from "vue";
+
 defineProps(['post'])
 import NavLink from "@/Components/NavLink.vue";
+import {router} from '@inertiajs/vue3';
+
+let search_is = ref(false);
+router.on('navigate', () => {
+    if (route().current('admin-post.search')) {
+        search_is.value = true;
+    }
+})
 </script>
 
 <template>
     <div class="flex h-10 justify-between">
         <div class="flex space-x-3 lg:space-x-5 sm:-my-px">
             <NavLink
-                :href="route('admin-post.index')"
-                :active="route().current('admin-post.index')">
+                :href="route('admin-posts.index')"
+                :active="route().current('admin-posts.index')">
                 Каталог
             </NavLink>
             <NavLink
@@ -21,6 +31,20 @@ import NavLink from "@/Components/NavLink.vue";
                 :active="route().current('contact')">
                 Пользователи
             </NavLink>
+            <template v-if="search_is">
+                <NavLink
+                    :href="route('admin-post.search')"
+                    :active="search_is">
+                    Поиск
+                </NavLink>
+            </template>
+            <template>
+                <NavLink
+                    :href="route('admin-post.filter')"
+                    :active="route().current('admin-post.filter')">
+                    Фильтр
+                </NavLink>
+            </template>
             <template
                 v-if="route().current('admin-post.edit') || route().current('admin-post.show')">
                 <NavLink

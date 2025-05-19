@@ -3,9 +3,9 @@ import Checkbox from '@/Components/Checkbox.vue';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
+import PrimaryButton from '@/Components/Button/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import {Head, Link, useForm} from '@inertiajs/vue3';
 
 defineProps({
     canResetPassword: {
@@ -31,7 +31,7 @@ const submit = () => {
 
 <template>
     <GuestLayout>
-        <Head title="Вход" />
+        <Head title="Вход"/>
 
         <div v-if="status" class="mb-4 text-sm font-medium text-green-600">
             {{ status }}
@@ -39,7 +39,7 @@ const submit = () => {
 
         <form @submit.prevent="submit">
             <div>
-                <InputLabel for="login" value="Email или телефон" />
+                <InputLabel for="login" value="Email или телефон"/>
 
                 <TextInput
                     id="login"
@@ -51,11 +51,11 @@ const submit = () => {
                     autocomplete="username"
                 />
 
-                <InputError class="mt-2" :message="form.errors.login" />
+                <InputError class="mt-2" :message="form.errors.login"/>
             </div>
 
             <div class="mt-4">
-                <InputLabel for="password" value="Пароль" />
+                <InputLabel for="password" value="Пароль"/>
 
                 <TextInput
                     id="password"
@@ -66,14 +66,14 @@ const submit = () => {
                     autocomplete="current-password"
                 />
 
-                <InputError class="mt-2" :message="form.errors.password" />
+                <InputError class="mt-2" :message="form.errors.password"/>
             </div>
 
             <div class="mt-4 block">
                 <label class="flex items-center">
-                    <Checkbox name="remember" v-model:checked="form.remember" />
+                    <Checkbox name="remember" v-model:checked="form.remember"/>
                     <span class="ms-2 text-sm text-gray-600"
-                        >Запомнить меня</span
+                    >Запомнить меня</span
                     >
                 </label>
             </div>

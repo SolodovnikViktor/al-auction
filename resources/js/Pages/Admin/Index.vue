@@ -6,19 +6,21 @@ import {computed, ref, watch} from 'vue'
 import {Swiper, SwiperSlide} from "swiper/vue";
 import {Navigation, Pagination} from 'swiper/modules';
 import Filters from "@/Components/Main/Filters.vue";
+import NavLink from "@/Components/NavLink.vue";
 
 const modules = [Navigation, Pagination];
 
 const page = usePage()
 const user = computed(() => page.props.auth.user)
 const catalog_view = ref(user.value.catalog_view)
-
 const catalogView = (bool) => catalog_view.value = bool
 
 const props = defineProps(
     {
         posts: Object,
         brands: Array,
+        fuels: Array,
+        wheels: Array,
         colors: Array,
         drives: Array,
         bodyTypes: Array,
@@ -26,10 +28,11 @@ const props = defineProps(
     }
 );
 
+console.log(props.posts.data)
+
+
 // Просмотр фото мышкой
 const postsData = props.posts.data
-console.log(postsData)
-
 const currentKey = ref([]);
 
 postsData.forEach(function (post) {
@@ -62,8 +65,11 @@ function numberFilter(number) {
         </template>
         <template #filters>
             <Filters @checkbox="catalogView"
+                     :postsData
                      :user
                      :brands
+                     :fuels
+                     :wheels
                      :colors
                      :drives
                      :bodyTypes
@@ -77,7 +83,7 @@ function numberFilter(number) {
             </div>
             <div>{{ catalog_view }}</div>
             <div class="grid grid-cols-12 gap-4 pb-4 mb-4 border-b border-gray-200">
-                <div v-for="(post, postIndex) in postsData" :key="post.id"
+                <div v-for="(post, postIndex) in posts.data" :key="post.id"
                      class="overflow-hidden col-span-12 sm:col-span-6 lg:col-span-4 text-gray-900">
                     <Link :href="route('admin-post.show', post.id)">
                         <div

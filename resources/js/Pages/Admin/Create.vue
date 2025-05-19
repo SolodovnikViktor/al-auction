@@ -14,9 +14,13 @@ import AdminNav from "@/Components/Admin/AdminNav.vue";
 import {ref} from "vue";
 import axios from "axios";
 import FormPost from "@/Components/Admin/Form/FormPost.vue";
+import ButtonCyan from "@/Components/Button/ButtonCyan.vue";
+import FormInput from "@/Components/Admin/Form/FormInput.vue";
 
 const props = defineProps({
     brands: Array,
+    fuels: Array,
+    wheels: Array,
     colors: Array,
     drives: Array,
     bodyTypes: Array,
@@ -32,7 +36,8 @@ const form = useForm({
     year_release: '',
     color_id: '',
     mileage: '',
-    fuel: '',
+    fuel_id: '',
+    wheel_id: '',
     drive_id: '',
     body_type_id: '',
     transmission_id: '',
@@ -232,18 +237,22 @@ function FilePondErrorLoad(error, files) {
                     <FormPost
                         :brands
                         :colors
+                        :fuels
+                        :wheels
                         :drives
                         :bodyTypes
                         :transmissions
                         :form="form"
                     />
                 </div>
-                <nav class="flex justify-end">
-                    <button type="submit" :disabled="form.processing"
-                            class="text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-300 font-medium rounded-lg text-sm px-5 py-2.5">
+                <div class="flex justify-end">
+                    <ButtonCyan
+                        type="submit"
+                        :disabled="form.processing"
+                        class="px-5 py-2.5">
                         Отправить
-                    </button>
-                </nav>
+                    </ButtonCyan>
+                </div>
             </form>
         </div>
 

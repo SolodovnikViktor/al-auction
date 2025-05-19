@@ -10,6 +10,8 @@ const props = defineProps({
     type: String,
     inputmode: String,
     placeholder: String,
+    fuels: Array,
+    wheels: Array,
     colors: Array,
     drives: Array,
     bodyTypes: Array,
@@ -21,6 +23,12 @@ let options
 
 if (props.title === 'color_id') {
     options = props.colors;
+}
+if (props.title === 'fuel_id') {
+    options = props.fuels;
+}
+if (props.title === 'wheel_id') {
+    options = props.wheels;
 }
 if (props.title === 'drive_id') {
     options = props.drives;

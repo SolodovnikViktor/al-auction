@@ -7,6 +7,8 @@ import FormBrandModel from "@/Components/Admin/Form/FormBrandModel.vue";
 const props = defineProps({
     form: Object,
     brands: Array,
+    fuels: Array,
+    wheels: Array,
     colors: Array,
     drives: Array,
     bodyTypes: Array,
@@ -18,7 +20,8 @@ const formInputs = [
     {title: "year_release", value: 'Год выпуска', type: "number"},
     {title: "color_id", value: 'Цвет кузова', type: "select"},
     {title: "mileage", value: 'Пробег', type: "number", placeholder: 'км'},
-    {title: "fuel", value: 'Топливо', type: "text"},
+    {title: "fuel_id", value: 'Топливо', type: "select"},
+    {title: "wheel_id", value: 'Руль', type: "select"},
     {title: "drive_id", value: 'Привод', type: "select"},
     {title: "body_type_id", value: 'Кузов', type: "select"},
     {title: "transmission_id", value: 'Коробка', type: "select"},
@@ -46,6 +49,8 @@ const formInputs = [
                         :value="input.value"
                         :inputmode="input.inputmode"
                         :placeholder="input.placeholder"
+                        :fuels
+                        :wheels
                         :colors
                         :drives
                         :bodyTypes

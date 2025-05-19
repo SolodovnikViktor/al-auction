@@ -2,9 +2,9 @@
 import GuestLayout from '@/Layouts/GuestLayout.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
+import PrimaryButton from '@/Components/Button/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import {Head, Link, useForm} from '@inertiajs/vue3';
 
 const form = useForm({
     name: '',
@@ -26,11 +26,11 @@ const submit = () => {
 
 <template>
     <GuestLayout>
-        <Head title="Register" />
+        <Head title="Register"/>
 
         <form @submit.prevent="submit">
             <div class="flex items-center justify-between">
-                <InputLabel for="name" value="Имя" class="mr-4" />
+                <InputLabel for="name" value="Имя" class="mr-4"/>
 
                 <TextInput
                     id="name"
@@ -42,11 +42,11 @@ const submit = () => {
                     autocomplete="name"
                 />
 
-                <InputError class="mt-2" :message="form.errors.name" />
+                <InputError class="mt-2" :message="form.errors.name"/>
             </div>
 
             <div class="flex items-center justify-between">
-                <InputLabel for="surname" value="Фамилия" class="mr-4" />
+                <InputLabel for="surname" value="Фамилия" class="mr-4"/>
 
                 <TextInput
                     id="surname"
@@ -58,11 +58,11 @@ const submit = () => {
                     autocomplete="surname"
                 />
 
-                <InputError class="mt-2" :message="form.errors.surname" />
+                <InputError class="mt-2" :message="form.errors.surname"/>
             </div>
 
             <div class="flex items-center justify-between">
-                <InputLabel for="patronymic" value="Отчество" class="mr-4" />
+                <InputLabel for="patronymic" value="Отчество" class="mr-4"/>
 
                 <TextInput
                     id="patronymic"
@@ -74,11 +74,11 @@ const submit = () => {
                     autocomplete="patronymic"
                 />
 
-                <InputError class="mt-2" :message="form.errors.patronymic" />
+                <InputError class="mt-2" :message="form.errors.patronymic"/>
             </div>
 
             <div class="flex items-center justify-between">
-                <InputLabel for="phone" value="Телефон" class="mr-4" />
+                <InputLabel for="phone" value="Телефон" class="mr-4"/>
 
                 <TextInput
                     id="phone"
@@ -90,11 +90,11 @@ const submit = () => {
                     autocomplete="username"
                 />
 
-                <InputError class="mt-2" :message="form.errors.phone" />
+                <InputError class="mt-2" :message="form.errors.phone"/>
             </div>
 
             <div class="flex items-center justify-between">
-                <InputLabel for="address" value="Адрес" class="mr-4" />
+                <InputLabel for="address" value="Адрес" class="mr-4"/>
 
                 <TextInput
                     id="address"
@@ -106,11 +106,11 @@ const submit = () => {
                     autocomplete="address"
                 />
 
-                <InputError class="mt-2" :message="form.errors.address" />
+                <InputError class="mt-2" :message="form.errors.address"/>
             </div>
 
             <div class="flex items-center justify-between">
-                <InputLabel for="email" value="Email" class="mr-4" />
+                <InputLabel for="email" value="Email" class="mr-4"/>
 
                 <TextInput
                     id="email"
@@ -121,11 +121,11 @@ const submit = () => {
                     autocomplete="email"
                 />
 
-                <InputError class="mt-2" :message="form.errors.email" />
+                <InputError class="mt-2" :message="form.errors.email"/>
             </div>
 
             <div class="flex items-center justify-between">
-                <InputLabel for="password" value="Пароль" class="mr-4" />
+                <InputLabel for="password" value="Пароль" class="mr-4"/>
 
                 <TextInput
                     id="password"
@@ -136,7 +136,7 @@ const submit = () => {
                     autocomplete="new-password"
                 />
 
-                <InputError class="mt-2" :message="form.errors.password" />
+                <InputError class="mt-2" :message="form.errors.password"/>
             </div>
 
             <div class="flex items-center justify-between">

@@ -17,7 +17,7 @@ Route::get('/contact', function () {
 })->name('contact');
 
 Route::middleware(['auth', 'verified', 'roles:admin'])->group(function () {
-    Route::get('/admin/posts/photos', [AdminPostController::class, 'index'])->name('admin-post.index');
+    Route::get('/admin/posts/index', [AdminPostController::class, 'index'])->name('admin-posts.index');
     Route::get('/admin/post/create', [AdminPostController::class, 'create'])->name('admin-post.create');
     Route::post('/admin/post/create', [AdminPostController::class, 'store'])->name('admin-post.store');
     Route::get('/admin/post/{post}/show', [AdminPostController::class, 'show'])->name('admin-post.show');
@@ -26,13 +26,16 @@ Route::middleware(['auth', 'verified', 'roles:admin'])->group(function () {
     Route::patch('/admin/post/update-published/{post}', [AdminPostController::class, 'updatePublished'])->name(
         'admin-post.updatePublished'
     );
+    Route::delete('/admin/post/{post}', [AdminPostController::class, 'destroy'])->name('admin-post.destroy');
 
     Route::post('/admin/post/crete/get-model', [AdminPostController::class, 'getModel']);
     Route::post('/admin/post/crete/brand', [AdminPostController::class, 'storeBrand'])->name('admin-post.storeBrand');
     Route::post('/admin/post/crete/model', [AdminPostController::class, 'storeModel'])->name('admin-post.storeModel');
 
-    Route::delete('/admin/post/{post}', [AdminPostController::class, 'destroy'])->name('admin-post.destroy');
+
+//    Route::post('/admin/posts/search', [AdminPostFilterController::class, 'adminSearch'])->name('admin-post.search');
     Route::get('/admin/posts/search', [AdminPostFilterController::class, 'adminSearch'])->name('admin-post.search');
+    Route::get('/admin/posts/filter', [AdminPostFilterController::class, 'adminFilter'])->name('admin-post.filter');
 
     Route::post('/admin/tmp-upload', [PhotoController::class, 'store']);
     Route::get('/admin/tmp-restore', [PhotoController::class, 'restore']);

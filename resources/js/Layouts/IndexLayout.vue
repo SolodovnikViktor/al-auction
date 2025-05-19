@@ -1,37 +1,53 @@
 <script setup>
-import {ref} from 'vue';
+import {ref, watch} from 'vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import {Link, useForm} from '@inertiajs/vue3';
+import {Link, useForm, router} from '@inertiajs/vue3';
 
 const showingNavigationDropdown = ref(false);
 
 let adminActive = false;
-if (route().current('admin-post.index') || route().current('admin-post.create')
-    || route().current('admin-post.show') || route().current('admin-post.edit')) {
+if (route().current('admin-posts.index') || route().current('admin-post.create')
+    || route().current('admin-post.show') || route().current('admin-post.edit') || route().current('admin-post.search')) {
     adminActive = true;
 }
 
-const form = useForm({
-    search: '',
+// const form = useForm({
+//     search: '',
+// });
+// let formSearch = ref();
+//
+// function search() {
+//     if (adminActive) {
+//         console.log(123)
+//         formSearch.value = form.search
+//         form.post(route('admin-post.search', formSearch), {
+//             // onSuccess: () => {
+//             //     form.search = formSearch.value
+//             // },
+//             onError: error => {
+//                 console.log(error)
+//             }
+//         })
+//     } else {
+//         console.log(333)
+//     }
+// }
+
+let search = ref('');
+watch(search, (value) => {
+    router.get(
+        "/admin/posts/search",
+        {search: value},
+        {
+            preserveState: true,
+        }
+    );
 });
 
-function search() {
-    if (adminActive) {
-        console.log(123)
-        form.get(route('admin-post.search'), {
-            onError: error => {
-                console.log(error)
-            }
-        })
-    } else {
-        console.log(333)
-    }
-
-}
 </script>
 
 <template>
@@ -62,7 +78,7 @@ function search() {
                         <div
                             class="hidden *:text-lg space-x-4 lg:space-x-8 sm:-my-px mx-4 sm:flex">
                             <NavLink
-                                :href="route('admin-post.index')"
+                                :href="route('admin-posts.index')"
                                 :active=adminActive>
                                 Админ панель
                             </NavLink>
@@ -79,26 +95,21 @@ function search() {
                         </div>
                     </nav>
                     <div class="flex">
-                        <form
-                            :disabled="form.processing"
-                            @submit.prevent="search"
-                            class="inline-flex items-center">
-                            <div class="relative">
-                                <input type="search"
-                                       id="default-search"
-                                       v-model="form.search"
-                                       class="block w-full p-1 pr-10 text-sm text-gray-900 border border-gray-200 rounded-lg "
-                                       placeholder="Поиск" required/>
-                                <button type="submit"
-                                        class="absolute top-0 end-0 bottom-0 focus:outline-none px-3">
-                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
-                                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                              stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                                    </svg>
-                                </button>
-                            </div>
-                        </form>
+                        <div class="inline-flex items-center relative">
+                            <input type="search"
+                                   id="default-search"
+                                   v-model="search"
+                                   class="block w-full p-1 pr-10 text-sm text-gray-900 border border-gray-200 rounded-lg "
+                                   placeholder="Поиск" required/>
+                            <button type="submit"
+                                    class="absolute top-0 end-0 bottom-0 focus:outline-none px-3">
+                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                          stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                                </svg>
+                            </button>
+                        </div>
                         <div class="hidden sm:ms-2 sm:flex sm:items-center">
                             <!-- Settings Dropdown -->
                             <div v-if="$page.props.auth.user" class="relative">
@@ -182,8 +193,8 @@ function search() {
                     class="sm:hidden">
                     <div class="space-y-1 pb-3 pt-2">
                         <ResponsiveNavLink
-                            :href="route('admin-post.index')"
-                            :active="route().current('admin-post.index')">
+                            :href="route('admin-posts.index')"
+                            :active="route().current('admin-posts.index')">
                             Админ панель
                         </ResponsiveNavLink>
                     </div>

@@ -18,7 +18,7 @@ class BetResource extends JsonResource
         return [
             'id' => $this->id,
             'user' => UserResource::collection($this->user),
-            'posts' => PostResource::collection($this->posts),
+            'posts' => PostIndexResource::collection($this->posts),
             'down_bet' => $this->down_bet,
             'up_bet' => $this->up_bet
         ];

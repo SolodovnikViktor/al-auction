@@ -2,9 +2,9 @@
 import GuestLayout from '@/Layouts/GuestLayout.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
+import PrimaryButton from '@/Components/Button/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
-import { Head, useForm } from '@inertiajs/vue3';
+import {Head, useForm} from '@inertiajs/vue3';
 
 const props = defineProps({
     email: {
@@ -33,11 +33,11 @@ const submit = () => {
 
 <template>
     <GuestLayout>
-        <Head title="Reset Password" />
+        <Head title="Reset Password"/>
 
         <form @submit.prevent="submit">
             <div>
-                <InputLabel for="email" value="Email" />
+                <InputLabel for="email" value="Email"/>
 
                 <TextInput
                     id="email"
@@ -49,11 +49,11 @@ const submit = () => {
                     autocomplete="username"
                 />
 
-                <InputError class="mt-2" :message="form.errors.email" />
+                <InputError class="mt-2" :message="form.errors.email"/>
             </div>
 
             <div class="mt-4">
-                <InputLabel for="password" value="Password" />
+                <InputLabel for="password" value="Password"/>
 
                 <TextInput
                     id="password"
@@ -64,7 +64,7 @@ const submit = () => {
                     autocomplete="new-password"
                 />
 
-                <InputError class="mt-2" :message="form.errors.password" />
+                <InputError class="mt-2" :message="form.errors.password"/>
             </div>
 
             <div class="mt-4">

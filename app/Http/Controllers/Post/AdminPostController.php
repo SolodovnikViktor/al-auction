@@ -4,17 +4,19 @@ namespace App\Http\Controllers\Post;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Post\PostRequest;
-use App\Http\Resources\Admin\PostResource;
+use App\Http\Resources\Admin\PostIndexResource;
 use App\Http\Resources\Admin\PostShowResource;
 use App\Models\BodyType;
 use App\Models\Brand;
 use App\Models\CarModel;
 use App\Models\Color;
 use App\Models\Drive;
+use App\Models\Fuel;
 use App\Models\Photo;
 use App\Models\PhotoPosition;
 use App\Models\Post;
 use App\Models\Transmission;
+use App\Models\Wheel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
@@ -28,13 +30,15 @@ class AdminPostController extends Controller
     {
         $postsPaginate = Post::with('user', 'images', 'imagesPath')->paginate(15);
         return Inertia::render('Admin/Index', [
-            'posts' => PostResource::collection(Post::paginate(15)),
+            'posts' => PostIndexResource::collection(Post::paginate(15)),
             'brands' => Brand::all(),
+            'fuels' => Fuel::all(),
+            'wheels' => Wheel::all(),
             'colors' => Color::all(),
             'drives' => Drive::all(),
             'bodyTypes' => BodyType::all(),
             'transmissions' => Transmission::all(),
-            
+
             'postsPaginate' => $postsPaginate,
         ]);
     }
@@ -43,6 +47,8 @@ class AdminPostController extends Controller
     {
         return Inertia::render('Admin/Create', [
             'brands' => Brand::all(),
+            'fuels' => Fuel::all(),
+            'wheels' => Wheel::all(),
             'colors' => Color::all(),
             'drives' => Drive::all(),
             'bodyTypes' => BodyType::all(),
@@ -133,17 +139,15 @@ class AdminPostController extends Controller
 
     public function edit(Post $post): Response
     {
-        $colors = Color::all()->select('id', 'title');
-        $drives = Drive::all()->select('id', 'title');
-        $bodyTypes = BodyType::all()->select('id', 'title');
-        $transmissions = Transmission::all()->select('id', 'title');
         return Inertia::render('Admin/Edit', [
             'post' => $post,
             'brands' => Brand::all(),
-            'colors' => $colors,
-            'drives' => $drives,
-            'bodyTypes' => $bodyTypes,
-            'transmissions' => $transmissions,
+            'fuels' => Fuel::all(),
+            'wheels' => Wheel::all(),
+            'colors' => Color::all(),
+            'drives' => Drive::all(),
+            'bodyTypes' => BodyType::all(),
+            'transmissions' => Transmission::all(),
         ]);
     }
 
@@ -186,7 +190,6 @@ class AdminPostController extends Controller
             }
         }
         return to_route('admin-post.show', $post)->with('message', 'Обновлено');
-//        return redirect()->route('admin-post.index')->with('message', 'Category Updated Successfully');
     }
 
     public function destroy(Post $post)
@@ -197,6 +200,6 @@ class AdminPostController extends Controller
             $image->delete();
         }
         $post->delete();
-        return to_route('admin-post.indexPhoto')->with('message', 'Объявление удалено');
+        return to_route('admin-posts.index')->with('message', 'Объявление удалено');
     }
 }

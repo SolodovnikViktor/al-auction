@@ -16,7 +16,8 @@ return new class extends Migration {
             $table->smallInteger('year_release');
             $table->foreignId('color_id');
             $table->unsignedMediumInteger('mileage'); // пробег
-            $table->string('fuel'); // топливо
+            $table->foreignId('fuel_id'); // топливо
+            $table->foreignId('wheel_id'); // руль
             $table->foreignId('drive_id'); // привод
             $table->foreignId('body_type_id'); // тип кузова
             $table->foreignId('transmission_id'); // тип коробки

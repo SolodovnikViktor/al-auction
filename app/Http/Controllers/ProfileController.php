@@ -66,6 +66,5 @@ class ProfileController extends Controller
     {
         $validated = $request->validate(['catalog_view' => ['required']]);
         $user->update($validated);
-//        return to_route('admin-post.index');
     }
 }

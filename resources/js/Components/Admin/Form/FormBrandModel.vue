@@ -1,9 +1,9 @@
 <script setup>
 import InputLabel from "@/Components/InputLabel.vue";
 import InputError from "@/Components/InputError.vue";
-import ButtonPlus from "@/Components/MyButton/ButtonPlus.vue";
-import ButtonClose from "@/Components/MyButton/ButtonClose.vue";
-import ButtonOk from "@/Components/MyButton/ButtonOk.vue";
+import ButtonPlus from "@/Components/Button/ButtonPlus.vue";
+import ButtonClose from "@/Components/Button/ButtonClose.vue";
+import ButtonOk from "@/Components/Button/ButtonOk.vue";
 import {ref, watch, nextTick, onMounted} from "vue";
 import {useForm} from "@inertiajs/vue3";
 import axios from "axios";
@@ -91,7 +91,6 @@ function getModel(value, bool) {
 }
 
 function showModel(option, bool) {
-    console.log(option)
     if (option.length >= 1) {
         modelOptions.value = option;
         if (bool === true) {

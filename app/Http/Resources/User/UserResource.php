@@ -27,7 +27,7 @@ class UserResource extends JsonResource
 //            'password' => $this->password,
 //
 //            'bet' => BetResource::collection($this->bets),
-//            'posts' => PostResource::collection($this->posts),
+//            'posts' => PostIndexResource::collection($this->posts),
         ];
     }
 }

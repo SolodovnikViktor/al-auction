@@ -8,7 +8,7 @@ use App\Models\PhotoPosition;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PostResource extends JsonResource
+class PostIndexResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
@@ -22,15 +22,14 @@ class PostResource extends JsonResource
         }
         return [
             'id' => $this->id,
-            'image_preview' => $this->image_preview,
-            'title' => $this->title,
-            'vin' => $this->vin,
             'brand' => $this->brand->title,
             'model' => $this->model->title,
+            'vin' => $this->vin,
             'year_release' => $this->year_release,
             'color' => $this->color->title,
             'mileage' => $this->mileage,
-            'fuel' => $this->fuel,
+            'fuel' => $this->fuel->title,
+            'wheel' => $this->wheel->title,
             'drive' => $this->drive->title,
             'body_type_id' => $this->body_type_id,
             'transmission' => $this->transmission->title,

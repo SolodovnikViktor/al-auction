@@ -13,21 +13,22 @@ import InputError from "@/Components/InputError.vue";
 import AdminNav from "@/Components/Admin/AdminNav.vue";
 import {ref} from "vue";
 import axios from "axios";
-import SecondaryButton from "@/Components/SecondaryButton.vue";
-import DangerButton from "@/Components/DangerButton.vue";
+import SecondaryButton from "@/Components/Button/SecondaryButton.vue";
+import DangerButton from "@/Components/Button/DangerButton.vue";
 import Modal from "@/Components/Modal.vue";
 import FormPost from "@/Components/Admin/Form/FormPost.vue";
 
 const props = defineProps({
     post: Object,
     brands: Array,
+    fuels: Array,
+    wheels: Array,
     colors: Array,
     drives: Array,
     bodyTypes: Array,
     transmissions: Array,
     user: Object,
 });
-console.log(props.post)
 
 const FilePond = vueFilePond(FilePondPluginFileValidateType, FilePondPluginImagePreview, FilePondPluginFilePoster, FilePondPluginFileRename);
 
@@ -38,7 +39,8 @@ const form = useForm({
     year_release: props.post.year_release,
     color_id: props.post.color_id,
     mileage: props.post.mileage,
-    fuel: props.post.fuel,
+    fuel_id: props.post.fuel_id,
+    wheel_id: props.post.wheel_id,
     drive_id: props.post.drive_id,
     body_type_id: props.post.body_type_id,
     transmission_id: props.post.transmission_id,
@@ -228,7 +230,6 @@ function updatePublished() {
                         Удалить
                     </DangerButton>
                 </div>
-
             </div>
 
             <form :disabled="form.processing"
@@ -301,6 +302,8 @@ function updatePublished() {
                     <FormPost
                         :brands
                         :colors
+                        :fuels
+                        :wheels
                         :drives
                         :bodyTypes
                         :transmissions

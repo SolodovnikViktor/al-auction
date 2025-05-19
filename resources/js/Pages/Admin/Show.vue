@@ -123,7 +123,11 @@ function numberFilter(number) {
                                 </div>
                                 <div class="flex mb-4 *:w-1/2">
                                     <p>Тип кузова</p>
-                                    <p class="font-bold">{{ post.body_type.title }}</p>
+                                    <p class="font-bold">{{ post.body_type }}</p>
+                                </div>
+                                <div class="flex mb-4 *:w-1/2">
+                                    <p>Руль</p>
+                                    <p class="font-bold">{{ post.wheel }}</p>
                                 </div>
                                 <div class="flex mb-4 *:w-1/2">
                                     <p>Привод</p>
