@@ -33,6 +33,10 @@ class AdminPostFilterController extends Controller
 //            'posts' => $posts,
 //        ]);
 
+
+//        return to_route('post.show', ['post' => $post->id]);
+
+//        dd($request->search, $request->input('search'));
         return Inertia::render(
             'Admin/Index',
             [
@@ -46,11 +50,12 @@ class AdminPostFilterController extends Controller
                 'transmissions' => Transmission::all(),
                 'posts' => PostIndexResource::collection(
                     Post::query()
-                        ->when($request->input('search'), function ($query, $search) {
+                        ->when($request->search, function ($query, $search) {
                             $query->where('vin', 'like', '%' . $search . '%')
                                 ->OrWhere('id', 'like', '%' . $search . '%');
                         })->paginate(8)
                         ->withQueryString()
+//                        ->withInput()
                 )
             ]
         );
@@ -58,18 +63,26 @@ class AdminPostFilterController extends Controller
 
     public function adminFilter(Request $request)
     {
-        $search = ($request['brand_id']);
-        dd($request);
+//        $brand_id = $request->brand_id;
+//        $posts = Post::query()->when($brand_id, function ($query, $brand_id) {
+//            $query->where('brand_id', $brand_id);
+//        });
+//        $posts = PostIndexResource::collection(Post::where('brand_id', $request->brand_id)->get());
+        $posts = Post::where('brand_id', $request->brand_id)->get();
+
+
+//        dd($request);
 
 //        $search = $validated->get('search');
 //        dd($search);
 //        $posts = Post::where('vin', 'LIKE', '%' . $search . '%')->get();
 
 //        $postsPaginate = Post::with('user', 'images', 'imagesPath')->paginate(15);
-        $posts = PostIndexResource::collection(Post::where('vin', 'LIKE', '%' . $search . '%')->paginate(15));
-        return Inertia::render('Admin/Index', [
-            'posts' => $posts,
-        ]);
+//        $posts = PostIndexResource::collection(Post::where('vin', 'LIKE', '%' . $search . '%')->paginate(15));
+//        return Inertia::render('Admin/Index', [
+//            'posts' => $posts,
+//        ]);
+        return $posts;
     }
 
 }

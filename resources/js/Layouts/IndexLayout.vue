@@ -17,7 +17,7 @@ if (route().current('admin-posts.index') || route().current('admin-post.create')
 
 let search = ref('');
 let i = 1
-onBeforeMount(()=>{
+onBeforeMount(() => {
     router.on('navigate', (event) => {
         i++
         if (route().current('admin-post.search') && i === 2) {
@@ -91,7 +91,7 @@ const getSearch = (value) => {
                         <form
                             @submit.prevent="getSearch(search)"
                             class="inline-flex items-center relative">
-                            <input type="text"
+                            <input type="search"
                                    id="lev-search"
                                    autocomplete="search"
                                    v-model="search"

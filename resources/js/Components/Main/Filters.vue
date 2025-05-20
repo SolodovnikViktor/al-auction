@@ -1,6 +1,6 @@
 <script setup>
-import {ref, watch} from "vue";
-import {useForm} from "@inertiajs/vue3";
+import {reactive, ref, watch} from "vue";
+import {useForm, router} from "@inertiajs/vue3";
 import axios from "axios";
 import SecondaryButton from "@/Components/Button/SecondaryButton.vue";
 import ButtonCyan from "@/Components/Button/ButtonCyan.vue";
@@ -19,7 +19,7 @@ const props = defineProps({
     transmissions: Array,
 });
 
-const form = useForm({
+const form = reactive({
     brand_id: '',
     model_id: '',
     price_ot: '',
@@ -71,15 +71,24 @@ watch(() => form.brand_id, (value) => {
     if (form.brand_id > 0) {
         getModel(value)
         form.model_id = ''
-        console.log(form)
-    }else {
+    } else {
         models.value = ''
         form.model_id = ''
     }
 })
 
+
 watch((form), (form) => {
-    console.log(form)
+    axios.post('/admin/posts/filter', form)
+        .then(response => {
+            console.log(response)
+            console.log(response.data)
+            console.log(response.data.data)
+        })
+        .catch(error => {
+            console.log(error)
+            console.log(error.message);
+        });
 });
 
 </script>
