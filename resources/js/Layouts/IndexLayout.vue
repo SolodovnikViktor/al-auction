@@ -1,5 +1,5 @@
 <script setup>
-import {ref, watch} from 'vue';
+import {onBeforeMount, onMounted, ref, watch} from 'vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
@@ -15,30 +15,18 @@ if (route().current('admin-posts.index') || route().current('admin-post.create')
     adminActive = true;
 }
 
-// const form = useForm({
-//     search: '',
-// });
-// let formSearch = ref();
-//
-// function search() {
-//     if (adminActive) {
-//         console.log(123)
-//         formSearch.value = form.search
-//         form.post(route('admin-post.search', formSearch), {
-//             // onSuccess: () => {
-//             //     form.search = formSearch.value
-//             // },
-//             onError: error => {
-//                 console.log(error)
-//             }
-//         })
-//     } else {
-//         console.log(333)
-//     }
-// }
-
 let search = ref('');
-watch(search, (value) => {
+let i = 1
+onBeforeMount(()=>{
+    router.on('navigate', (event) => {
+        i++
+        if (route().current('admin-post.search') && i === 2) {
+            search.value = event.detail.page.props.search
+        }
+    })
+})
+
+const getSearch = (value) => {
     router.get(
         "/admin/posts/search",
         {search: value},
@@ -46,7 +34,12 @@ watch(search, (value) => {
             preserveState: true,
         }
     );
-});
+}
+
+// watch(search, (value) => {
+//     console.log('сработал watch')
+//     getSearch(value)
+// });
 
 </script>
 
@@ -95,12 +88,15 @@ watch(search, (value) => {
                         </div>
                     </nav>
                     <div class="flex">
-                        <div class="inline-flex items-center relative">
-                            <input type="search"
-                                   id="default-search"
+                        <form
+                            @submit.prevent="getSearch(search)"
+                            class="inline-flex items-center relative">
+                            <input type="text"
+                                   id="lev-search"
+                                   autocomplete="search"
                                    v-model="search"
                                    class="block w-full p-1 pr-10 text-sm text-gray-900 border border-gray-200 rounded-lg "
-                                   placeholder="Поиск" required/>
+                                   placeholder="Поиск"/>
                             <button type="submit"
                                     class="absolute top-0 end-0 bottom-0 focus:outline-none px-3">
                                 <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
@@ -109,7 +105,7 @@ watch(search, (value) => {
                                           stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                                 </svg>
                             </button>
-                        </div>
+                        </form>
                         <div class="hidden sm:ms-2 sm:flex sm:items-center">
                             <!-- Settings Dropdown -->
                             <div v-if="$page.props.auth.user" class="relative">

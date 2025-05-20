@@ -36,6 +36,7 @@ class AdminPostFilterController extends Controller
         return Inertia::render(
             'Admin/Index',
             [
+                'search' => $request->search,
                 'brands' => Brand::all(),
                 'fuels' => Fuel::all(),
                 'wheels' => Wheel::all(),
@@ -58,7 +59,7 @@ class AdminPostFilterController extends Controller
     public function adminFilter(Request $request)
     {
         $search = ($request['brand_id']);
-        dd($search);
+        dd($request);
 
 //        $search = $validated->get('search');
 //        dd($search);

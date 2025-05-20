@@ -2,11 +2,10 @@
 import {Head, Link, usePage} from '@inertiajs/vue3';
 import IndexLayout from "@/Layouts/IndexLayout.vue";
 import AdminNav from "@/Components/Admin/AdminNav.vue";
-import {computed, ref, watch} from 'vue'
+import {computed, onBeforeMount, ref, watch} from 'vue'
 import {Swiper, SwiperSlide} from "swiper/vue";
 import {Navigation, Pagination} from 'swiper/modules';
 import Filters from "@/Components/Main/Filters.vue";
-import NavLink from "@/Components/NavLink.vue";
 
 const modules = [Navigation, Pagination];
 
@@ -28,18 +27,23 @@ const props = defineProps(
     }
 );
 
-console.log(props.posts.data)
-
-
 // Просмотр фото мышкой
 const postsData = props.posts.data
 const currentKey = ref([]);
 
-postsData.forEach(function (post) {
-    if (post.photos.length > 0) {
-        currentKey.value.push({postId: post.id, photoId: post.photos[0].id})
-    }
-
+const updateCurrentKey = () => {
+    currentKey.value = []
+    props.posts.data.forEach(function (post) {
+        if (post.photos.length > 0) {
+            currentKey.value.push({postId: post.id, photoId: post.photos[0].id})
+        }
+    })
+}
+watch(() => props.posts, () =>{
+    updateCurrentKey()
+})
+onBeforeMount(() => {
+    updateCurrentKey()
 })
 
 function onMouseEnter(photoId, postId) {
@@ -53,7 +57,6 @@ function onMouseEnter(photoId, postId) {
 function numberFilter(number) {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 }
-
 </script>
 
 <template>

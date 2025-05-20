@@ -70,9 +70,18 @@ function getModel(value) {
 watch(() => form.brand_id, (value) => {
     if (form.brand_id > 0) {
         getModel(value)
+        form.model_id = ''
         console.log(form)
+    }else {
+        models.value = ''
+        form.model_id = ''
     }
 })
+
+watch((form), (form) => {
+    console.log(form)
+});
+
 </script>
 
 <template>

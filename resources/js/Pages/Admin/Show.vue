@@ -18,7 +18,7 @@ const setThumbsSwiper = (swiper) => {
 };
 
 let isSlidesPerView = ref(4);
-if (post.photos.length > 3) {
+if (post.photos.length > 4) {
     isSlidesPerView = ref(4.2)
 }
 
