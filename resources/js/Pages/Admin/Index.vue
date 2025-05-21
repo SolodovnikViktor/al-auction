@@ -27,6 +27,8 @@ const props = defineProps(
     }
 );
 
+console.log(props.posts)
+
 // Просмотр фото мышкой
 const postsData = props.posts.data
 const currentKey = ref([]);
@@ -39,7 +41,8 @@ const updateCurrentKey = () => {
         }
     })
 }
-watch(() => props.posts, () =>{
+watch(() => props.posts, () => {
+    console.log(props.posts)
     updateCurrentKey()
 })
 onBeforeMount(() => {

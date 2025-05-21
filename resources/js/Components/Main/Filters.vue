@@ -3,6 +3,7 @@ import {reactive, ref, watch} from "vue";
 import axios from "axios";
 import SecondaryButton from "@/Components/Button/SecondaryButton.vue";
 import ButtonCyan from "@/Components/Button/ButtonCyan.vue";
+import {router} from "@inertiajs/vue3";
 
 const emit = defineEmits(['checkbox'])
 
@@ -41,9 +42,10 @@ const form = reactive({
 
 const models = ref()
 
-let toggle = ref();
-let postCount = ref(props.postsData.length)
-toggle.value = props.user.catalog_view;
+let toggle = ref(props.user.catalog_view);
+let postCount = ref(props.postsData.length);
+let viewFullFilter = ref(false);
+
 
 function updateCatalogView() {
     emit('checkbox', toggle.value);
@@ -91,19 +93,21 @@ watch((form), (form) => {
 });
 
 const filterIndex = () => {
-    form.index_is = true
-    axios.post('/admin/posts/filter', form)
-        .catch(error => {
-            console.log(error)
-            console.log(error.message);
-        });
+    // form.index_is = true
+    router.get(
+        "/admin/posts/filter/index",
+        {form},
+        {
+            preserveState: true,
+        }
+    );
 }
 
 </script>
 
 <template>
     <div class="p-4 sm:px-5 mb-4 max-w-screen-2xl mx-auto shadow sm:rounded-2xl bg-white">
-        <form  @submit.prevent="filterIndex">
+        <form @submit.prevent="filterIndex">
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 <select
                     class="w-full  rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
@@ -134,7 +138,7 @@ const filterIndex = () => {
                         type="number"
                     />
                 </div>
-                <div class="flex">
+                <div class="hidden sm:flex md:hidden lg:flex">
                     <input
                         class="w-full rounded-s-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
                         placeholder="Год от"
@@ -148,80 +152,108 @@ const filterIndex = () => {
                         type="number"
                     />
                 </div>
-                <div class="flex">
-                    <input
-                        class="w-full rounded-s-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        placeholder="Пробег от"
-                        v-model="form.mileage_ot"
-                        type="number"
-                    />
-                    <input
-                        class="w-full rounded-e-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        placeholder="до"
-                        v-model="form.mileage_do"
-                        type="number"
-                    />
-                </div>
 
-                <select
-                    class="w-full  rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                    v-model="form.color_id"
-                    id="color">
-                    <option value="">Цвет</option>
-                    <option v-for="color in colors" :value="color.id">{{ color.title }}</option>
-                </select>
-                <select
-                    class="w-full  rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                    v-model="form.fuel_id"
-                    id="fuel">
-                    <option value="">Топливо</option>
-                    <option v-for="option in fuels" :value="option.id">{{ option.title }}</option>
-                </select>
-                <select
-                    class="w-full  rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                    v-model="form.wheel_id"
-                    id="wheel">
-                    <option value="">Руль</option>
-                    <option v-for="option in wheels" :value="option.id">{{ option.title }}</option>
-                </select>
-                <select
-                    class="w-full  rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                    v-model="form.transmission_id"
-                    id="transmission">
-                    <option value="">Трансмиссия</option>
-                    <option v-for="transmission in transmissions" :value="transmission.id">{{
-                            transmission.title
-                        }}
-                    </option>
-                </select>
-                <select
-                    class="w-full  rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                    v-model="form.drive_id"
-                    id="drive">
-                    <option value="">Привод</option>
-                    <option v-for="drive in drives" :value="drive.id">{{ drive.title }}</option>
-                </select>
-                <select
-                    class="w-full  rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                    v-model="form.body_type_id"
-                    id="body_type">
-                    <option value="">Кузов</option>
-                    <option v-for="bodyType in bodyTypes" :value="bodyType.id">{{ bodyType.title }}</option>
-                </select>
-                <div class="flex">
-                    <input
-                        class="w-full rounded-s-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        placeholder="Лошадей от"
-                        v-model="form.horsepower_ot"
-                        type="number"
-                    />
-                    <input
-                        class="w-full rounded-e-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        placeholder="до"
-                        v-model="form.horsepower_do"
-                        type="number"
-                    />
+            </div>
+
+            <transition name="filter">
+                <div v-show="viewFullFilter"
+                     class="grid grid-cols-1 mt-4 transition-all transform sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <div class="flex sm:hidden md:flex lg:hidden">
+                        <input
+                            class="w-full rounded-s-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="Год от"
+                            v-model="form.year_ot"
+                            type="number"
+                        />
+                        <input
+                            class="w-full rounded-e-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="до"
+                            v-model="form.year_do"
+                            type="number"
+                        />
+                    </div>
+                    <div class="flex">
+                        <input
+                            class="w-full rounded-s-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="Пробег от"
+                            v-model="form.mileage_ot"
+                            type="number"
+                        />
+                        <input
+                            class="w-full rounded-e-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="до"
+                            v-model="form.mileage_do"
+                            type="number"
+                        />
+                    </div>
+
+                    <select
+                        class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                        v-model="form.color_id"
+                        id="color">
+                        <option value="">Цвет</option>
+                        <option v-for="color in colors" :value="color.id">{{ color.title }}</option>
+                    </select>
+                    <select
+                        class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                        v-model="form.fuel_id"
+                        id="fuel">
+                        <option value="">Топливо</option>
+                        <option v-for="option in fuels" :value="option.id">{{ option.title }}</option>
+                    </select>
+                    <select
+                        class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                        v-model="form.wheel_id"
+                        id="wheel">
+                        <option value="">Руль</option>
+                        <option v-for="option in wheels" :value="option.id">{{ option.title }}</option>
+                    </select>
+                    <select
+                        class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                        v-model="form.transmission_id"
+                        id="transmission">
+                        <option value="">Трансмиссия</option>
+                        <option v-for="transmission in transmissions" :value="transmission.id">{{
+                                transmission.title
+                            }}
+                        </option>
+                    </select>
+                    <select
+                        class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                        v-model="form.drive_id"
+                        id="drive">
+                        <option value="">Привод</option>
+                        <option v-for="drive in drives" :value="drive.id">{{ drive.title }}</option>
+                    </select>
+                    <select
+                        class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                        v-model="form.body_type_id"
+                        id="body_type">
+                        <option value="">Кузов</option>
+                        <option v-for="bodyType in bodyTypes" :value="bodyType.id">{{ bodyType.title }}</option>
+                    </select>
+                    <div class="flex">
+                        <input
+                            class="w-full rounded-s-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="Лошадей от"
+                            v-model="form.horsepower_ot"
+                            type="number"
+                        />
+                        <input
+                            class="w-full rounded-e-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="до"
+                            v-model="form.horsepower_do"
+                            type="number"
+                        />
+                    </div>
                 </div>
+            </transition>
+
+            <div class="flex w-full sm:hidden mt-4">
+                <SecondaryButton class="w-1/2 py-3 justify-center mr-2">Сбросить Х</SecondaryButton>
+                <ButtonCyan :disabled="postCount === 0" type="submit" class="w-1/2 justify-center">
+                    Показать {{ postCount }} авто
+                </ButtonCyan>
             </div>
             <div class="flex justify-between mt-4">
                 <div class="flex items-center">
@@ -242,9 +274,13 @@ const filterIndex = () => {
                     <p v-if="toggle" class="font-medium">Список</p>
                     <p v-else>Список</p>
                 </div>
-                <div class="flex gap-4">
+                <div @click="viewFullFilter =!viewFullFilter" class="text-cyan-600 flex items-center">
+                    <a v-show="!viewFullFilter" role="button">Развернуть ↓</a>
+                    <a v-show="viewFullFilter" role="button">Свернуть ↑</a>
+                </div>
+                <div class="hidden sm:flex gap-4">
                     <SecondaryButton>Сбросить Х</SecondaryButton>
-                    <ButtonCyan :disabled="postCount === 0" type="submit">Показать {{ postCount }}</ButtonCyan>
+                    <ButtonCyan :disabled="postCount === 0" type="submit">Показать {{ postCount }} авто</ButtonCyan>
                 </div>
             </div>
         </form>
@@ -252,5 +288,14 @@ const filterIndex = () => {
 </template>
 
 <style scoped>
+.filter-enter-active,
+.filter-leave-active {
+    transition: all 0.5s ease-in-out;
+}
 
+.filter-enter-from,
+.filter-leave-to {
+    transform: translateX(50px);
+    opacity: 0;
+}
 </style>

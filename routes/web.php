@@ -36,6 +36,9 @@ Route::middleware(['auth', 'verified', 'roles:admin'])->group(function () {
 //    Route::post('/admin/posts/search', [AdminPostFilterController::class, 'adminSearch'])->name('admin-post.search');
     Route::get('/admin/posts/search', [AdminPostFilterController::class, 'adminSearch'])->name('admin-post.search');
     Route::post('/admin/posts/filter', [AdminPostFilterController::class, 'adminFilter'])->name('admin-post.filter');
+    Route::get('/admin/posts/filter/index', [AdminPostFilterController::class, 'adminFilterIndex'])->name(
+        'admin-post.filterIndex'
+    );
 
     Route::post('/admin/tmp-upload', [PhotoController::class, 'store']);
     Route::get('/admin/tmp-restore', [PhotoController::class, 'restore']);
