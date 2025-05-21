@@ -1,6 +1,5 @@
 <script setup>
 import {reactive, ref, watch} from "vue";
-import {useForm, router} from "@inertiajs/vue3";
 import axios from "axios";
 import SecondaryButton from "@/Components/Button/SecondaryButton.vue";
 import ButtonCyan from "@/Components/Button/ButtonCyan.vue";
@@ -37,11 +36,13 @@ const form = reactive({
     engine_capacity: '',
     horsepower_ot: '',
     horsepower_do: '',
+    index_is: false,
 });
 
 const models = ref()
 
 let toggle = ref();
+let postCount = ref(props.postsData.length)
 toggle.value = props.user.catalog_view;
 
 function updateCatalogView() {
@@ -77,13 +78,11 @@ watch(() => form.brand_id, (value) => {
     }
 })
 
-
 watch((form), (form) => {
     axios.post('/admin/posts/filter', form)
         .then(response => {
-            console.log(response)
             console.log(response.data)
-            console.log(response.data.data)
+            postCount.value = response.data
         })
         .catch(error => {
             console.log(error)
@@ -91,13 +90,20 @@ watch((form), (form) => {
         });
 });
 
+const filterIndex = () => {
+    form.index_is = true
+    axios.post('/admin/posts/filter', form)
+        .catch(error => {
+            console.log(error)
+            console.log(error.message);
+        });
+}
+
 </script>
 
 <template>
     <div class="p-4 sm:px-5 mb-4 max-w-screen-2xl mx-auto shadow sm:rounded-2xl bg-white">
-        <form :disabled="form.processing" @submit.prevent="form.get(route('admin-post.filter'),{
-            preserveScroll: true,
-                onError: error => {console.log(error)}})">
+        <form  @submit.prevent="filterIndex">
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 <select
                     class="w-full  rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
@@ -237,8 +243,8 @@ watch((form), (form) => {
                     <p v-else>Список</p>
                 </div>
                 <div class="flex gap-4">
-                    <SecondaryButton>Очистить Х</SecondaryButton>
-                    <ButtonCyan type="submit">Показать {{ postsData.length }}</ButtonCyan>
+                    <SecondaryButton>Сбросить Х</SecondaryButton>
+                    <ButtonCyan :disabled="postCount === 0" type="submit">Показать {{ postCount }}</ButtonCyan>
                 </div>
             </div>
         </form>

@@ -131,9 +131,8 @@ class AdminPostController extends Controller
 
     public function show(Post $post): Response
     {
-        $postRes = new PostShowResource($post);
         return Inertia::render('Admin/Show', [
-            'postRes' => $postRes,
+            'post' => new PostShowResource($post),
         ]);
     }
 

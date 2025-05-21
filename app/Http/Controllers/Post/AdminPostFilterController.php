@@ -63,13 +63,51 @@ class AdminPostFilterController extends Controller
 
     public function adminFilter(Request $request)
     {
+
 //        $brand_id = $request->brand_id;
 //        $posts = Post::query()->when($brand_id, function ($query, $brand_id) {
 //            $query->where('brand_id', $brand_id);
 //        });
-//        $posts = PostIndexResource::collection(Post::where('brand_id', $request->brand_id)->get());
-        $posts = Post::where('brand_id', $request->brand_id)->get();
+        $posts = PostIndexResource::collection(Post::
+            when($request->brand_id, function ($query, $brand_id) {
+                $query->where('brand_id', $brand_id);})->
+            when($request->model_id, function ($query, $model_id) {
+                $query->where('model_id', $model_id);})->
+            when($request->body_type_id, function ($query, $body_type_id) {
+                $query->where('body_type_id', $body_type_id);})->
+            when($request->transmission_id, function ($query, $x) {
+                $query->where('transmission_id', $x);})->
+            when($request->fuel_id, function ($query, $x) {
+                $query->where('fuel_id', $x);})->
+            when($request->wheel_id, function ($query, $x) {
+                $query->where('wheel_id', $x);})->
+            when($request->drive_id, function ($query, $x) {
+                $query->where('drive_id', $x);})->
+            when($request->color_id, function ($query, $x) {
+                $query->where('color_id', $x);})->
+            when($request->price_ot, function ($query, $x) {
+                $query->where('price_ot', '>=', $x);})->
+            when($request->price_do, function ($query, $x) {
+                $query->where('price', '<=', $x);})->
+            when($request->year_ot, function ($query, $x) {
+                $query->where('year_release', '>=', $x);})->
+            when($request->year_do, function ($query, $x) {
+                $query->where('year_release', '<=', $x);})->
+            when($request->mileage_ot, function ($query, $x) {
+                $query->where('mileage', '>=', $x);})->
+            when($request->mileage_do, function ($query, $x) {
+                $query->where('mileage', '<=', $x);})->
+            when($request->price_ot, function ($query, $x) {
+                $query->where('price_ot', '>=', $x);})->
+            when($request->price_ot, function ($query, $x) {
+                $query->where('price_ot', '<=', $x);})->
 
+//            where('horsepower_ot', '>', $request->horsepower_ot)->
+//            where('horsepower_do', '<', $request->horsepower_do)->
+            paginate(8));
+
+        $postsCount = $posts->count();
+//        $postsCount = Post::where('brand_id', $request->brand_id)->count();
 
 //        dd($request);
 
@@ -82,7 +120,19 @@ class AdminPostFilterController extends Controller
 //        return Inertia::render('Admin/Index', [
 //            'posts' => $posts,
 //        ]);
-        return $posts;
+        if($request->index_is === true){
+return Inertia::render('Admin/Index', [
+    'posts' => $posts,
+    'brands' => Brand::all(),
+    'fuels' => Fuel::all(),
+    'wheels' => Wheel::all(),
+    'colors' => Color::all(),
+    'drives' => Drive::all(),
+    'bodyTypes' => BodyType::all(),
+    'transmissions' => Transmission::all(),
+]);
+        }
+        return $postsCount;
     }
 
 }

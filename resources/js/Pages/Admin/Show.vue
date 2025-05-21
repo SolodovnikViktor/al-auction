@@ -8,9 +8,8 @@ import 'swiper/css/navigation';
 import {ref} from "vue";
 
 const props = defineProps({
-    postRes: Object
+    post: Object
 })
-const post = props.postRes.data;
 const modules = [FreeMode, Navigation, Thumbs];
 const thumbsSwiper = ref(null);
 const setThumbsSwiper = (swiper) => {
@@ -18,10 +17,10 @@ const setThumbsSwiper = (swiper) => {
 };
 
 let isSlidesPerView = ref(4);
-if (post.photos.length > 4) {
+
+if (props.post.photos.length > 4) {
     isSlidesPerView = ref(4.2)
 }
-
 
 function numberFilter(number) {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
