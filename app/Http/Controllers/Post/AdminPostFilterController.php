@@ -53,7 +53,7 @@ class AdminPostFilterController extends Controller
                         ->when($request->search, function ($query, $search) {
                             $query->where('vin', 'like', '%' . $search . '%')
                                 ->OrWhere('id', 'like', '%' . $search . '%');
-                        })->paginate(8)
+                        })->paginate(1)
                         ->withQueryString()
 //                        ->withInput()
                 )
@@ -64,7 +64,7 @@ class AdminPostFilterController extends Controller
     public function adminFilter(Request $request)
     {
         $this->getPosts($request, $posts);
-        return $posts->count();
+        return $posts->total();
     }
 
     public function adminFilterIndex(Request $request)
@@ -139,7 +139,7 @@ class AdminPostFilterController extends Controller
             })->
             when($request->price_ot, function ($query, $x) {
                 $query->where('price_ot', '<=', $x);
-            })->paginate(8)
+            })->paginate(1)->withQueryString()
         );
     }
 }

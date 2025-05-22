@@ -11,7 +11,8 @@ const showingNavigationDropdown = ref(false);
 
 let adminActive = false;
 if (route().current('admin-posts.index') || route().current('admin-post.create')
-    || route().current('admin-post.show') || route().current('admin-post.edit') || route().current('admin-post.search')) {
+    || route().current('admin-post.show') || route().current('admin-post.edit')
+    || route().current('admin-post.search') || route().current('admin-post.filter')) {
     adminActive = true;
 }
 
@@ -95,7 +96,7 @@ const getSearch = (value) => {
                                    id="lev-search"
                                    autocomplete="search"
                                    v-model="search"
-                                   class="block w-full p-1 pr-10 text-sm text-gray-900 border border-gray-200 rounded-lg "
+                                   class="block w-full p-1 pl-2 pr-10 text-sm text-gray-900 border border-gray-200 rounded-lg "
                                    placeholder="Поиск"/>
                             <button type="submit"
                                     class="absolute top-0 end-0 bottom-0 focus:outline-none px-3">

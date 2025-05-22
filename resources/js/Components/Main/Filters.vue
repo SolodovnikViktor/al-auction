@@ -8,7 +8,7 @@ import {router} from "@inertiajs/vue3";
 const emit = defineEmits(['checkbox'])
 
 const props = defineProps({
-    postsData: Object,
+    posts: Object,
     user: Object,
     brands: Array,
     fuels: Array,
@@ -19,7 +19,7 @@ const props = defineProps({
     transmissions: Array,
 });
 
-const form = reactive({
+let form = reactive({
     brand_id: '',
     model_id: '',
     price_ot: '',
@@ -35,17 +35,13 @@ const form = reactive({
     drive_id: '',
     body_type_id: '',
     engine_capacity: '',
-    horsepower_ot: '',
-    horsepower_do: '',
-    index_is: false,
 });
 
 const models = ref()
 
 let toggle = ref(props.user.catalog_view);
-let postCount = ref(props.postsData.length);
+let postCount = ref(props.posts.meta.total);
 let viewFullFilter = ref(false);
-
 
 function updateCatalogView() {
     emit('checkbox', toggle.value);
@@ -62,7 +58,6 @@ function getModel(value) {
     axios.post('/admin/post/crete/get-model', value)
         .then(response => {
             models.value = response.data;
-            // console.log(models.value);
         })
         .catch(error => {
             console.log(error)
@@ -83,7 +78,6 @@ watch(() => form.brand_id, (value) => {
 watch((form), (form) => {
     axios.post('/admin/posts/filter', form)
         .then(response => {
-            console.log(response.data)
             postCount.value = response.data
         })
         .catch(error => {
@@ -96,11 +90,29 @@ const filterIndex = () => {
     // form.index_is = true
     router.get(
         "/admin/posts/filter/index",
-        {form},
+        form,
         {
             preserveState: true,
         }
     );
+}
+
+const cleanForm = () => {
+    form.brand_id = ''
+    form.model_id = ''
+    form.price_ot = ''
+    form.price_do = ''
+    form.year_ot = ''
+    form.year_do = ''
+    form.mileage_ot = ''
+    form.mileage_do = ''
+    form.color_id = ''
+    form.fuel_id = ''
+    form.wheel_id = ''
+    form.transmission_id = ''
+    form.drive_id = ''
+    form.body_type_id = ''
+    form.engine_capacity = ''
 }
 
 </script>
@@ -279,7 +291,7 @@ const filterIndex = () => {
                     <a v-show="viewFullFilter" role="button">Свернуть ↑</a>
                 </div>
                 <div class="hidden sm:flex gap-4">
-                    <SecondaryButton>Сбросить Х</SecondaryButton>
+                    <SecondaryButton @click="cleanForm">Сбросить Х</SecondaryButton>
                     <ButtonCyan :disabled="postCount === 0" type="submit">Показать {{ postCount }} авто</ButtonCyan>
                 </div>
             </div>

@@ -1,6 +1,6 @@
 <script setup>
-import IndexLayout from "@/Layouts/IndexLayout.vue";
-import AdminNav from "@/Components/Admin/AdminNav.vue";
+import MainLayout from "@/Layouts/MainLayout.vue";
+import AdminNav from "@/Components/Main/Admin/AdminNav.vue";
 import {Head, Link} from "@inertiajs/vue3";
 import {Swiper, SwiperSlide} from "swiper/vue";
 import {FreeMode, Navigation, Thumbs} from 'swiper/modules';
@@ -31,7 +31,7 @@ function numberFilter(number) {
 <template>
     <Head title="Карточка авто"/>
 
-    <IndexLayout>
+    <MainLayout>
         <template #adminNav>
             <AdminNav :post/>
         </template>
@@ -158,7 +158,7 @@ function numberFilter(number) {
                 </div>
             </div>
         </div>
-    </IndexLayout>
+    </MainLayout>
 </template>
 
 <style>

@@ -28,9 +28,10 @@ class AdminPostController extends Controller
 {
     public function index(): Response
     {
-        $postsPaginate = Post::with('user', 'images', 'imagesPath')->paginate(15);
+        $postsPaginate = Post::with('user', 'images', 'imagesPath')->paginate(1);
+        $postsPaginateString = Post::with('user', 'images', 'imagesPath')->paginate(1)->withQueryString();
         return Inertia::render('Admin/Index', [
-            'posts' => PostIndexResource::collection(Post::paginate(15)),
+            'posts' => PostIndexResource::collection(Post::paginate(1)),
             'brands' => Brand::all(),
             'fuels' => Fuel::all(),
             'wheels' => Wheel::all(),
@@ -40,6 +41,7 @@ class AdminPostController extends Controller
             'transmissions' => Transmission::all(),
 
             'postsPaginate' => $postsPaginate,
+            'postsPaginateString' => $postsPaginateString,
         ]);
     }
 

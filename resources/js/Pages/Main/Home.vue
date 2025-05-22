@@ -1,6 +1,6 @@
 <script setup>
 import {Head} from '@inertiajs/vue3';
-import IndexLayout from "@/Layouts/IndexLayout.vue";
+import MainLayout from "@/Layouts/MainLayout.vue";
 import Header from "@/Components/Main/Header.vue";
 
 const title = 'Главная';
@@ -8,7 +8,7 @@ const title = 'Главная';
 
 <template>
     <Head :title='title'/>
-    <IndexLayout>
+    <MainLayout>
         <template #header>
             <Header :title="title"/>
         </template>
@@ -26,7 +26,7 @@ const title = 'Главная';
                 Навигация
             </nav>
         </div>
-    </IndexLayout>
+    </MainLayout>
 </template>
 
 <style scoped>

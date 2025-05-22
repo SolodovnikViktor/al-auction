@@ -1,8 +1,8 @@
 <script setup>
 import InputLabel from "@/Components/InputLabel.vue";
-import FormInput from "@/Components/Admin/Form/FormInput.vue";
+import FormInput from "@/Components/Main/Admin/Form/FormInput.vue";
 import InputError from "@/Components/InputError.vue";
-import FormBrandModel from "@/Components/Admin/Form/FormBrandModel.vue";
+import FormBrandModel from "@/Components/Main/Admin/Form/FormBrandModel.vue";
 
 const props = defineProps({
     form: Object,

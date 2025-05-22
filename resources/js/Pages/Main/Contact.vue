@@ -1,12 +1,12 @@
 <script setup>
 import {Head} from "@inertiajs/vue3";
-import IndexLayout from "@/Layouts/IndexLayout.vue";
+import MainLayout from "@/Layouts/MainLayout.vue";
 
 </script>
 
 <template>
     <Head title="Контакты"/>
-    <IndexLayout>
+    <MainLayout>
         <template #header>
             <div class="flex justify-between">
                 <h2 class="text-xl mr-5 font-semibold leading-tight text-gray-800">
@@ -25,5 +25,5 @@ import IndexLayout from "@/Layouts/IndexLayout.vue";
                 </div>
             </div>
         </div>
-    </IndexLayout>
+    </MainLayout>
 </template>

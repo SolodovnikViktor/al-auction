@@ -6,9 +6,16 @@ import NavLink from "@/Components/NavLink.vue";
 import {router} from '@inertiajs/vue3';
 
 let search_is = ref(false);
+let filter_is = ref(false);
 router.on('navigate', () => {
     if (route().current('admin-post.search')) {
         search_is.value = true;
+        filter_is.value = false;
+    }
+    if (route().current('admin-post.filter')) {
+        filter_is.value = true;
+        search_is.value = false;
+
     }
 })
 </script>
@@ -38,10 +45,10 @@ router.on('navigate', () => {
                     Поиск
                 </NavLink>
             </template>
-            <template>
+            <template v-if="filter_is">
                 <NavLink
                     :href="route('admin-post.filter')"
-                    :active="route().current('admin-post.filter')">
+                    :active="filter_is">
                     Фильтр
                 </NavLink>
             </template>

@@ -1,6 +1,6 @@
 <script setup>
 import {Head, useForm,} from '@inertiajs/vue3';
-import IndexLayout from "@/Layouts/IndexLayout.vue";
+import MainLayout from "@/Layouts/MainLayout.vue";
 import vueFilePond from 'vue-filepond';
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
@@ -10,12 +10,12 @@ import 'filepond/dist/filepond.min.css';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css';
 import 'filepond-plugin-file-poster/dist/filepond-plugin-file-poster.css';
 import InputError from "@/Components/InputError.vue";
-import AdminNav from "@/Components/Admin/AdminNav.vue";
+import AdminNav from "@/Components/Main/Admin/AdminNav.vue";
 import {ref} from "vue";
 import axios from "axios";
-import FormPost from "@/Components/Admin/Form/FormPost.vue";
+import FormPost from "@/Components/Main/Admin/Form/FormPost.vue";
 import ButtonCyan from "@/Components/Button/ButtonCyan.vue";
-import FormInput from "@/Components/Admin/Form/FormInput.vue";
+import FormInput from "@/Components/Main/Admin/Form/FormInput.vue";
 
 const props = defineProps({
     brands: Array,
@@ -162,7 +162,7 @@ function FilePondErrorLoad(error, files) {
 <template>
     <Head title="Админ панель"/>
 
-    <IndexLayout>
+    <MainLayout>
         <template #adminNav>
             <AdminNav/>
         </template>
@@ -256,7 +256,7 @@ function FilePondErrorLoad(error, files) {
             </form>
         </div>
 
-    </IndexLayout>
+    </MainLayout>
 </template>
 
 <style>
