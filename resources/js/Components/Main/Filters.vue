@@ -44,8 +44,14 @@ let postCount = ref(props.posts.meta.total);
 let viewFullFilter = ref(false);
 
 function updateCatalogView() {
-    emit('checkbox', toggle.value);
+
     axios.patch(`/update-catalog-view/${props.user.id}`, {catalog_view: toggle.value})
+        .then(res =>
+            {
+                router.reload({only: ['posts']})
+                emit('checkbox', toggle.value)
+            }
+        )
         .catch((error) => {
             console.log(error);
         });

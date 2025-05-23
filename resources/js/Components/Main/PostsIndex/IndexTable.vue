@@ -1,7 +1,21 @@
 <script setup>
+import {Link} from "@inertiajs/vue3";
+import {router} from "@inertiajs/vue3";
+
+
 const props = defineProps({
     posts: Object,
 })
+
+function numberFilter(number) {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+}
+const show = (id) => {
+    console.log(id)
+
+    // router.patch(route('admin-post.updateCatalogView', user.value.id), {
+    router.get( route('admin-post.show', id))
+}
 </script>
 
 <template>
@@ -40,26 +54,28 @@ const props = defineProps({
                         </tr>
                         </thead>
 
-                        <tbody class="divide-y divide-gray-200">
+<!--                        <Link :href="route('admin-post.show', post.id)">-->
 
-                        <tr v-for="post in posts.data" class="hover:bg-gray-100">
-                            <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
-                                {{ post.brand }}
-                            </td>
-                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-800">{{ post.model }}</td>
-                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-800">{{ post.year_release }}</td>
-                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-800">{{ post.vin }}</td>
-                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-800">{{ post.price }}</td>
-                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-800">{{ post.betce }}</td>
-                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-800">{{ post.mileage }}</td>
-                            <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-800">{{ post.transmission }}</td>
-                            <td class="px-4 py-4 whitespace-nowrap text-end text-sm font-medium">
-                                <button type="button"
-                                        class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 focus:outline-hidden focus:text-blue-800 disabled:opacity-50 disabled:pointer-events-none">
-                                    Delete
-                                </button>
-                            </td>
-                        </tr>
+                        <tbody class="divide-y divide-gray-200">
+                                <tr v-for="post in posts.data" @click="show(post.id)" class="hover:bg-gray-100">
+                                    <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
+                                        {{ post.brand }}
+                                    </td>
+                                    <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-800">{{ post.model }}</td>
+                                    <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-800">{{ post.year_release }}</td>
+                                    <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-800">{{ post.vin }}</td>
+                                    <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-800">{{ numberFilter(post.price) }}р</td>
+                                    <td v-if="post.betce" class="px-4 py-4 whitespace-nowrap text-sm text-gray-800">{{ numberFilter(post.betce) }}р</td>
+                                    <td v-else class="px-4 py-4 whitespace-nowrap text-sm text-gray-800">Ставок нет</td>
+                                    <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-800">{{ numberFilter(post.mileage) }}км</td>
+                                    <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-800">{{ post.transmission }}</td>
+                                    <td class="px-4 py-4 whitespace-nowrap text-end text-sm font-medium">
+                                        <Link :href="route('admin-post.edit', post.id)"
+                                              class="bg-gray-200 rounded-md px-1 border-transparent border-b-2 transition focus:outline-none focus:border-indigo-400 hover:bg-gray-300">
+                                            Редактировать
+                                        </Link>
+                                    </td>
+                                </tr>
                         </tbody>
                     </table>
                 </div>

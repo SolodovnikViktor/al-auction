@@ -19,24 +19,10 @@ class AdminPostFilterController extends Controller
 {
     public function adminSearch(Request $request)
     {
-//        $validated = $request->validate(['search' => ['required']]);
-//        $search = ($validated['search']);
-
-//        $search = $validated->get('search');
-//        $posts = Post::where('vin', 'LIKE', '%' . $search . '%')->get();
-//        $postsPaginate = Post::with('user', 'images', 'imagesPath')->paginate(15);
-
-//        $posts = PostIndexResource::collection(
-//            Post::where('vin', 'LIKE', '%' . $search . '%')->paginate(15)
-//        );
-//        return Inertia::render('Admin/Index', [
-//            'posts' => $posts,
-//        ]);
-
-
-//        return to_route('post.show', ['post' => $post->id]);
-
-//        dd($request->search, $request->input('search'));
+        $paginate = 15;
+        if(auth()->user()->catalog_view){
+            $paginate = 50;
+        }
         return Inertia::render(
             'Admin/Index',
             [
@@ -53,7 +39,7 @@ class AdminPostFilterController extends Controller
                         ->when($request->search, function ($query, $search) {
                             $query->where('vin', 'like', '%' . $search . '%')
                                 ->OrWhere('id', 'like', '%' . $search . '%');
-                        })->paginate(1)
+                        })->paginate($paginate)
                         ->withQueryString()
 //                        ->withInput()
                 )
@@ -90,6 +76,10 @@ class AdminPostFilterController extends Controller
      */
     public function getPosts(Request $request, &$posts): void
     {
+        $paginate = 15;
+        if(auth()->user()->catalog_view){
+            $paginate = 50;
+        }
         $posts = PostIndexResource::collection(
             Post::
             when($request->brand_id, function ($query, $x) {
@@ -139,7 +129,7 @@ class AdminPostFilterController extends Controller
             })->
             when($request->price_ot, function ($query, $x) {
                 $query->where('price_ot', '<=', $x);
-            })->paginate(1)->withQueryString()
+            })->paginate($paginate)->withQueryString()
         );
     }
 }
