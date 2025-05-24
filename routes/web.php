@@ -5,6 +5,7 @@ use App\Http\Controllers\Post\AdminPostFilterController;
 use App\Http\Controllers\Post\PhotoController;
 use App\Http\Controllers\Post\PhotoPostController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Users\AdminUserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -27,6 +28,10 @@ Route::middleware(['auth', 'verified', 'roles:admin'])->group(function () {
         'admin-post.updatePublished'
     );
     Route::delete('/admin/post/{post}', [AdminPostController::class, 'destroy'])->name('admin-post.destroy');
+
+    Route::get('/admin/users/index', [AdminUserController::class, 'index'])->name('admin-users.index');
+    Route::get('/admin/user/show', [AdminUserController::class, 'show'])->name('admin-user.show');
+    Route::get('/admin/user/{user}/edit', [AdminUserController::class, 'edit'])->name('admin-user.edit');
 
     Route::post('/admin/post/crete/get-model', [AdminPostController::class, 'getModel']);
     Route::post('/admin/post/crete/brand', [AdminPostController::class, 'storeBrand'])->name('admin-post.storeBrand');

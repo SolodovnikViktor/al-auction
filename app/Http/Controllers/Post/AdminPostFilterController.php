@@ -24,7 +24,7 @@ class AdminPostFilterController extends Controller
             $paginate = 50;
         }
         return Inertia::render(
-            'Admin/Index',
+            'Admin/Posts/Index',
             [
                 'search' => $request->search,
                 'brands' => Brand::all(),
@@ -57,7 +57,7 @@ class AdminPostFilterController extends Controller
     {
         $this->getPosts($request, $posts);
 
-        return Inertia::render('Admin/Index', [
+        return Inertia::render('Admin/Posts/Index', [
             'posts' => $posts,
             'brands' => Brand::all(),
             'fuels' => Fuel::all(),

@@ -29,7 +29,6 @@ const props = defineProps(
 
 <template>
     <Head title="Админ панель"/>
-
     <MainLayout>
         <template #adminNav>
             <AdminNav/>

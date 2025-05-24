@@ -2,7 +2,6 @@
 import {Link} from "@inertiajs/vue3";
 import {router} from "@inertiajs/vue3";
 
-
 const props = defineProps({
     posts: Object,
 })
@@ -11,8 +10,6 @@ function numberFilter(number) {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 }
 const show = (id) => {
-    console.log(id)
-
     // router.patch(route('admin-post.updateCatalogView', user.value.id), {
     router.get( route('admin-post.show', id))
 }

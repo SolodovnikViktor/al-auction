@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Post;
+namespace App\Http\Controllers\Users;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Post\PostRequest;
@@ -16,6 +16,7 @@ use App\Models\Photo;
 use App\Models\PhotoPosition;
 use App\Models\Post;
 use App\Models\Transmission;
+use App\Models\User;
 use App\Models\Wheel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
@@ -24,29 +25,12 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Intervention\Image\Laravel\Facades\Image;
 
-class AdminPostController extends Controller
+class AdminUserController extends Controller
 {
     public function index(): Response
     {
-        $paginate = 15;
-        if(auth()->user()->catalog_view){
-            $paginate = 50;
-        }
-
-        $postsPaginate = Post::with('user', 'images', 'imagesPath')->paginate(1);
-        $postsPaginateString = Post::with('user', 'images', 'imagesPath')->paginate(1)->withQueryString();
-        return Inertia::render('Admin/Posts/Index', [
-            'posts' => PostIndexResource::collection(Post::paginate($paginate)),
-            'brands' => Brand::all(),
-            'fuels' => Fuel::all(),
-            'wheels' => Wheel::all(),
-            'colors' => Color::all(),
-            'drives' => Drive::all(),
-            'bodyTypes' => BodyType::all(),
-            'transmissions' => Transmission::all(),
-
-            'postsPaginate' => $postsPaginate,
-            'postsPaginateString' => $postsPaginateString,
+        return Inertia::render('Admin/Users/Index', [
+            'users' => User::paginate(50),
         ]);
     }
 
@@ -96,64 +80,17 @@ class AdminPostController extends Controller
         return Redirect::back();
     }
 
-    public function store(PostRequest $request)
+    public function show(User $user): Response
     {
-        $userId = auth()->id();
-        $validated = $request->validated();
-        $post = Post::create($validated);
-
-        if ($photoPositionStr = PhotoPosition::where('user_id', $userId)->where('post_id', null)->first()) {
-            $photoPositionArr = explode(',', $photoPositionStr->position);
-            $photos = Photo::whereIn('id', $photoPositionArr)->get();
-            foreach ($photos as $photo) {
-                $photoName = $photo->name;
-                $folder = '/images/posts/PostID-' . $post->id . '/' . uniqid('image-', true);
-                $pathTmp = $photo->folder . '/' . $photoName;
-                $pathNew = $folder . '/' . $photoName;
-                $pathNewMin = $folder . '/' . 'min_' . $photoName;
-                if (Storage::copy($pathTmp, $pathNew)) {
-                    $photoMin = Image::read(Storage::get($pathTmp))->scaleDown(
-                        300,
-                        200
-                    );
-                    $photoMin->save('storage/' . $pathNewMin);
-                    Storage::deleteDirectory($photo->folder);
-                    $photo->update([
-                        'post_id' => $post->id,
-                        'folder' => $folder,
-                        'path' => '/storage' . $pathNew,
-                        'path_min' => '/storage' . $pathNewMin,
-                    ]);
-                    $photoPositionStr->update([
-                        'post_id' => $post->id,
-                    ]);
-                } else {
-                    return back()->with('message_form', 'Фотографии не сохранены');
-                }
-            }
-        }
-        $request->session()->flash('message_form', 'Автомобиль успешно добавлен message_form');
-        return to_route('admin-post.show', $post)->with('message', 'Category Created Successfully');
-    }
-
-    public function show(Post $post): Response
-    {
-        return Inertia::render('Admin/Posts/Show', [
-            'post' => new PostShowResource($post),
+        return Inertia::render('Admin/Users/Show', [
+            'user' => $user,
         ]);
     }
 
-    public function edit(Post $post): Response
+    public function edit(User $user): Response
     {
-        return Inertia::render('Admin/Posts/Edit', [
-            'post' => $post,
-            'brands' => Brand::all(),
-            'fuels' => Fuel::all(),
-            'wheels' => Wheel::all(),
-            'colors' => Color::all(),
-            'drives' => Drive::all(),
-            'bodyTypes' => BodyType::all(),
-            'transmissions' => Transmission::all(),
+        return Inertia::render('Admin/Users/Edit', [
+            'user' => $user,
         ]);
     }
 

@@ -15,7 +15,6 @@ router.on('navigate', () => {
     if (route().current('admin-post.filter')) {
         filter_is.value = true;
         search_is.value = false;
-
     }
 })
 </script>
@@ -34,8 +33,8 @@ router.on('navigate', () => {
                 Добавить
             </NavLink>
             <NavLink
-                :href="route('contact')"
-                :active="route().current('contact')">
+                :href="route('admin-users.index')"
+                :active="route().current('admin-users.index')">
                 Пользователи
             </NavLink>
             <template v-if="search_is">
