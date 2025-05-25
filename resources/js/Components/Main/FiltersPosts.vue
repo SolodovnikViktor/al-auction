@@ -46,8 +46,7 @@ let viewFullFilter = ref(false);
 function updateCatalogView() {
 
     axios.patch(`/update-catalog-view/${props.user.id}`, {catalog_view: toggle.value})
-        .then(res =>
-            {
+        .then(res => {
                 router.reload({only: ['posts']})
                 emit('checkbox', toggle.value)
             }
@@ -128,7 +127,7 @@ const cleanForm = () => {
         <form @submit.prevent="filterIndex">
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 <select
-                    class="w-full  rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                    class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
                     v-model="form.brand_id"
                     id="brand">
                     <option value="">Бренд</option>

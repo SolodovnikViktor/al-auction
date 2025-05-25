@@ -6,20 +6,14 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
- */
 class UserFactory extends Factory
 {
     protected static ?string $password;
 
-    /**
-     * @return array<string, mixed>
-     */
     public function definition(): array
     {
         return [
-            'role' => 'user',
+            'role_id' => fake()->numberBetween(2, 3),
             'name' => fake()->firstName(),
             'surname' => fake()->lastName(),
             'patronymic' => fake()->lastName(),
@@ -32,6 +26,7 @@ class UserFactory extends Factory
             'remember_token' => Str::random(10),
         ];
     }
+
 
     public function unverified(): static
     {

@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('role')->default('user');
+            $table->foreignId('role_id')->default(2);
             $table->boolean('catalog_view')->default(0);
             $table->string('name');
             $table->string('surname');

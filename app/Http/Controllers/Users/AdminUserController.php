@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Post\PostRequest;
 use App\Http\Resources\Admin\PostIndexResource;
 use App\Http\Resources\Admin\PostShowResource;
+use App\Http\Resources\User\UserResource;
 use App\Models\BodyType;
 use App\Models\Brand;
 use App\Models\CarModel;
@@ -15,6 +16,7 @@ use App\Models\Fuel;
 use App\Models\Photo;
 use App\Models\PhotoPosition;
 use App\Models\Post;
+use App\Models\Role;
 use App\Models\Transmission;
 use App\Models\User;
 use App\Models\Wheel;
@@ -30,21 +32,15 @@ class AdminUserController extends Controller
     public function index(): Response
     {
         return Inertia::render('Admin/Users/Index', [
-            'users' => User::paginate(50),
+            'users' => UserResource::collection(User::paginate(20)),
+            'roles' => Role::all(),
         ]);
     }
 
-    public function create(): Response
+    public function updateRole(Request $request, User $user)
     {
-        return Inertia::render('Admin/Posts/Create', [
-            'brands' => Brand::all(),
-            'fuels' => Fuel::all(),
-            'wheels' => Wheel::all(),
-            'colors' => Color::all(),
-            'drives' => Drive::all(),
-            'bodyTypes' => BodyType::all(),
-            'transmissions' => Transmission::all(),
-        ]);
+        $validated = $request->validate(['role_id' => ['required']]);
+        $user->update($validated);
     }
 
     public function getModel(Request $request)

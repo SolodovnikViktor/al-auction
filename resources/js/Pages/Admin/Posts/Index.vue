@@ -3,7 +3,7 @@ import {Head, usePage} from '@inertiajs/vue3';
 import MainLayout from "@/Layouts/MainLayout.vue";
 import AdminNav from "@/Components/Main/Admin/AdminNav.vue";
 import {computed, ref} from 'vue'
-import Filters from "@/Components/Main/Filters.vue";
+import FiltersPosts from "@/Components/Main/FiltersPosts.vue";
 import PaginationBar from "@/Components/Main/PaginationBar.vue";
 import IndexPhoto from "@/Components/Main/PostsIndex/IndexPhoto.vue";
 import IndexTable from "@/Components/Main/PostsIndex/IndexTable.vue";
@@ -25,6 +25,8 @@ const props = defineProps(
         transmissions: Array,
     }
 );
+
+console.log(props.posts);
 </script>
 
 <template>
@@ -34,16 +36,16 @@ const props = defineProps(
             <AdminNav/>
         </template>
         <template #filters>
-            <Filters @checkbox="catalogView"
-                     :posts
-                     :user
-                     :brands
-                     :fuels
-                     :wheels
-                     :colors
-                     :drives
-                     :bodyTypes
-                     :transmissions
+            <FiltersPosts @checkbox="catalogView"
+                          :posts
+                          :user
+                          :brands
+                          :fuels
+                          :wheels
+                          :colors
+                          :drives
+                          :bodyTypes
+                          :transmissions
             />
         </template>
         <div class="p-2 lg:p-4 max-w-screen-2xl mx-auto shadow sm:rounded-2xl bg-white">
@@ -57,7 +59,7 @@ const props = defineProps(
                 <IndexTable :posts/>
             </template>
             <nav class="flex justify-center">
-                <PaginationBar :links="posts.meta.links" />
+                <PaginationBar :links="posts.meta.links"/>
             </nav>
         </div>
     </MainLayout>

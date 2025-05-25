@@ -7,9 +7,6 @@ use Illuminate\Database\Seeder;
 
 class FuelSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         $titles = [

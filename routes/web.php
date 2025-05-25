@@ -17,7 +17,7 @@ Route::get('/contact', function () {
     return Inertia::render('Main/Contact');
 })->name('contact');
 
-Route::middleware(['auth', 'verified', 'roles:admin'])->group(function () {
+Route::middleware(['auth', 'verified', 'roles:1'])->group(function () {
     Route::get('/admin/posts/index', [AdminPostController::class, 'index'])->name('admin-posts.index');
     Route::get('/admin/post/create', [AdminPostController::class, 'create'])->name('admin-post.create');
     Route::post('/admin/post/create', [AdminPostController::class, 'store'])->name('admin-post.store');
@@ -32,6 +32,7 @@ Route::middleware(['auth', 'verified', 'roles:admin'])->group(function () {
     Route::get('/admin/users/index', [AdminUserController::class, 'index'])->name('admin-users.index');
     Route::get('/admin/user/show', [AdminUserController::class, 'show'])->name('admin-user.show');
     Route::get('/admin/user/{user}/edit', [AdminUserController::class, 'edit'])->name('admin-user.edit');
+    Route::patch('/admin/update-role/{user}', [AdminUserController::class, 'updateRole']);
 
     Route::post('/admin/post/crete/get-model', [AdminPostController::class, 'getModel']);
     Route::post('/admin/post/crete/brand', [AdminPostController::class, 'storeBrand'])->name('admin-post.storeBrand');

@@ -12,7 +12,7 @@ const showingNavigationDropdown = ref(false);
 let adminActive = false;
 if (route().current('admin-posts.index') || route().current('admin-post.create')
     || route().current('admin-post.show') || route().current('admin-post.edit')
-    || route().current('admin-post.search') || route().current('admin-post.filter')) {
+    || route().current('admin-post.search') || route().current('admin-post.filter') || route().current('admin-users.index')) {
     adminActive = true;
 }
 

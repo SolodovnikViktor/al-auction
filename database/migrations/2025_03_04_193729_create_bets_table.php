@@ -11,8 +11,8 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('user_id');
             $table->foreignId('post_id');
-            $table->unsignedMediumInteger('down_bet');
-            $table->unsignedMediumInteger('up_bet');
+            $table->unsignedMediumInteger('down_price');
+            $table->unsignedMediumInteger('up_price');
             $table->timestamps();
         });
     }

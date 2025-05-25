@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
             CarModelSeeder::class,
             WheelSeeder::class,
             FuelSeeder::class,
+            RoleSeeder::class,
+            PostSeeder::class,
         ]);
     }
 }

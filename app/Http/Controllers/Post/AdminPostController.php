@@ -29,12 +29,9 @@ class AdminPostController extends Controller
     public function index(): Response
     {
         $paginate = 15;
-        if(auth()->user()->catalog_view){
+        if (auth()->user()->catalog_view) {
             $paginate = 50;
         }
-
-        $postsPaginate = Post::with('user', 'images', 'imagesPath')->paginate(1);
-        $postsPaginateString = Post::with('user', 'images', 'imagesPath')->paginate(1)->withQueryString();
         return Inertia::render('Admin/Posts/Index', [
             'posts' => PostIndexResource::collection(Post::paginate($paginate)),
             'brands' => Brand::all(),
@@ -44,9 +41,6 @@ class AdminPostController extends Controller
             'drives' => Drive::all(),
             'bodyTypes' => BodyType::all(),
             'transmissions' => Transmission::all(),
-
-            'postsPaginate' => $postsPaginate,
-            'postsPaginateString' => $postsPaginateString,
         ]);
     }
 
