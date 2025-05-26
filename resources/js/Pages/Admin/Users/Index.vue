@@ -43,42 +43,51 @@ console.log(props.roles)
         <div class="p-2 lg:p-4 max-w-screen-2xl mx-auto shadow sm:rounded-2xl bg-white">
             <div class="flex flex-col">
                 <div class="-m-1.5 overflow-x-auto">
-                    <div class="p-1.5 min-w-full inline-block align-middle">
+                    <div class="p-1.5 -mt-3 min-w-full inline-block align-middle">
                         <div class="overflow-hidden rounded-t-lg">
                             <table class="min-w-full divide-y divide-gray-200 ">
                                 <thead class=" ">
-                                <tr>
-                                    <th scope="col"
-                                        class="px-4 py-3 text-start text-xs font-medium text-gray-500 uppercase">
-                                        Имя
-                                    </th>
-                                    <th scope="col"
-                                        class="px-4 py-3 text-start text-xs font-medium text-gray-500 uppercase">
-                                        Фамилия
-                                    </th>
-                                    <th scope="col"
-                                        class="px-4 py-3 text-start text-xs font-medium text-gray-500 uppercase">
-                                        Телефон
-                                    </th>
-                                    <th scope="col"
-                                        class="px-4 py-3 text-start text-xs font-medium text-gray-500 uppercase">Email
-                                    </th>
-                                    <th scope="col"
-                                        class="px-4 py-3 text-start text-xs font-medium text-gray-500 uppercase">Ставок
-                                    </th>
-                                    <th scope="col"
-                                        class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">роль
-                                    </th>
-                                </tr>
+                                   <tr>
+                                       <th scope="col"
+                                        class="text-start text-xs font-medium text-gray-500 uppercase">
+                                            <div class="py-1 px-2.5 cursor-pointer select-none inline-flex items-center border border-transparent text-sm text-gray-500 rounded-md hover:border-gray-200">
+                                            Имя
+                                                <svg class="size-3.5 ms-1 -me-0.5 text-gray-400" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path class="hs-datatable-ordering-desc:text-blue-600" d="m7 15 5 5 5-5"></path>
+                                                    <path class="hs-datatable-ordering-asc:text-blue-600 " d="m7 9 5-5 5 5"></path>
+                                                </svg>
+                                            </div>
+                                        </th>
+                                       <th scope="col"
+                                            class="px-4 py-3 text-start text-xs font-medium text-gray-500 uppercase">
+                                            Фамилия
+                                        </th>
+                                        <th scope="col"
+                                            class="px-4 py-3 text-start text-xs font-medium text-gray-500 uppercase">
+                                            Телефон
+                                        </th>
+                                        <th scope="col"
+                                            class="px-4 py-3 text-start text-xs font-medium text-gray-500 uppercase">
+                                            Email
+                                        </th>
+                                        <th scope="col"
+                                            class="px-4 py-3 text-start text-xs font-medium text-gray-500 uppercase">
+                                            Ставок
+                                        </th>
+                                        <th scope="col"
+                                            class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">
+                                            Роль
+                                        </th>
+                                   </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-200">
                                 <tr v-for="user in users.data" class="hover:bg-gray-100">
                                     <td @click="show(user.id)"
-                                        class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
+                                        class="px-4 py-4 cursor-pointer whitespace-nowrap text-sm font-medium text-gray-800">
                                         {{ user.name }}
                                     </td>
                                     <td @click="show(user.id)"
-                                        class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
+                                        class="px-4 py-4 cursor-pointer whitespace-nowrap text-sm font-medium text-gray-800">
                                         {{ user.surname }}
                                     </td>
                                     <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
@@ -92,7 +101,7 @@ console.log(props.roles)
                                     </td>
                                     <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
                                         <select @change="patchRole(user.id, user.role.id)"
-                                                class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500
+                                                class="w-min-[113px] cursor-pointer rounded-md border-gray-300 shadow-sm focus:ring-blue-500
                                             focus:border-blue-500"
                                                 v-model="user.role.id"
                                                 id="role">
