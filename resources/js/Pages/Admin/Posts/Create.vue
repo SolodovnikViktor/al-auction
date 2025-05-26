@@ -53,7 +53,7 @@ let errorLoadFiles = ref('');
 let errorMessage = ref(false);
 
 function getPhotos() {
-    axios.get('/admin/tmp-restore')
+    axios.get('/admin/post/create/tmp-restore')
         .then(response => {
             pondRestore(response.data)
         })
@@ -101,7 +101,7 @@ function reorderFiles(files, origin, target) {
             photoPosition = photoPosition + ',' + file.file.id
         }
     })
-    axios.post('/admin/tmp-reorder', photoPosition)
+    axios.post('/admin/post/create/tmp-reorder', photoPosition)
         .catch((error) => {
             console.log(error);
         });
@@ -213,14 +213,14 @@ function FilePondErrorLoad(error, files) {
                                 url:'',
                                 timeout: 120000,
                                 process:{
-                                    url: '/admin/tmp-upload',
+                                    url: '/admin/post/create/tmp-upload',
                                     method: 'POST',
                                     withCredentials: false,
                                     onerror: FilePondErrorLoad,
                                     onload: handleFilePondLoad
                                     },
                                 revert:{
-                                    url: '/admin/tmp-revert',
+                                    url: '/admin/post/create/tmp-revert',
                                     method: 'DELETE',
                                     onload: handleFilePondRevert
                                 },
