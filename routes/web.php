@@ -52,8 +52,6 @@ Route::middleware(['auth', 'verified', 'roles:1'])->group(function () {
     Route::get('/admin/user/show', [AdminUserController::class, 'show'])->name('admin-user.show');
     Route::get('/admin/user/{user}/edit', [AdminUserController::class, 'edit'])->name('admin-user.edit');
     Route::patch('/admin/update-role/{user}', [AdminUserController::class, 'updateRole']);
-
-    Route::get('/admin/users/ordering', [AdminUserFilterController::class, 'ordering']);
 });
 
 Route::middleware('auth')->group(function () {

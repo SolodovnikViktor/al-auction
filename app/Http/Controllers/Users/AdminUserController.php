@@ -31,13 +31,31 @@ class AdminUserController extends Controller
 {
     public function index(Request $request): Response
     {
-        if($request->ordering_value){
-            $users = User::orderBy($request->ordering_value, $request->ordering_direction)->paginate(20)->withQueryString();
-        }else{
-           $users = User::paginate(20);
+        $orderingValue = 'created_at';
+        if ($request->ordering_value) {
+            $orderingValue = $request->ordering_value;
+        }
+        $orderingDirection = 'desc';
+        if ($request->ordering_direction) {
+            $orderingDirection = $request->ordering_direction;
+        }
+
+        if ($request->search) {
+            $users = User::query()
+                ->when($request->search, function ($query, $search) {
+                    $query->where('name', 'like', '%' . $search . '%')
+                        ->OrWhere('id', 'like', '%' . $search . '%');
+                })->orderBy($orderingValue, $orderingDirection)->paginate(
+                    20
+                )->withQueryString();
+        } elseif ($request->ordering_value) {
+            $users = User::orderBy($orderingValue, $orderingDirection)->paginate(
+                20
+            )->withQueryString();
+        } else {
+            $users = User::paginate(20);
         }
         return Inertia::render('Admin/Users/Index', [
-//            'users' => UserResource::collection(User::paginate(20)),
             'users' => UserResource::collection($users),
             'roles' => Role::all(),
             'orderingValue' => $request->ordering_value,
@@ -45,14 +63,9 @@ class AdminUserController extends Controller
             'orderingDesc' => $request->ordering_desc,
             'orderingAsc' => $request->ordering_asc,
             'headerIndex' => $request->header_index,
+            'search' => $request->search,
         ]);
     }
-
-
-
-
-
-
 
 
     public function updateRole(Request $request, User $user)

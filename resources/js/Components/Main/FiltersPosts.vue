@@ -44,7 +44,6 @@ let postCount = ref(props.posts.meta.total);
 let viewFullFilter = ref(false);
 
 function updateCatalogView() {
-
     axios.patch(`/update-catalog-view/${props.user.id}`, {catalog_view: toggle.value})
         .then(res => {
                 router.reload({only: ['posts']})
@@ -66,7 +65,6 @@ function getModel(value) {
         })
         .catch(error => {
             console.log(error)
-            console.log(error.message);
         });
 }
 
@@ -119,7 +117,6 @@ const cleanForm = () => {
     form.body_type_id = ''
     form.engine_capacity = ''
 }
-
 </script>
 
 <template>

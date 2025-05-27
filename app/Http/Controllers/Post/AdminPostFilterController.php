@@ -20,7 +20,7 @@ class AdminPostFilterController extends Controller
     public function adminSearch(Request $request)
     {
         $paginate = 15;
-        if(auth()->user()->catalog_view){
+        if (auth()->user()->catalog_view) {
             $paginate = 50;
         }
         return Inertia::render(
@@ -77,7 +77,7 @@ class AdminPostFilterController extends Controller
     public function getPosts(Request $request, &$posts): void
     {
         $paginate = 15;
-        if(auth()->user()->catalog_view){
+        if (auth()->user()->catalog_view) {
             $paginate = 50;
         }
         $posts = PostIndexResource::collection(

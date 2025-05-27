@@ -4,8 +4,9 @@ import MainLayout from "@/Layouts/MainLayout.vue";
 import AdminNav from "@/Components/Main/Admin/AdminNav.vue";
 import PaginationBar from "@/Components/Main/PaginationBar.vue";
 import axios from "axios";
-import {reactive, ref} from "vue";
+import {reactive} from "vue";
 import TableHeader from "@/Components/Main/TableHeader.vue";
+import SecondaryButton from "@/Components/Button/SecondaryButton.vue";
 
 const props = defineProps({
     users: Object,
@@ -15,7 +16,7 @@ const props = defineProps({
     orderingDesc: String,
     orderingAsc: String,
     headerIndex: String,
-
+    search: String,
 })
 let form = reactive({
     ordering_direction: props.orderingDirection,
@@ -23,7 +24,8 @@ let form = reactive({
     ordering_desc: props.orderingDesc,
     ordering_asc: props.orderingAsc,
     header_index: props.headerIndex,
-    })
+    search: props.search,
+})
 
 const tableHeaders = [
     {id: 1, title: 'Имя', value: 'name'},
@@ -33,11 +35,8 @@ const tableHeaders = [
     {id: 5, title: 'Ставок', value: 'bet'},
     {id: 6, title: 'Роль', value: 'role'},
 ]
-// let orderingDesc = ref(props.orderingDesc);
-// let orderingAsc = ref(form.orderingAsc)
-// let headerIndex = ref(form.headerIndex)
-// let orderingValue = ref(props.orderingValue)
-// let orderingDirection = ref(props.orderingDirection)
+
+// let search = ref('');
 
 const patchRole = (userId, roleId) => {
     axios.patch(`/admin/update-role/${userId}`, {role_id: roleId})
@@ -67,11 +66,26 @@ const filterOn = (i, v) => {
     // })
     console.log(form)
     router.get(route('admin-users.index'),
-        form
-        ,{
-        preserveState: true,
-    }
+        form,
+        {
+            preserveState: true,
+        }
     )
+}
+const getSearch = () => {
+    if (form.search) {
+        router.get(route("admin-users.index",
+            form,
+            {
+                preserveState: true,
+            })
+        );
+    }
+}
+
+const cleanForm = () => {
+    console.log(123)
+    router.get(route("admin-users.index"))
 }
 
 </script>
@@ -89,8 +103,32 @@ const filterOn = (i, v) => {
         <!--        </template>-->
         <div class="p-2 lg:p-4 max-w-screen-2xl mx-auto shadow sm:rounded-2xl bg-white">
             <div class="flex lg:-mt-1 flex-col">
-                <div class="-m-1.5  overflow-x-auto">
-                    <div class="p-1.5 pt-0  min-w-full inline-block align-middle">
+                <div class="-m-1.5 overflow-x-auto">
+                    <div class="p-1.5 min-w-full inline-block align-middle">
+                        <form
+                            @submit.prevent="getSearch"
+                            class="inline-flex ml-3 mb-1 items-center ">
+                            <div class="relative">
+                                <input type="search"
+                                       id="lev-search"
+                                       autocomplete="search"
+                                       v-model="form.search"
+                                       class="block w-full p-1 pl-2 pr-10 text-sm text-gray-900 border border-gray-200 rounded-lg "
+                                       placeholder="Поиск"/>
+                                <button type="submit"
+                                        class="absolute top-0 end-0 bottom-0 focus:outline-none px-3">
+                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                              stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            <SecondaryButton class="py-1.5 ml-3 text-gray-500" @click="cleanForm">
+                                x
+                            </SecondaryButton>
+                        </form>
+
                         <div class="overflow-hidden rounded-t-lg">
                             <table class="min-w-full divide-y divide-gray-200 ">
                                 <thead>

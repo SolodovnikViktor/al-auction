@@ -28,13 +28,14 @@ onBeforeMount(() => {
 })
 
 const getSearch = (value) => {
-    router.get(
-        "/admin/posts/search",
-        {search: value},
-        {
-            preserveState: true,
-        }
-    );
+    if (value) {
+        router.get(route("admin-post.search",
+            {search: value},
+            {
+                preserveState: true,
+            })
+        );
+    }
 }
 
 // watch(search, (value) => {
