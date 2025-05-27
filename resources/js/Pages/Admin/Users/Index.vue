@@ -4,14 +4,27 @@ import MainLayout from "@/Layouts/MainLayout.vue";
 import AdminNav from "@/Components/Main/Admin/AdminNav.vue";
 import PaginationBar from "@/Components/Main/PaginationBar.vue";
 import axios from "axios";
-import {ref} from "vue";
+import {reactive, ref} from "vue";
 import TableHeader from "@/Components/Main/TableHeader.vue";
-
 
 const props = defineProps({
     users: Object,
     roles: Array,
+    orderingDirection: String,
+    orderingValue: String,
+    orderingDesc: String,
+    orderingAsc: String,
+    headerIndex: String,
+
 })
+let form = reactive({
+    ordering_direction: props.orderingDirection,
+    ordering_value: props.orderingValue,
+    ordering_desc: props.orderingDesc,
+    ordering_asc: props.orderingAsc,
+    header_index: props.headerIndex,
+    })
+
 const tableHeaders = [
     {id: 1, title: 'Имя', value: 'name'},
     {id: 2, title: 'Фамилия', value: 'surname'},
@@ -20,9 +33,11 @@ const tableHeaders = [
     {id: 5, title: 'Ставок', value: 'bet'},
     {id: 6, title: 'Роль', value: 'role'},
 ]
-let orderingDesc = ref(false);
-let orderingAsc = ref(false)
-let indexHeader = ref(null)
+// let orderingDesc = ref(props.orderingDesc);
+// let orderingAsc = ref(form.orderingAsc)
+// let headerIndex = ref(form.headerIndex)
+// let orderingValue = ref(props.orderingValue)
+// let orderingDirection = ref(props.orderingDirection)
 
 const patchRole = (userId, roleId) => {
     axios.patch(`/admin/update-role/${userId}`, {role_id: roleId})
@@ -36,19 +51,27 @@ const show = (id) => {
 }
 
 const filterOn = (i, v) => {
-    console.log(i)
-    console.log(v)
-    indexHeader.value = i
-    if (!orderingDesc.value) {
-        orderingDesc.value = true;
-        orderingAsc.value = false;
+    form.header_index = i.toString()
+    form.ordering_value = v
+    if (form.ordering_desc === 'false') {
+        form.ordering_direction = 'desc';
+        form.ordering_desc = 'true';
+        form.ordering_asc = 'false';
     } else {
-        orderingDesc.value = false;
-        orderingAsc.value = true;
+        form.ordering_direction = 'asc';
+        form.ordering_desc = 'false';
+        form.ordering_asc = 'true';
     }
-    axios.get('/admin/users/ordering', {index_header: indexHeader.value, ordering_desc: ordering.value}).then((res) => {
-        router.reload({only: ['users']})
-    })
+    // axios.get('/admin/users/ordering', {index_header: indexHeader.value, ordering_desc: ordering.value}).then((res) => {
+    //     router.reload({only: ['users']})
+    // })
+    console.log(form)
+    router.get(route('admin-users.index'),
+        form
+        ,{
+        preserveState: true,
+    }
+    )
 }
 
 </script>
@@ -74,15 +97,15 @@ const filterOn = (i, v) => {
                                 <tr>
                                     <TableHeader
                                         :tableHeaders
-                                        :orderingDesc
-                                        :orderingAsc
-                                        :indexHeader
+                                        :orderingDesc="form.ordering_desc"
+                                        :orderingAsc="form.ordering_asc"
+                                        :headerIndex="form.header_index"
                                         @filter-on="filterOn"
                                     />
                                 </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-200">
-                                <tr v-for="user in users.data" class="hover:bg-gray-100">
+                                <tr v-for="user in users.data" :key="user.id" class="hover:bg-gray-100">
                                     <td @click="show(user.id)"
                                         class="px-4 py-4 cursor-pointer whitespace-nowrap text-sm font-medium text-gray-800">
                                         {{ user.name }}
@@ -106,7 +129,7 @@ const filterOn = (i, v) => {
                                             focus:border-blue-500"
                                                 v-model="user.role.id"
                                                 id="role">
-                                            <option v-for="role in roles" :key="user.id" :value="role.id">
+                                            <option v-for="role in roles" :key="role.id" :value="role.id">
                                                 {{ role.title }}
                                             </option>
                                         </select>

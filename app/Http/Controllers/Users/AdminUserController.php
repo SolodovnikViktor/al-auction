@@ -29,13 +29,31 @@ use Intervention\Image\Laravel\Facades\Image;
 
 class AdminUserController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
+        if($request->ordering_value){
+            $users = User::orderBy($request->ordering_value, $request->ordering_direction)->paginate(20)->withQueryString();
+        }else{
+           $users = User::paginate(20);
+        }
         return Inertia::render('Admin/Users/Index', [
-            'users' => UserResource::collection(User::paginate(20)),
+//            'users' => UserResource::collection(User::paginate(20)),
+            'users' => UserResource::collection($users),
             'roles' => Role::all(),
+            'orderingValue' => $request->ordering_value,
+            'orderingDirection' => $request->ordering_direction,
+            'orderingDesc' => $request->ordering_desc,
+            'orderingAsc' => $request->ordering_asc,
+            'headerIndex' => $request->header_index,
         ]);
     }
+
+
+
+
+
+
+
 
     public function updateRole(Request $request, User $user)
     {
