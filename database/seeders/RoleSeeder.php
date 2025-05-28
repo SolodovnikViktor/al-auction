@@ -11,8 +11,8 @@ class RoleSeeder extends Seeder
     {
         $titles = [
             ['title' => 'Admin'],
+            ['title' => 'Trusted'],
             ['title' => 'User'],
-            ['title' => 'Trusted '],
         ];
         foreach ($titles as $title) {
             Role::create($title);

@@ -6,7 +6,7 @@ use App\Http\Resources\Admin\BetResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserAdminResource extends JsonResource
+class AdminUserShowResource extends JsonResource
 {
     /**
      * @return array<string, mixed>
@@ -25,7 +25,7 @@ class UserAdminResource extends JsonResource
 //            'address' => $this->address,
 //            'password' => $this->password,
 //            'timestamps' => $this->timestamps,
-//
+//'created_at' => $this->created_at->format('d.m.y H:i'),
 //            'bet' => BetResource::collection($this->bets),
         ];
     }

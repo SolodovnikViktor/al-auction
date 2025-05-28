@@ -4,22 +4,14 @@ namespace App\Http\Controllers\Users;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Post\PostRequest;
-use App\Http\Resources\Admin\PostIndexResource;
-use App\Http\Resources\Admin\PostShowResource;
-use App\Http\Resources\User\UserResource;
-use App\Models\BodyType;
+use App\Http\Resources\User\AdminUserIndexResource;
 use App\Models\Brand;
 use App\Models\CarModel;
-use App\Models\Color;
-use App\Models\Drive;
-use App\Models\Fuel;
 use App\Models\Photo;
 use App\Models\PhotoPosition;
 use App\Models\Post;
 use App\Models\Role;
-use App\Models\Transmission;
 use App\Models\User;
-use App\Models\Wheel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
@@ -44,7 +36,10 @@ class AdminUserController extends Controller
             $users = User::query()
                 ->when($request->search, function ($query, $search) {
                     $query->where('name', 'like', '%' . $search . '%')
-                        ->OrWhere('id', 'like', '%' . $search . '%');
+                        ->OrWhere('id', 'like', '%' . $search . '%')
+                        ->OrWhere('surname', 'like', '%' . $search . '%')
+                        ->OrWhere('phone', 'like', '%' . $search . '%')
+                        ->OrWhere('email', 'like', '%' . $search . '%');
                 })->orderBy($orderingValue, $orderingDirection)->paginate(
                     20
                 )->withQueryString();
@@ -53,10 +48,10 @@ class AdminUserController extends Controller
                 20
             )->withQueryString();
         } else {
-            $users = User::paginate(20);
+            $users = User::latest()->paginate(20);
         }
         return Inertia::render('Admin/Users/Index', [
-            'users' => UserResource::collection($users),
+            'users' => AdminUserIndexResource::collection($users),
             'roles' => Role::all(),
             'orderingValue' => $request->ordering_value,
             'orderingDirection' => $request->ordering_direction,

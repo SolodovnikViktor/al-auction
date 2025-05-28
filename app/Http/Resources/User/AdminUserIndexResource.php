@@ -7,7 +7,7 @@ use App\Http\Resources\Admin\PostIndexResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserResource extends JsonResource
+class AdminUserIndexResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
@@ -16,11 +16,9 @@ class UserResource extends JsonResource
             'role' => $this->role,
             'name' => $this->name,
             'surname' => $this->surname,
-            'patronymic' => $this->patronymic,
             'phone' => $this->phone,
-            'phone_verified_at' => $this->phone_verified_at,
             'email' => $this->email,
-            'address' => $this->address,
+            'created_at' => $this->created_at->format('d.m.y'),
 
             'bet' => BetResource::collection($this->bets),
             'posts' => PostIndexResource::collection($this->posts),

@@ -94,7 +94,7 @@ const getSearch = (value) => {
                             @submit.prevent="getSearch(search)"
                             class="inline-flex items-center relative">
                             <input type="search"
-                                   id="lev-search"
+                                   id="post_search"
                                    autocomplete="search"
                                    v-model="search"
                                    class="block w-full p-1 pl-2 pr-10 text-sm text-gray-900 border border-gray-200 rounded-lg "

@@ -18,6 +18,9 @@ const props = defineProps({
     headerIndex: String,
     search: String,
 })
+
+console.log(props.users);
+
 let form = reactive({
     ordering_direction: props.orderingDirection,
     ordering_value: props.orderingValue,
@@ -28,12 +31,13 @@ let form = reactive({
 })
 
 const tableHeaders = [
-    {id: 1, title: 'Имя', value: 'name'},
-    {id: 2, title: 'Фамилия', value: 'surname'},
-    {id: 3, title: 'Телефон', value: 'phone'},
-    {id: 4, title: 'Email', value: 'email'},
-    {id: 5, title: 'Ставок', value: 'bet'},
-    {id: 6, title: 'Роль', value: 'role'},
+    {id: 1, title: 'Имя', value: 'name', exception: false},
+    {id: 2, title: 'Фамилия', value: 'surname', exception: false},
+    {id: 3, title: 'Телефон', value: 'phone', exception: true},
+    {id: 4, title: 'Email', value: 'email', exception: true},
+    {id: 5, title: 'Дата', value: 'created_at', exception: false},
+    {id: 6, title: 'Ставок', value: 'bet', exception: false},
+    {id: 7, title: 'Роль', value: 'role_id', exception: false},
 ]
 
 // let search = ref('');
@@ -107,13 +111,13 @@ const cleanForm = () => {
                     <div class="p-1.5 min-w-full inline-block align-middle">
                         <form
                             @submit.prevent="getSearch"
-                            class="inline-flex ml-3 mb-1 items-center ">
-                            <div class="relative">
+                            class="inline-flex ml-3 w-1/3 mb-1 items-center ">
+                            <div class="relative w-full">
                                 <input type="search"
-                                       id="lev-search"
+                                       id="user_search"
                                        autocomplete="search"
                                        v-model="form.search"
-                                       class="block w-full p-1 pl-2 pr-10 text-sm text-gray-900 border border-gray-200 rounded-lg "
+                                       class="block w-full p-1 pl-2 pr-10 text-sm text-gray-800 border border-gray-200 rounded-lg "
                                        placeholder="Поиск"/>
                                 <button type="submit"
                                         class="absolute top-0 end-0 bottom-0 focus:outline-none px-3">
@@ -124,7 +128,7 @@ const cleanForm = () => {
                                     </svg>
                                 </button>
                             </div>
-                            <SecondaryButton class="py-1.5 ml-3 text-gray-500" @click="cleanForm">
+                            <SecondaryButton class="py-1.5 ml-3" @click="cleanForm">
                                 x
                             </SecondaryButton>
                         </form>
@@ -157,6 +161,9 @@ const cleanForm = () => {
                                     </td>
                                     <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
                                         {{ user.email }}
+                                    </td>
+                                    <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
+                                        {{ user.created_at }}
                                     </td>
                                     <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
                                         {{ user.bet.length }}
