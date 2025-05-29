@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Post;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Admin\PostIndexResource;
+use App\Http\Resources\Admin\Post\AdminPostIndexResource;
 use App\Models\BodyType;
 use App\Models\Brand;
 use App\Models\Color;
@@ -34,7 +34,7 @@ class AdminPostFilterController extends Controller
                 'drives' => Drive::all(),
                 'bodyTypes' => BodyType::all(),
                 'transmissions' => Transmission::all(),
-                'posts' => PostIndexResource::collection(
+                'posts' => AdminPostIndexResource::collection(
                     Post::query()
                         ->when($request->search, function ($query, $search) {
                             $query->where('vin', 'like', '%' . $search . '%')
@@ -80,7 +80,7 @@ class AdminPostFilterController extends Controller
         if (auth()->user()->catalog_view) {
             $paginate = 50;
         }
-        $posts = PostIndexResource::collection(
+        $posts = AdminPostIndexResource::collection(
             Post::
             when($request->brand_id, function ($query, $x) {
                 $query->where('brand_id', $x);

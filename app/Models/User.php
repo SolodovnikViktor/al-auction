@@ -22,21 +22,22 @@ class User extends Authenticatable
         'phone',
         'phone_verified_at',
         'email',
+        'count_bets',
         'address',
         'password',
     ];
 
-    public function bets(): HasMany
+    public function CountBets(): HasMany
     {
         return $this->hasMany(Bet::class);
     }
 
-    public function posts(): HasMany
+    public function Posts(): HasMany
     {
         return $this->hasMany(Post::class);
     }
 
-    public function role(): BelongsTo
+    public function Role(): BelongsTo
     {
         return $this->belongsTo(Role::class);
     }

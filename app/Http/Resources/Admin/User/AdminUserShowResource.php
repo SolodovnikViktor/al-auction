@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Resources\User;
+namespace App\Http\Resources\Admin\User;
 
-use App\Http\Resources\Admin\BetResource;
-use App\Http\Resources\Admin\PostIndexResource;
+use App\Http\Resources\Admin\Post\AdminPostIndexResource;
+use App\Http\Resources\Main\BetResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserResource extends JsonResource
+class AdminUserShowResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
@@ -20,10 +20,11 @@ class UserResource extends JsonResource
             'phone' => $this->phone,
             'phone_verified_at' => $this->phone_verified_at,
             'email' => $this->email,
+            'count_bets' => $this->count_bets,
             'address' => $this->address,
-
-            'bet' => BetResource::collection($this->bets),
-            'posts' => PostIndexResource::collection($this->posts),
+            'created_at' => $this->created_at->format('d.m.y'),
+            'bets' => BetResource::collection($this->CountBets),
+            'posts' => AdminPostIndexResource::collection($this->Posts),
         ];
     }
 }

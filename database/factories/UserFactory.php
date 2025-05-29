@@ -20,6 +20,7 @@ class UserFactory extends Factory
             'phone' => fake()->phoneNumber(),
             'phone_verified_at' => now(),
             'email' => fake()->unique()->safeEmail(),
+            'count_bets' => fake()->numberBetween(0, 100),
             'email_verified_at' => now(),
             'address' => fake()->address(),
             'password' => static::$password ??= Hash::make('password'),

@@ -1,14 +1,16 @@
 <?php
 
-namespace App\Http\Resources\Admin;
+namespace App\Http\Resources\Admin\Post;
 
-use App\Http\Resources\User\UserResource;
+use App\Http\Resources\Admin\User\UserResource;
+use App\Http\Resources\Main\BetResource;
+use App\Http\Resources\Main\Post\PhotoResource;
 use App\Models\Photo;
 use App\Models\PhotoPosition;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PostShowResource extends JsonResource
+class AdminPostShowResource extends JsonResource
 {
     public function toArray(Request $request): array
     {

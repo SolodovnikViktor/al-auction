@@ -1,9 +1,7 @@
 <?php
 
-namespace App\Http\Resources\User;
+namespace App\Http\Resources\Admin\User;
 
-use App\Http\Resources\Admin\BetResource;
-use App\Http\Resources\Admin\PostIndexResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -18,10 +16,8 @@ class AdminUserIndexResource extends JsonResource
             'surname' => $this->surname,
             'phone' => $this->phone,
             'email' => $this->email,
+            'count_bets' => $this->count_bets,
             'created_at' => $this->created_at->format('d.m.y'),
-
-            'bet' => BetResource::collection($this->bets),
-            'posts' => PostIndexResource::collection($this->posts),
         ];
     }
 }

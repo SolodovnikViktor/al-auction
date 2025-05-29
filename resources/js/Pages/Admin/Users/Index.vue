@@ -36,7 +36,7 @@ const tableHeaders = [
     {id: 3, title: 'Телефон', value: 'phone', exception: true},
     {id: 4, title: 'Email', value: 'email', exception: false},
     {id: 5, title: 'Дата', value: 'created_at', exception: false},
-    {id: 6, title: 'Ставок', value: 'bet', exception: false},
+    {id: 6, title: 'Ставок', value: 'bets', exception: false},
     {id: 7, title: 'Роль', value: 'role_id', exception: false},
 ]
 
@@ -49,7 +49,6 @@ const patchRole = (userId, roleId) => {
         });
 }
 const show = (id) => {
-    // router.patch(route('admin-post.updateCatalogView', user.value.id), {
     router.get(route('admin-user.show', id))
 }
 
@@ -100,11 +99,6 @@ const cleanForm = () => {
         <template #adminNav>
             <AdminNav/>
         </template>
-        <!--        <template #filters>-->
-        <!--                    <FiltersUsers-->
-        <!--                :users-->
-        <!--            />-->
-        <!--        </template>-->
         <div class="p-2 lg:p-4 max-w-screen-2xl mx-auto shadow sm:rounded-2xl bg-white">
             <div class="flex lg:-mt-1 flex-col">
                 <div class="-m-1.5 overflow-x-auto">
@@ -166,7 +160,7 @@ const cleanForm = () => {
                                         {{ user.created_at }}
                                     </td>
                                     <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
-                                        {{ user.bet.length }}
+                                        {{ user.count_bets }}
                                     </td>
                                     <td class="px-3.5 py-2 whitespace-nowrap text-sm font-medium text-gray-800">
                                         <select @change="patchRole(user.id, user.role.id)"

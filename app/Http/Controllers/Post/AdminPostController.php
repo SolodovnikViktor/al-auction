@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Post;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Post\PostRequest;
-use App\Http\Resources\Admin\PostIndexResource;
-use App\Http\Resources\Admin\PostShowResource;
+use App\Http\Resources\Admin\Post\AdminPostIndexResource;
+use App\Http\Resources\Admin\Post\AdminPostShowResource;
 use App\Models\BodyType;
 use App\Models\Brand;
 use App\Models\CarModel;
@@ -33,7 +33,7 @@ class AdminPostController extends Controller
             $paginate = 50;
         }
         return Inertia::render('Admin/Posts/Index', [
-            'posts' => PostIndexResource::collection(Post::paginate($paginate)),
+            'posts' => AdminPostIndexResource::collection(Post::paginate($paginate)),
             'brands' => Brand::all(),
             'fuels' => Fuel::all(),
             'wheels' => Wheel::all(),
@@ -133,7 +133,7 @@ class AdminPostController extends Controller
     public function show(Post $post): Response
     {
         return Inertia::render('Admin/Posts/Show', [
-            'post' => new PostShowResource($post),
+            'post' => new AdminPostShowResource($post),
         ]);
     }
 

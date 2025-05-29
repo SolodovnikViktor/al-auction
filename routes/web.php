@@ -49,7 +49,7 @@ Route::middleware(['auth', 'verified', 'roles:1'])->group(function () {
     Route::delete('/admin/post/tmp-revert/{post}', [PhotoPostController::class, 'destroy']);
 
     Route::get('/admin/users/index', [AdminUserController::class, 'index'])->name('admin-users.index');
-    Route::get('/admin/user/show', [AdminUserController::class, 'show'])->name('admin-user.show');
+    Route::get('/admin/user/{user}/show', [AdminUserController::class, 'show'])->name('admin-user.show');
     Route::get('/admin/user/{user}/edit', [AdminUserController::class, 'edit'])->name('admin-user.edit');
     Route::patch('/admin/update-role/{user}', [AdminUserController::class, 'updateRole']);
 });
