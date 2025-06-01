@@ -1,7 +1,7 @@
 <script setup>
 import {ref} from "vue";
 
-defineProps(['post'])
+defineProps(['post', 'user'])
 import NavLink from "@/Components/NavLink.vue";
 import {router} from '@inertiajs/vue3';
 
@@ -36,6 +36,11 @@ router.on('navigate', () => {
                 :href="route('admin-users.index')"
                 :active="route().current('admin-users.index')">
                 Пользователи
+            </NavLink>
+            <NavLink v-if="route().current('admin-user.show')"
+                :href="route('admin-users.index')"
+                :active="route().current('admin-user.show')">
+                {{user.name}} {{user.surname}}
             </NavLink>
             <template v-if="search_is">
                 <NavLink

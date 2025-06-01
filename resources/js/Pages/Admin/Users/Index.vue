@@ -19,8 +19,6 @@ const props = defineProps({
     search: String,
 })
 
-console.log(props.users);
-
 let form = reactive({
     ordering_direction: props.orderingDirection,
     ordering_value: props.orderingValue,
@@ -36,11 +34,9 @@ const tableHeaders = [
     {id: 3, title: 'Телефон', value: 'phone', exception: true},
     {id: 4, title: 'Email', value: 'email', exception: false},
     {id: 5, title: 'Дата', value: 'created_at', exception: false},
-    {id: 6, title: 'Ставок', value: 'bets', exception: false},
+    {id: 6, title: 'Ставок', value: 'count_bets', exception: false},
     {id: 7, title: 'Роль', value: 'role_id', exception: false},
 ]
-
-// let search = ref('');
 
 const patchRole = (userId, roleId) => {
     axios.patch(`/admin/update-role/${userId}`, {role_id: roleId})
@@ -49,6 +45,7 @@ const patchRole = (userId, roleId) => {
         });
 }
 const show = (id) => {
+    console.log(id)
     router.get(route('admin-user.show', id))
 }
 
@@ -64,10 +61,6 @@ const filterOn = (i, v) => {
         form.ordering_desc = 'false';
         form.ordering_asc = 'true';
     }
-    // axios.get('/admin/users/ordering', {index_header: indexHeader.value, ordering_desc: ordering.value}).then((res) => {
-    //     router.reload({only: ['users']})
-    // })
-    console.log(form)
     router.get(route('admin-users.index'),
         form,
         {
@@ -87,7 +80,6 @@ const getSearch = () => {
 }
 
 const cleanForm = () => {
-    console.log(123)
     router.get(route("admin-users.index"))
 }
 
@@ -99,9 +91,8 @@ const cleanForm = () => {
         <template #adminNav>
             <AdminNav/>
         </template>
-        <div class="p-2 lg:p-4 max-w-screen-2xl mx-auto shadow sm:rounded-2xl bg-white">
-            <div class="flex lg:-mt-1 flex-col">
-                <div class="-m-1.5 overflow-x-auto">
+        <div class="p-1 lg:p-2 max-w-screen-2xl mx-auto shadow sm:rounded-2xl bg-white">
+                <div class="overflow-x-auto">
                     <div class="p-1.5 min-w-full inline-block align-middle">
                         <form
                             @submit.prevent="getSearch"
@@ -173,20 +164,12 @@ const cleanForm = () => {
                                             </option>
                                         </select>
                                     </td>
-
-                                    <!--                                    <td class="px-4 py-4 whitespace-nowrap text-end text-sm font-medium">-->
-                                    <!--                                <Link :href="route('admin-user.edit', user.id)"-->
-                                    <!--                                      class="bg-gray-200 rounded-md px-1 border-transparent border-b-2 transition focus:outline-none focus:border-indigo-400 hover:bg-gray-300">-->
-                                    <!--                                    Редактировать-->
-                                    <!--                                </Link>-->
-                                    <!--                                    </td>-->
                                 </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
-            </div>
             <nav class="flex justify-center">
                 <PaginationBar :links="users.meta.links"/>
             </nav>

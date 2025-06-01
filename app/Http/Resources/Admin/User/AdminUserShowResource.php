@@ -13,7 +13,7 @@ class AdminUserShowResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'role' => $this->role,
+            'role' => $this->Role,
             'name' => $this->name,
             'surname' => $this->surname,
             'patronymic' => $this->patronymic,

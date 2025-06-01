@@ -65,7 +65,7 @@ class AdminUserController extends Controller
     public function show(User $user): Response
     {
         return Inertia::render('Admin/Users/Show', [
-            'user' => AdminUserShowResource::collection($user),
+            'user' => new AdminUserShowResource($user),
         ]);
     }
 

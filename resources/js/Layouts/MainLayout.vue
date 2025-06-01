@@ -12,7 +12,8 @@ const showingNavigationDropdown = ref(false);
 let adminActive = false;
 if (route().current('admin-posts.index') || route().current('admin-post.create')
     || route().current('admin-post.show') || route().current('admin-post.edit')
-    || route().current('admin-post.search') || route().current('admin-post.filter') || route().current('admin-users.index')) {
+    || route().current('admin-post.search') || route().current('admin-post.filter')
+    || route().current('admin-users.index') || route().current('admin-user.show')) {
     adminActive = true;
 }
 
@@ -37,12 +38,6 @@ const getSearch = (value) => {
         );
     }
 }
-
-// watch(search, (value) => {
-//     console.log('сработал watch')
-//     getSearch(value)
-// });
-
 </script>
 
 <template>

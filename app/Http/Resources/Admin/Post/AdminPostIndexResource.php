@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources\Admin\Post;
 
-use App\Http\Resources\Main\Post\PhotoResource;
+use App\Http\Resources\Main\PhotoResource;
 use App\Models\Photo;
 use App\Models\PhotoPosition;
 use Illuminate\Http\Request;

@@ -2,9 +2,9 @@
 
 namespace App\Http\Resources\Admin\Post;
 
-use App\Http\Resources\Admin\User\UserResource;
 use App\Http\Resources\Main\BetResource;
-use App\Http\Resources\Main\Post\PhotoResource;
+use App\Http\Resources\Main\PhotoResource;
+use App\Http\Resources\Main\UserResource;
 use App\Models\Photo;
 use App\Models\PhotoPosition;
 use Illuminate\Http\Request;

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources\Admin\User;
+namespace App\Http\Resources\Main;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class AdminUserIndexResource extends JsonResource
+class UserResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
