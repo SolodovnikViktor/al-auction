@@ -35,9 +35,9 @@ function numberFilter(number) {
         <template #adminNav>
             <AdminNav :post/>
         </template>
-        <div class="max-w-screen-xl mx-auto ">
+        <div class="max-w-screen-xl mx-auto">
             <div class="grid grid-cols-12 gap-4">
-                <div class="overflow-hidden col-span-12  lg:col-span-8">
+                <div class="overflow-hidden col-span-12 lg:col-span-8">
                     <swiper
                         v-if="post.photos.length > 0"
                         :style="{'--swiper-navigation-color': '#fff','--swiper-pagination-color': '#fff'}"
@@ -63,24 +63,112 @@ function numberFilter(number) {
                         class="mySwiperDown p-2 sm:p-0"
                     >
                         <swiper-slide v-for="photo in post.photos" :key="photo.id" class="hover:grow">
-                            <img :src="photo.pathMin" :alt="photo.name"
-                                 class="">
+                            <img :src="photo.pathMin" :alt="photo.name">
                         </swiper-slide>
                     </swiper>
                     <img
-                        class="rounded-2xl"
                         v-else
+                        class="rounded-2xl"
                         src="/storage/images/service/not_photo.jpg"
                         alt="Фото отсутствует">
-                    <div class="mt-10 p-2 sm:p-0">
+
+
+                    <div
+                        class="px-4 py-3 block lg:hidden mt-5 mx-auto shadow sm:rounded-2xl bg-white text-gray-500">
+                        <div class="      ">
+                            <div class="mb-3 flex justify-between">
+                                <h4 class="text-xl overflow-auto div-no-scrollbar font-medium text-black">
+                                    {{ post.brand }} {{ post.model }}
+                                    <span class="text-gray-500">
+                                    {{ post.year_release }}г
+                                </span>
+                                </h4>
+                                <div>
+                                    <Link :href="route('admin-post.edit', post.id)"
+                                          class="bg-gray-200 rounded-md p-1 border-transparent border-b-2 transition focus:outline-none focus:border-indigo-400 hover:bg-gray-300">
+                                        Редактировать
+                                    </Link>
+                                </div>
+                            </div>
+                            <div class="bg-lime-200 rounded-md text-xl mx-[-2px] mb-5">
+                                <div v-if="post.up_price === null"
+                                     class="flex justify-between px-1 bg-orange-200 rounded-md">
+                                    <span>{{ numberFilter(post.price) }}₽</span>
+                                    <span class="ml-3">Ставок нет</span>
+                                </div>
+                                <div v-else>
+                                    <span class="line-through">{{ numberFilter(post.price) }}₽</span>
+                                    <span class="ml-3">{{ numberFilter(post.up_price) }}₽</span>
+                                    <span class="text-xl font-bold">{{ post.count_bets }}</span>
+                                </div>
+                            </div>
+                            <div>
+                                <h5 class="text-lg font-bold mb-2">
+                                    Характеристики
+                                </h5>
+                                <div class="*:text-base">
+                                    <div class="flex mb-4 *:w-1/2">
+                                        <p>VIN</p>
+                                        <p class="font-bold overflow-auto div-no-scrollbar">{{ post.vin }}</p>
+                                    </div>
+                                    <div class="flex mb-4 *:w-1/2">
+                                        <p>Год выпуска</p>
+                                        <p class="font-bold">{{ post.year_release }}</p>
+                                    </div>
+                                    <div class="flex mb-4 *:w-1/2">
+                                        <p>Пробег</p>
+                                        <p class="font-bold">{{ numberFilter(post.mileage) }} км</p>
+                                    </div>
+                                    <div class="flex mb-4 *:w-1/2">
+                                        <p>Тип кузова</p>
+                                        <p class="font-bold">{{ post.body_type }}</p>
+                                    </div>
+                                    <div class="flex mb-4 *:w-1/2">
+                                        <p>Руль</p>
+                                        <p class="font-bold">{{ post.wheel }}</p>
+                                    </div>
+                                    <div class="flex mb-4 *:w-1/2">
+                                        <p>Привод</p>
+                                        <p class="font-bold">{{ post.drive }}</p>
+                                    </div>
+                                    <div class="flex mb-4 *:w-1/2">
+                                        <p>Трансмиссия</p>
+                                        <p class="font-bold">{{ post.transmission }}</p>
+                                    </div>
+                                    <div class="flex mb-4 *:w-1/2">
+                                        <p>Цвет кузова</p>
+                                        <p class="font-bold">{{ post.color }}</p>
+                                    </div>
+                                    <div class="flex mb-4 *:w-1/2">
+                                        <p>Мощность</p>
+                                        <p class="font-bold">{{ post.horsepower }} лс</p>
+                                    </div>
+                                    <div class="flex mb-4 *:w-1/2">
+                                        <p>Топливо</p>
+                                        <p class="font-bold">{{ post.fuel }}</p>
+                                    </div>
+                                    <div class="flex *:w-1/2">
+                                        <p>Обьём</p>
+                                        <p class="font-bold scrollb">{{ post.engine_capacity }} л</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <!--Описание-->
+                    <div class="mt-10 px-2">
                         <h2 class="text-3xl font-bold mb-4">Описание</h2>
                         <div class="whitespace-pre-wrap">{{ post.description }}</div>
                     </div>
                 </div>
+                <!--Боковые хар-ки-->
                 <div class="hidden lg:block col-span-4">
                     <div class="px-4 py-3 sticky top-28 rounded-2xl shadow bg-white text-gray-500">
                         <div class="mb-3 flex justify-between">
-                            <h4 class="text-xl font-medium text-black">
+                            <h4 class="text-xl overflow-auto div-no-scrollbar font-medium text-black">
                                 {{ post.brand }} {{ post.model }}
                                 <span class="text-gray-500">
                                     {{ post.year_release }}г
@@ -88,7 +176,7 @@ function numberFilter(number) {
                             </h4>
                             <div>
                                 <Link :href="route('admin-post.edit', post.id)"
-                                      class="bg-gray-200 rounded-md px-1 border-transparent border-b-2 transition focus:outline-none focus:border-indigo-400 hover:bg-gray-300">
+                                      class="bg-gray-200 rounded-md p-1 border-transparent border-b-2 transition focus:outline-none focus:border-indigo-400 hover:bg-gray-300">
                                     Редактировать
                                 </Link>
                             </div>
@@ -106,11 +194,13 @@ function numberFilter(number) {
                             </div>
                         </div>
                         <div>
-                            <h5 class="text-lg font-bold mb-2">Характеристики</h5>
+                            <h5 class="text-lg font-bold mb-2">
+                                Характеристики
+                            </h5>
                             <div class="*:text-base">
                                 <div class="flex mb-4 *:w-1/2">
                                     <p>VIN</p>
-                                    <p class="font-bold">{{ post.vin }}</p>
+                                    <p class="font-bold overflow-auto div-no-scrollbar">{{ post.vin }}</p>
                                 </div>
                                 <div class="flex mb-4 *:w-1/2">
                                     <p>Год выпуска</p>
@@ -150,7 +240,7 @@ function numberFilter(number) {
                                 </div>
                                 <div class="flex *:w-1/2">
                                     <p>Обьём</p>
-                                    <p class="font-bold">{{ post.engine_capacity }} л</p>
+                                    <p class="font-bold scrollb">{{ post.engine_capacity }} л</p>
                                 </div>
                             </div>
                         </div>
@@ -162,6 +252,15 @@ function numberFilter(number) {
 </template>
 
 <style>
+.div-no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.div-no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}
+
 .mySwiperUp {
     height: 450px;
     width: 100%;
