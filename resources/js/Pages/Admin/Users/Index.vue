@@ -90,12 +90,12 @@ const cleanForm = () => {
         <template #adminNav>
             <AdminNav/>
         </template>
-        <div class="p-1 lg:p-2 max-w-screen-2xl mx-auto shadow sm:rounded-2xl bg-white">
+        <div class="p-3 lg:p-4 max-w-screen-2xl mx-auto shadow sm:rounded-2xl bg-white">
             <div class="overflow-x-auto">
-                <div class="p-1.5 min-w-full inline-block align-middle">
+                <div class="min-w-full inline-block align-middle">
                     <form
                         @submit.prevent="getSearch"
-                        class="inline-flex ml-3 w-1/3 mb-1 items-center ">
+                        class="inline-flex w-1/3 mb-1 items-center ">
                         <div class="relative w-full">
                             <input type="search"
                                    id="user_search"

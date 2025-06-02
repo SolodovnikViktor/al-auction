@@ -1,10 +1,53 @@
 <script setup>
 import {Link} from "@inertiajs/vue3";
 import {router} from "@inertiajs/vue3";
+import TableHeader from "@/Components/Main/TableHeader.vue";
+import {reactive} from "vue";
 
 const props = defineProps({
     posts: Object,
 })
+
+let form = reactive({
+    ordering_direction: props.orderingDirection,
+    ordering_value: props.orderingValue,
+    ordering_desc: props.orderingDesc,
+    ordering_asc: props.orderingAsc,
+    header_index: props.headerIndex,
+    search: props.search,
+})
+
+const tableHeaders = [
+    {id: 1, title: 'Бренд', value: 'name', exception: false},
+    {id: 2, title: 'Модель', value: 'surname', exception: false},
+    {id: 3, title: 'Год', value: 'phone', exception: false},
+    {id: 4, title: 'VIN', value: 'email', exception: false},
+    {id: 5, title: 'Цена', value: 'created_at', exception: false},
+    {id: 6, title: 'Ставка', value: 'count_bets', exception: false},
+    {id: 7, title: 'Пробег', value: 'role_id', exception: false},
+    {id: 8, title: 'Трансмиссия', value: 'role_id', exception: false},
+    {id: 9, title: '', value: '', exception: true},
+]
+
+const filterOn = (i, v) => {
+    form.header_index = i.toString()
+    form.ordering_value = v
+    if (form.ordering_desc === 'false') {
+        form.ordering_direction = 'desc';
+        form.ordering_desc = 'true';
+        form.ordering_asc = 'false';
+    } else {
+        form.ordering_direction = 'asc';
+        form.ordering_desc = 'false';
+        form.ordering_asc = 'true';
+    }
+    router.get(route('admin-posts.index'),
+        form,
+        {
+            preserveState: true,
+        }
+    )
+}
 
 function numberFilter(number) {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
@@ -16,38 +59,18 @@ const show = (id) => {
 </script>
 
 <template>
-    <div class="flex flex-col">
-        <div class="-m-1.5 overflow-x-auto">
-            <div class="p-1.5 -mt-3 min-w-full inline-block align-middle">
-                <div class="overflow-hidden rounded-t-lg">
+        <div class="-mt-2 overflow-x-auto">
+            <div class="min-w-full inline-block align-middle">
                     <table class="min-w-full divide-y divide-gray-200 ">
                         <thead>
                         <tr>
-                            <th scope="col" class="px-4 py-3 text-start text-xs font-medium text-gray-500 uppercase">
-                                Бренд
-                            </th>
-                            <th scope="col" class="px-4 py-3 text-start text-xs font-medium text-gray-500 uppercase">
-                                Модель
-                            </th>
-                            <th scope="col" class="px-4 py-3 text-start text-xs font-medium text-gray-500 uppercase">
-                                Год
-                            </th>
-                            <th scope="col" class="px-4 py-3 text-start text-xs font-medium text-gray-500 uppercase">VIN
-                            </th>
-                            <th scope="col" class="px-4 py-3 text-start text-xs font-medium text-gray-500 uppercase">
-                                Цена
-                            </th>
-                            <th scope="col" class="px-4 py-3 text-start text-xs font-medium text-gray-500 uppercase">
-                                Ставка
-                            </th>
-                            <th scope="col" class="px-4 py-3 text-start text-xs font-medium text-gray-500 uppercase">
-                                Пробег
-                            </th>
-                            <th scope="col" class="px-4 py-3 text-start text-xs font-medium text-gray-500 uppercase">
-                                Трансмиссия
-                            </th>
-                            <th scope="col"
-                                class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase"></th>
+                            <TableHeader
+                                :tableHeaders
+                                :orderingDesc="form.ordering_desc"
+                                :orderingAsc="form.ordering_asc"
+                                :headerIndex="form.header_index"
+                                @filter-on="filterOn"
+                            />
                         </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200">
@@ -87,10 +110,8 @@ const show = (id) => {
                         </tr>
                         </tbody>
                     </table>
-                </div>
             </div>
         </div>
-    </div>
 </template>
 
 <style scoped>
