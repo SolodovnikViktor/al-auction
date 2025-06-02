@@ -151,7 +151,7 @@ const storeModel = () => {
 <template>
     <div class="p-1 sm:col-span-3 lg:col-span-2 text-gray-900">
         <div class="flex justify-between relative">
-            <InputLabel class="content-center" for="brend" value="Бренд"/>
+            <InputLabel class="content-center" for="brand" value="Бренд"/>
             <div class="flex w-3/4">
                 <select
                     v-show="!inputBrand_is"

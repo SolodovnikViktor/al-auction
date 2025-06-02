@@ -90,15 +90,15 @@ const cleanForm = () => {
         <template #adminNav>
             <AdminNav/>
         </template>
-        <div class="p-3 lg:p-4 max-w-screen-2xl mx-auto shadow sm:rounded-2xl bg-white">
+        <div class="p-2 lg:p-4 max-w-screen-2xl mx-auto shadow sm:rounded-2xl bg-white">
             <div class="overflow-x-auto">
                 <div class="min-w-full inline-block align-middle">
                     <form
                         @submit.prevent="getSearch"
-                        class="inline-flex w-1/3 mb-1 items-center ">
+                        class="inline-flex w-1/3 m-1 items-center ">
                         <div class="relative w-full">
                             <input type="search"
-                                   id="user_search"
+                                   id="users_search"
                                    autocomplete="search"
                                    v-model="form.search"
                                    class="block w-full p-1 pl-2 pr-10 text-sm text-gray-800 border border-gray-200 rounded-lg "
@@ -157,7 +157,7 @@ const cleanForm = () => {
                                             class="w-min-[113px] py-1 cursor-pointer rounded-md border-gray-300 shadow-sm focus:ring-blue-500
                                             focus:border-blue-500"
                                             v-model="user.role.id"
-                                            id="role">
+                                            :id="`role` + user.id">
                                         <option v-for="role in roles" :key="role.id" :value="role.id">
                                             {{ role.title }}
                                         </option>

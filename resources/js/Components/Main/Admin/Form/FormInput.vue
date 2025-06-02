@@ -8,7 +8,7 @@ const props = defineProps({
     title: String,
     value: String,
     type: String,
-    inputmode: String,
+    inputMod: String,
     placeholder: String,
     fuels: Array,
     wheels: Array,
@@ -65,7 +65,7 @@ if (props.title === 'transmission_id') {
            class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
            v-model="model"
            :type
-           :inputmode
+           :inputMod
            min='0'
            step="0.01"
            :id="title"

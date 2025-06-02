@@ -35,7 +35,7 @@ Route::middleware(['auth', 'verified', 'roles:1'])->group(function () {
     Route::post('/admin/post/crete/model', [AdminPostController::class, 'storeModel'])->name('admin-post.storeModel');
 
     Route::get('/admin/posts/search', [AdminPostFilterController::class, 'adminSearch'])->name('admin-post.search');
-    Route::post('/admin/posts/filter', [AdminPostFilterController::class, 'adminFilter']);
+    Route::post('/admin/posts/filter', [AdminPostFilterController::class, 'adminFilterCount']);
     Route::get('/admin/posts/filter/index', [AdminPostFilterController::class, 'adminFilterIndex'])
         ->name('admin-post.filter');
 

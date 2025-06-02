@@ -25,7 +25,7 @@ const formInputs = [
     {title: "drive_id", value: 'Привод', type: "select"},
     {title: "body_type_id", value: 'Кузов', type: "select"},
     {title: "transmission_id", value: 'Коробка', type: "select"},
-    {title: "engine_capacity", value: 'Объём двигателя', type: "number", inputmode: "decimal"},
+    {title: "engine_capacity", value: 'Объём двигателя', type: "number", inputMod: "decimal"},
     {title: "horsepower", value: 'Мощность', type: "number"},
     {title: "price", value: 'Цена', type: "number"},
     {title: "description", value: 'Описание', type: "textarea"},
@@ -47,7 +47,7 @@ const formInputs = [
                         :title="input.title"
                         :type="input.type"
                         :value="input.value"
-                        :inputmode="input.inputmode"
+                        :inputMod="input.inputMod"
                         :placeholder="input.placeholder"
                         :fuels
                         :wheels

@@ -1,8 +1,8 @@
 <script setup>
-import {Head, router, usePage} from '@inertiajs/vue3';
+import {Head, usePage} from '@inertiajs/vue3';
 import MainLayout from "@/Layouts/MainLayout.vue";
 import AdminNav from "@/Components/Main/Admin/AdminNav.vue";
-import {computed, onBeforeMount, ref} from 'vue'
+import {computed, ref} from 'vue'
 import FiltersPosts from "@/Components/Main/FiltersPosts.vue";
 import PaginationBar from "@/Components/Main/PaginationBar.vue";
 import IndexPhoto from "@/Components/Main/PostsIndex/IndexPhoto.vue";
@@ -24,19 +24,15 @@ const props = defineProps(
         drives: Array,
         bodyTypes: Array,
         transmissions: Array,
+        search: String,
+
+        orderingDirection: String,
+        orderingValue: String,
+        orderingDesc: String,
+        orderingAsc: String,
+        headerIndex: String,
     }
 );
-let search = ref('');
-let i = 1
-onBeforeMount(() => {
-    router.on('navigate', (event) => {
-        i++
-        if (route().current('admin-post.search') && i === 2) {
-            search.value = event.detail.page.props.search
-        }
-    })
-})
-console.log(props.posts);
 </script>
 
 <template>
@@ -69,7 +65,15 @@ console.log(props.posts);
             </template>
             <template v-else>
                 <IndexPhoto v-if="!catalog_view" :posts/>
-                <IndexTable v-if="catalog_view" :posts/>
+                <IndexTable v-if="catalog_view"
+                            :posts
+                            :orderingDirection
+                            :orderingValue
+                            :orderingDesc
+                            :orderingAsc
+                            :headerIndex
+
+                />
             </template>
             <nav class="flex justify-center">
                 <PaginationBar :links="posts.meta.links"/>

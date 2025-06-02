@@ -95,7 +95,7 @@ const filterIndex = () => {
         "/admin/posts/filter/index",
         form,
         {
-            // preserveState: true,
+            preserveState: true,
         }
     );
 }

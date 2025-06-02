@@ -47,7 +47,7 @@ class AdminPostFilterController extends Controller
         );
     }
 
-    public function adminFilter(Request $request)
+    public function adminFilterCount(Request $request)
     {
         $this->getPosts($request, $posts);
         return $posts->total();
