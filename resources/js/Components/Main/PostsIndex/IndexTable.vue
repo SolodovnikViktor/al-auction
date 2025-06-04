@@ -13,7 +13,7 @@ const props = defineProps({
     headerIndex: String,
 })
 
-let form = reactive({
+let formOrdering = reactive({
     ordering_direction: props.orderingDirection,
     ordering_value: props.orderingValue,
     ordering_desc: props.orderingDesc,
@@ -35,19 +35,19 @@ const tableHeaders = [
 ]
 
 const filterOn = (i, v) => {
-    form.header_index = i.toString()
-    form.ordering_value = v
-    if (form.ordering_desc === 'false') {
-        form.ordering_direction = 'desc';
-        form.ordering_desc = 'true';
-        form.ordering_asc = 'false';
+    formOrdering.header_index = i.toString()
+    formOrdering.ordering_value = v
+    if (formOrdering.ordering_desc === 'false') {
+        formOrdering.ordering_direction = 'desc';
+        formOrdering.ordering_desc = 'true';
+        formOrdering.ordering_asc = 'false';
     } else {
-        form.ordering_direction = 'asc';
-        form.ordering_desc = 'false';
-        form.ordering_asc = 'true';
+        formOrdering.ordering_direction = 'asc';
+        formOrdering.ordering_desc = 'false';
+        formOrdering.ordering_asc = 'true';
     }
     router.get(route('admin-posts.index'),
-        form,
+        formOrdering,
         {
             preserveState: true,
         }
@@ -71,9 +71,9 @@ const show = (id) => {
                 <tr>
                     <TableHeader
                         :tableHeaders
-                        :orderingDesc="form.ordering_desc"
-                        :orderingAsc="form.ordering_asc"
-                        :headerIndex="form.header_index"
+                        :orderingDesc="formOrdering.ordering_desc"
+                        :orderingAsc="formOrdering.ordering_asc"
+                        :headerIndex="formOrdering.header_index"
                         @filter-on="filterOn"
                     />
                 </tr>

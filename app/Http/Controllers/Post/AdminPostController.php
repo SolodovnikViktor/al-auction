@@ -26,40 +26,6 @@ use Intervention\Image\Laravel\Facades\Image;
 
 class AdminPostController extends Controller
 {
-    public function index(Request $request): Response
-    {
-        $paginate = 15;
-        if (auth()->user()->catalog_view) {
-            $paginate = 20;
-        }
-        
-        if ($request->ordering_value) {
-            $posts = Post::orderBy($request->ordering_value, $request->ordering_direction)->paginate(
-                $paginate
-            )->withQueryString();
-        } else {
-            $posts = Post::latest()->paginate($paginate);
-        }
-
-
-        return Inertia::render('Admin/Posts/Index', [
-            'posts' => AdminPostIndexResource::collection($posts),
-            'brands' => Brand::all(),
-            'fuels' => Fuel::all(),
-            'wheels' => Wheel::all(),
-            'colors' => Color::all(),
-            'drives' => Drive::all(),
-            'bodyTypes' => BodyType::all(),
-            'transmissions' => Transmission::all(),
-
-            'orderingValue' => $request->ordering_value,
-            'orderingDirection' => $request->ordering_direction,
-            'orderingDesc' => $request->ordering_desc,
-            'orderingAsc' => $request->ordering_asc,
-            'headerIndex' => $request->header_index,
-        ]);
-    }
-
     public function create(): Response
     {
         return Inertia::render('Admin/Posts/Create', [
@@ -98,8 +64,7 @@ class AdminPostController extends Controller
             'title' => 'required|string|max:20',
             'brand_id' => 'required|integer|exists:brands,id',
         ], [
-            'title.required' => 'Заполните поле "Бренд".',
-            'title.unique' => 'Такой Бренд уже создан.',
+            'title.required' => 'Заполните поле "Модель".',
             'title.max' => 'Максимум 20 символов.',
         ]);
         CarModel::create($validated);

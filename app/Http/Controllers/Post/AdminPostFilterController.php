@@ -53,12 +53,13 @@ class AdminPostFilterController extends Controller
         return $posts->total();
     }
 
-    public function adminFilterIndex(Request $request)
+    public function adminPostsFilter(Request $request)
     {
         $this->getPosts($request, $posts);
 
         return Inertia::render('Admin/Posts/Index', [
             'posts' => $posts,
+
             'brands' => Brand::all(),
             'fuels' => Fuel::all(),
             'wheels' => Wheel::all(),
@@ -78,11 +79,11 @@ class AdminPostFilterController extends Controller
     {
         $paginate = 15;
         if (auth()->user()->catalog_view) {
-            $paginate = 50;
+            $paginate = 10;
         }
         $posts = AdminPostIndexResource::collection(
             Post::
-            when($request->brand_id, function ($query, $x) {
+            when($request->input('brand_id'), function ($query, $x) {
                 $query->where('brand_id', $x);
             })->
             when($request->model_id, function ($query, $x) {
@@ -107,7 +108,7 @@ class AdminPostFilterController extends Controller
                 $query->where('color_id', $x);
             })->
             when($request->price_ot, function ($query, $x) {
-                $query->where('price_ot', '>=', $x);
+                $query->where('price', '>=', $x);
             })->
             when($request->price_do, function ($query, $x) {
                 $query->where('price', '<=', $x);
@@ -123,12 +124,6 @@ class AdminPostFilterController extends Controller
             })->
             when($request->mileage_do, function ($query, $x) {
                 $query->where('mileage', '<=', $x);
-            })->
-            when($request->price_ot, function ($query, $x) {
-                $query->where('price_ot', '>=', $x);
-            })->
-            when($request->price_ot, function ($query, $x) {
-                $query->where('price_ot', '<=', $x);
             })->paginate($paginate)->withQueryString()
         );
     }

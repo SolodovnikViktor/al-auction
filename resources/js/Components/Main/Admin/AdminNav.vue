@@ -1,5 +1,5 @@
 <script setup>
-import {ref} from "vue";
+import {onBeforeMount, onMounted, ref} from "vue";
 
 defineProps(['post', 'user'])
 import NavLink from "@/Components/NavLink.vue";
@@ -7,16 +7,29 @@ import {router} from '@inertiajs/vue3';
 
 let search_is = ref(false);
 let filter_is = ref(false);
-router.on('navigate', () => {
+onBeforeMount(() => {
     if (route().current('admin-post.search')) {
+        console.log(333)
         search_is.value = true;
         filter_is.value = false;
     }
-    if (route().current('admin-post.filter')) {
+    if (route().current('admin-posts.filter')) {
         filter_is.value = true;
         search_is.value = false;
     }
 })
+
+
+if (route().current('admin-post.search')) {
+    console.log(333)
+    search_is.value = true;
+    filter_is.value = false;
+}
+if (route().current('admin-posts.filter')) {
+    filter_is.value = true;
+    search_is.value = false;
+}
+
 </script>
 
 <template>
@@ -38,9 +51,9 @@ router.on('navigate', () => {
                 Пользователи
             </NavLink>
             <NavLink v-if="route().current('admin-user.show')"
-                :href="route('admin-users.index')"
-                :active="route().current('admin-user.show')">
-                {{user.name}} {{user.surname}}
+                     :href="route('admin-users.index')"
+                     :active="route().current('admin-user.show')">
+                {{ user.name }} {{ user.surname }}
             </NavLink>
             <template v-if="search_is">
                 <NavLink
@@ -51,7 +64,7 @@ router.on('navigate', () => {
             </template>
             <template v-if="filter_is">
                 <NavLink
-                    :href="route('admin-post.filter')"
+                    :href="route('admin-posts.filter')"
                     :active="filter_is">
                     Фильтр
                 </NavLink>

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Post\AdminPostController;
 use App\Http\Controllers\Post\AdminPostFilterController;
+use App\Http\Controllers\Post\AdminPostsIndexController;
 use App\Http\Controllers\Post\PhotoController;
 use App\Http\Controllers\Post\PhotoPostController;
 use App\Http\Controllers\ProfileController;
@@ -19,7 +20,9 @@ Route::get('/contact', function () {
 })->name('contact');
 
 Route::middleware(['auth', 'verified', 'roles:1'])->group(function () {
-    Route::get('/admin/posts/index', [AdminPostController::class, 'index'])->name('admin-posts.index');
+    Route::get('/admin/posts/index', [AdminPostsIndexController::class, 'index'])->name('admin-posts.index');
+    Route::get('/admin/posts/index/filter', [AdminPostFilterController::class, 'adminPostsFilter'])
+        ->name('admin-posts.filter');
     Route::get('/admin/post/create', [AdminPostController::class, 'create'])->name('admin-post.create');
     Route::post('/admin/post/create', [AdminPostController::class, 'store'])->name('admin-post.store');
     Route::get('/admin/post/{post}/show', [AdminPostController::class, 'show'])->name('admin-post.show');
@@ -36,8 +39,7 @@ Route::middleware(['auth', 'verified', 'roles:1'])->group(function () {
 
     Route::get('/admin/posts/search', [AdminPostFilterController::class, 'adminSearch'])->name('admin-post.search');
     Route::post('/admin/posts/filter', [AdminPostFilterController::class, 'adminFilterCount']);
-    Route::get('/admin/posts/filter/index', [AdminPostFilterController::class, 'adminFilterIndex'])
-        ->name('admin-post.filter');
+
 
     Route::post('/admin/post/create/tmp-upload', [PhotoController::class, 'store']);
     Route::get('/admin/post/create/tmp-restore', [PhotoController::class, 'restore']);

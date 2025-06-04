@@ -1,5 +1,5 @@
 <script setup>
-import {onBeforeMount, onMounted, ref, watch} from 'vue';
+import {computed, onBeforeMount, onMounted, reactive, ref, watch} from 'vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
@@ -12,26 +12,37 @@ const showingNavigationDropdown = ref(false);
 let adminActive = false;
 if (route().current('admin-posts.index') || route().current('admin-post.create')
     || route().current('admin-post.show') || route().current('admin-post.edit')
-    || route().current('admin-post.search') || route().current('admin-post.filter')
+    || route().current('admin-post.search') || route().current('admin-posts.filter')
     || route().current('admin-users.index') || route().current('admin-user.show')) {
     adminActive = true;
+
+    if (route().current('admin-post.search')) {
+        console.log(123)
+    }
 }
 
-let search = ref('');
+let form = reactive(
+    {
+        search: '',
+    }
+)
+
+let search = ref();
 let i = 1
 onBeforeMount(() => {
+
     router.on('navigate', (event) => {
         i++
         if (route().current('admin-post.search') && i === 2) {
-            search.value = event.detail.page.props.search
+            form.search = event.detail.page.props.search
         }
     })
 })
 
-const getSearch = (value) => {
-    if (value) {
+const getSearch = () => {
+    if (form.search) {
         router.get(route("admin-post.search",
-            {search: value},
+            form,
             {
                 preserveState: true,
             })
@@ -86,12 +97,12 @@ const getSearch = (value) => {
                     </nav>
                     <div class="flex">
                         <form
-                            @submit.prevent="getSearch(search)"
+                            @submit.prevent="getSearch"
                             class="inline-flex items-center relative">
                             <input type="search"
                                    id="post_search"
                                    autocomplete="search"
-                                   v-model="search"
+                                   v-model="form.search"
                                    class="block w-full p-1 pl-2 pr-10 text-sm text-gray-900 border border-gray-200 rounded-lg "
                                    placeholder="Поиск по VIN"/>
                             <button type="submit"
