@@ -91,8 +91,7 @@ watch((form), (form) => {
 
 const filterIndex = () => {
     // form.index_is = true
-    router.get(
-        route('admin-posts.filter'),
+    router.get(route('admin-posts.filter'),
         form,
         {
             preserveState: true,

@@ -41,11 +41,11 @@ onBeforeMount(() => {
 
 const getSearch = () => {
     if (form.search) {
-        router.get(route("admin-post.search",
+        router.get(route("admin-post.search"),
             form,
             {
                 preserveState: true,
-            })
+            }
         );
     }
 }

@@ -1,5 +1,5 @@
 <script setup>
-import {onBeforeMount, onMounted, ref} from "vue";
+import {ref} from "vue";
 
 defineProps(['post', 'user'])
 import NavLink from "@/Components/NavLink.vue";
@@ -7,9 +7,10 @@ import {router} from '@inertiajs/vue3';
 
 let search_is = ref(false);
 let filter_is = ref(false);
-onBeforeMount(() => {
+
+router.on('navigate', (event) => {
+
     if (route().current('admin-post.search')) {
-        console.log(333)
         search_is.value = true;
         filter_is.value = false;
     }
@@ -18,18 +19,6 @@ onBeforeMount(() => {
         search_is.value = false;
     }
 })
-
-
-if (route().current('admin-post.search')) {
-    console.log(333)
-    search_is.value = true;
-    filter_is.value = false;
-}
-if (route().current('admin-posts.filter')) {
-    filter_is.value = true;
-    search_is.value = false;
-}
-
 </script>
 
 <template>
