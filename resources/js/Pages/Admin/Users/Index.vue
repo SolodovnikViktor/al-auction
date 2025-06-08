@@ -24,7 +24,6 @@ let form = reactive({
     ordering_value: props.orderingValue,
     ordering_desc: props.orderingDesc,
     ordering_asc: props.orderingAsc,
-    header_index: props.headerIndex,
     search: props.search,
 })
 
@@ -48,8 +47,7 @@ const show = (id) => {
     router.get(route('admin-user.show', id))
 }
 
-const filterOn = (i, v) => {
-    form.header_index = i.toString()
+const filterOn = (v) => {
     form.ordering_value = v
     if (form.ordering_desc === 'false') {
         form.ordering_direction = 'desc';
@@ -123,9 +121,9 @@ const cleanForm = () => {
                             <tr>
                                 <TableHeader
                                     :tableHeaders
+                                    :formOrdering="form"
                                     :orderingDesc="form.ordering_desc"
                                     :orderingAsc="form.ordering_asc"
-                                    :headerIndex="form.header_index"
                                     @filter-on="filterOn"
                                 />
                             </tr>

@@ -3,12 +3,14 @@ import {reactive, ref, watch} from "vue";
 import axios from "axios";
 import SecondaryButton from "@/Components/Button/SecondaryButton.vue";
 import ButtonCyan from "@/Components/Button/ButtonCyan.vue";
-import {router} from "@inertiajs/vue3";
+import {router, useForm} from "@inertiajs/vue3";
 
 const emit = defineEmits(['checkbox'])
 
 const props = defineProps({
     posts: Object,
+    formFilter: Object,
+    formOrdering: Object,
     user: Object,
     brands: Array,
     fuels: Array,
@@ -18,8 +20,7 @@ const props = defineProps({
     bodyTypes: Array,
     transmissions: Array,
 });
-
-let form = reactive({
+let formFilter = reactive({
     brand_id: '',
     model_id: '',
     price_ot: '',
@@ -36,9 +37,33 @@ let form = reactive({
     body_type_id: '',
     engine_capacity: '',
 });
-
+if (props.formFilter) {
+    formFilter = reactive({
+        brand_id: props.formFilter.brand_id || '',
+        model_id: props.formFilter.model_id || '',
+        price_ot: props.formFilter.price_ot || '',
+        price_do: props.formFilter.price_do || '',
+        year_ot: props.formFilter.year_ot || '',
+        year_do: props.formFilter.year_do || '',
+        mileage_ot: props.formFilter.mileage_ot || '',
+        mileage_do: props.formFilter.mileage_do || '',
+        color_id: props.formFilter.color_id || '',
+        fuel_id: props.formFilter.fuel_id || '',
+        wheel_id: props.formFilter.wheel_id || '',
+        transmission_id: props.formFilter.transmission_id || '',
+        drive_id: props.formFilter.drive_id || '',
+        body_type_id: props.formFilter.body_type_id || '',
+        engine_capacity: props.formFilter.engine_capacity || '',
+    });
+    axios.post('/admin/post/crete/get-model', props.formFilter.brand_id)
+        .then(response => {
+            models.value = response.data;
+        })
+        .catch(error => {
+            console.log(error)
+        });
+}
 const models = ref()
-
 let toggle = ref(props.user.catalog_view);
 let postCount = ref(props.posts.meta.total);
 let viewFullFilter = ref(false);
@@ -68,18 +93,18 @@ function getModel(value) {
         });
 }
 
-watch(() => form.brand_id, (value) => {
-    if (form.brand_id > 0) {
+watch(() => formFilter.brand_id, (value) => {
+    if (formFilter.brand_id > 0) {
         getModel(value)
-        form.model_id = ''
+        formFilter.model_id = ''
     } else {
         models.value = ''
-        form.model_id = ''
+        formFilter.model_id = ''
     }
 })
 
-watch((form), (form) => {
-    axios.post('/admin/posts/filter', form)
+watch((formFilter), (formFilter) => {
+    axios.post('/admin/posts/filter', {formFilter: formFilter},)
         .then(response => {
             postCount.value = response.data
         })
@@ -90,9 +115,8 @@ watch((form), (form) => {
 });
 
 const filterIndex = () => {
-    // form.index_is = true
     router.get(route('admin-posts.filter'),
-        form,
+        {formFilter: formFilter, formOrdering: props.formOrdering},
         {
             preserveState: true,
         }
@@ -100,21 +124,21 @@ const filterIndex = () => {
 }
 
 const cleanForm = () => {
-    form.brand_id = ''
-    form.model_id = ''
-    form.price_ot = ''
-    form.price_do = ''
-    form.year_ot = ''
-    form.year_do = ''
-    form.mileage_ot = ''
-    form.mileage_do = ''
-    form.color_id = ''
-    form.fuel_id = ''
-    form.wheel_id = ''
-    form.transmission_id = ''
-    form.drive_id = ''
-    form.body_type_id = ''
-    form.engine_capacity = ''
+    formFilter.brand_id = ''
+    formFilter.model_id = ''
+    formFilter.price_ot = ''
+    formFilter.price_do = ''
+    formFilter.year_ot = ''
+    formFilter.year_do = ''
+    formFilter.mileage_ot = ''
+    formFilter.mileage_do = ''
+    formFilter.color_id = ''
+    formFilter.fuel_id = ''
+    formFilter.wheel_id = ''
+    formFilter.transmission_id = ''
+    formFilter.drive_id = ''
+    formFilter.body_type_id = ''
+    formFilter.engine_capacity = ''
 }
 </script>
 
@@ -124,14 +148,14 @@ const cleanForm = () => {
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 <select
                     class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                    v-model="form.brand_id"
+                    v-model="formFilter.brand_id"
                     id="brand">
                     <option value="">Бренд</option>
                     <option v-for="brand in brands" :value="brand.id">{{ brand.title }}</option>
                 </select>
                 <select
                     class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                    v-model="form.model_id"
+                    v-model="formFilter.model_id"
                     id="model">
                     <option value="">Модель</option>
                     <option v-for="model in models" :value="model.id">{{ model.title }}</option>
@@ -141,13 +165,13 @@ const cleanForm = () => {
                     <input
                         class="w-full rounded-s-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
                         placeholder="Цена от"
-                        v-model="form.price_ot"
+                        v-model="formFilter.price_ot"
                         type="number"
                     />
                     <input
                         class="w-full rounded-e-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
                         placeholder="до"
-                        v-model="form.price_do"
+                        v-model="formFilter.price_do"
                         type="number"
                     />
                 </div>
@@ -155,13 +179,13 @@ const cleanForm = () => {
                     <input
                         class="w-full rounded-s-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
                         placeholder="Год от"
-                        v-model="form.year_ot"
+                        v-model="formFilter.year_ot"
                         type="number"
                     />
                     <input
                         class="w-full rounded-e-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
                         placeholder="до"
-                        v-model="form.year_do"
+                        v-model="formFilter.year_do"
                         type="number"
                     />
                 </div>
@@ -175,13 +199,13 @@ const cleanForm = () => {
                         <input
                             class="w-full rounded-s-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
                             placeholder="Год от"
-                            v-model="form.year_ot"
+                            v-model="formFilter.year_ot"
                             type="number"
                         />
                         <input
                             class="w-full rounded-e-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
                             placeholder="до"
-                            v-model="form.year_do"
+                            v-model="formFilter.year_do"
                             type="number"
                         />
                     </div>
@@ -189,41 +213,41 @@ const cleanForm = () => {
                         <input
                             class="w-full rounded-s-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
                             placeholder="Пробег от"
-                            v-model="form.mileage_ot"
+                            v-model="formFilter.mileage_ot"
                             type="number"
                         />
                         <input
                             class="w-full rounded-e-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
                             placeholder="до"
-                            v-model="form.mileage_do"
+                            v-model="formFilter.mileage_do"
                             type="number"
                         />
                     </div>
 
                     <select
                         class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        v-model="form.color_id"
+                        v-model="formFilter.color_id"
                         id="color">
                         <option value="">Цвет</option>
                         <option v-for="color in colors" :value="color.id">{{ color.title }}</option>
                     </select>
                     <select
                         class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        v-model="form.fuel_id"
+                        v-model="formFilter.fuel_id"
                         id="fuel">
                         <option value="">Топливо</option>
                         <option v-for="option in fuels" :value="option.id">{{ option.title }}</option>
                     </select>
                     <select
                         class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        v-model="form.wheel_id"
+                        v-model="formFilter.wheel_id"
                         id="wheel">
                         <option value="">Руль</option>
                         <option v-for="option in wheels" :value="option.id">{{ option.title }}</option>
                     </select>
                     <select
                         class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        v-model="form.transmission_id"
+                        v-model="formFilter.transmission_id"
                         id="transmission">
                         <option value="">Трансмиссия</option>
                         <option v-for="transmission in transmissions" :value="transmission.id">{{
@@ -233,14 +257,14 @@ const cleanForm = () => {
                     </select>
                     <select
                         class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        v-model="form.drive_id"
+                        v-model="formFilter.drive_id"
                         id="drive">
                         <option value="">Привод</option>
                         <option v-for="drive in drives" :value="drive.id">{{ drive.title }}</option>
                     </select>
                     <select
                         class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        v-model="form.body_type_id"
+                        v-model="formFilter.body_type_id"
                         id="body_type">
                         <option value="">Кузов</option>
                         <option v-for="bodyType in bodyTypes" :value="bodyType.id">{{ bodyType.title }}</option>
@@ -249,13 +273,13 @@ const cleanForm = () => {
                         <input
                             class="w-full rounded-s-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
                             placeholder="Лошадей от"
-                            v-model="form.horsepower_ot"
+                            v-model="formFilter.horsepower_ot"
                             type="number"
                         />
                         <input
                             class="w-full rounded-e-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
                             placeholder="до"
-                            v-model="form.horsepower_do"
+                            v-model="formFilter.horsepower_do"
                             type="number"
                         />
                     </div>
@@ -263,7 +287,9 @@ const cleanForm = () => {
             </transition>
 
             <div class="flex w-full sm:hidden mt-4">
-                <SecondaryButton class="w-1/2 py-3 justify-center mr-2">Сбросить Х</SecondaryButton>
+                <SecondaryButton class="w-1/2 py-3 justify-center mr-2">
+                    Сбросить Х
+                </SecondaryButton>
                 <ButtonCyan :disabled="postCount === 0" type="submit" class="w-1/2 justify-center">
                     Показать {{ postCount }} авто
                 </ButtonCyan>

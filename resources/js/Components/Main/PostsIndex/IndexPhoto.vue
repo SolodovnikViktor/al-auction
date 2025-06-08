@@ -1,14 +1,32 @@
 <script setup>
 import {Swiper, SwiperSlide} from "swiper/vue";
-import {computed, onBeforeMount, ref, watch} from 'vue'
-import {Link} from "@inertiajs/vue3";
+import {onBeforeMount, reactive, ref, watch} from 'vue'
+import {Link, router} from "@inertiajs/vue3";
 import {Navigation, Pagination} from 'swiper/modules';
+import SecondaryButton from "@/Components/Button/SecondaryButton.vue";
+import SvgOrdering from "@/Components/Main/SvgOrdering.vue";
 
 const modules = [Navigation, Pagination];
-
 const props = defineProps({
     posts: Object,
+    formFilter: Object,
+    formOrdering: Object,
 })
+
+let formOrdering = reactive({
+    ordering_direction: '',
+    ordering_value: '',
+    ordering_desc: '',
+    ordering_asc: '',
+})
+if (props.formOrdering) {
+    formOrdering = reactive({
+        ordering_direction: props.formOrdering.ordering_direction,
+        ordering_value: props.formOrdering.ordering_value,
+        ordering_desc: props.formOrdering.ordering_desc,
+        ordering_asc: props.formOrdering.ordering_asc,
+    })
+}
 
 // Просмотр фото мышкой
 const currentKey = ref([]);
@@ -18,6 +36,8 @@ const updateCurrentKey = () => {
     props.posts.data.forEach(function (post) {
         if (post.photos.length > 0) {
             currentKey.value.push({postId: post.id, photoId: post.photos[0].id})
+        } else {
+            currentKey.value.push({postId: null, photoId: null})
         }
     })
 }
@@ -39,9 +59,65 @@ function onMouseEnter(photoId, postId) {
 function numberFilter(number) {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 }
+
+const filterOn = (value) => {
+    formOrdering.ordering_value = value
+    if (formOrdering.ordering_desc === 'false') {
+        formOrdering.ordering_direction = 'desc';
+        formOrdering.ordering_desc = 'true';
+        formOrdering.ordering_asc = 'false';
+    } else {
+        formOrdering.ordering_direction = 'asc';
+        formOrdering.ordering_desc = 'false';
+        formOrdering.ordering_asc = 'true';
+    }
+    router.get(route('admin-posts.index'),
+        {formOrdering: formOrdering, formFilter: props.formFilter},
+        {
+            preserveState: true,
+            preserveScroll: true,
+        }
+    )
+}
 </script>
 
 <template>
+    <div class="flex justify-end mb-4">
+        <SecondaryButton
+            @click="filterOn( 'price')"
+            class="justify-center mr-2"
+            :class="['price' === formOrdering.ordering_value ? '!text-black' : '']"
+        >
+            По цене
+            <SvgOrdering
+                :formOrdering
+                :keyOrdering="'price'"
+            />
+        </SecondaryButton>
+        <SecondaryButton
+            @click="filterOn( 'year_release')"
+            class="justify-center mr-2"
+            :class="['year_release' === formOrdering.ordering_value ? '!text-black' : '']"
+        >
+            По году выпуска
+            <SvgOrdering
+                :formOrdering
+                :keyOrdering="'year_release'"
+            />
+        </SecondaryButton>
+        <SecondaryButton
+            @click="filterOn( 'mileage')"
+            class="justify-center mr-2"
+            :class="['mileage' === formOrdering.ordering_value ? '!text-black' : '']"
+        >
+            По пробегу
+            <SvgOrdering
+                :formOrdering
+                :keyOrdering="'mileage'"
+            />
+        </SecondaryButton>
+    </div>
+
     <div class="grid grid-cols-12 gap-4 pb-4 mb-4 border-b border-gray-200">
         <div v-for="(post, postIndex) in posts.data" :key="post.id"
              class="overflow-hidden col-span-12 sm:col-span-6 lg:col-span-4 text-gray-900">
@@ -52,7 +128,7 @@ function numberFilter(number) {
                     <div class="slider__elements">
                         <template v-for="photo in post.photos" :key="photo.id">
                             <img class="slider__element"
-                                 :class="{ active: currentKey[postIndex].photoId === photo.id  }"
+                                 :class="{ active: currentKey[postIndex].photoId === photo.id }"
                                  :src="photo.path" :alt="photo.name">
                         </template>
                     </div>
@@ -61,7 +137,7 @@ function numberFilter(number) {
                             v-for="photo in post.photos" :key="photo.id"
                             @mouseenter.prevent="onMouseEnter(photo.id, post.id)"
                             class="slider__ghost"
-                            :class="{active: currentKey[postIndex].photoId === photo.id}"
+                            :class="{ active: currentKey[postIndex].photoId === photo.id }"
                             :style="{width: 100 / post.photos.length + '%'}">
                         </div>
                     </div>

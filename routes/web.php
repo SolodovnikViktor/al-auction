@@ -1,13 +1,11 @@
 <?php
 
 use App\Http\Controllers\Post\AdminPostController;
-use App\Http\Controllers\Post\AdminPostFilterController;
-use App\Http\Controllers\Post\AdminPostsIndexController;
+use App\Http\Controllers\Post\AdminPostIndexController;
 use App\Http\Controllers\Post\PhotoController;
 use App\Http\Controllers\Post\PhotoPostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Users\AdminUserController;
-use App\Http\Controllers\Users\AdminUserFilterController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -20,9 +18,10 @@ Route::get('/contact', function () {
 })->name('contact');
 
 Route::middleware(['auth', 'verified', 'roles:1'])->group(function () {
-    Route::get('/admin/posts/index', [AdminPostsIndexController::class, 'index'])->name('admin-posts.index');
-    Route::get('/admin/posts/index/filter', [AdminPostFilterController::class, 'adminPostsFilter'])
+    Route::get('/admin/posts/index', [AdminPostIndexController::class, 'index'])->name('admin-posts.index');
+    Route::get('/admin/posts/index/filter', [AdminPostIndexController::class, 'index'])
         ->name('admin-posts.filter');
+    Route::post('/admin/posts/filter', [AdminPostIndexController::class, 'adminFilterCount']);
     Route::get('/admin/post/create', [AdminPostController::class, 'create'])->name('admin-post.create');
     Route::post('/admin/post/create', [AdminPostController::class, 'store'])->name('admin-post.store');
     Route::get('/admin/post/{post}/show', [AdminPostController::class, 'show'])->name('admin-post.show');
@@ -37,8 +36,7 @@ Route::middleware(['auth', 'verified', 'roles:1'])->group(function () {
     Route::post('/admin/post/crete/brand', [AdminPostController::class, 'storeBrand'])->name('admin-post.storeBrand');
     Route::post('/admin/post/crete/model', [AdminPostController::class, 'storeModel'])->name('admin-post.storeModel');
 
-    Route::get('/admin/posts/search', [AdminPostFilterController::class, 'adminSearch'])->name('admin-post.search');
-    Route::post('/admin/posts/filter', [AdminPostFilterController::class, 'adminFilterCount']);
+    Route::get('/admin/posts/search', [AdminPostIndexController::class, 'search'])->name('admin-post.search');
 
 
     Route::post('/admin/post/create/tmp-upload', [PhotoController::class, 'store']);

@@ -17,6 +17,8 @@ const catalogView = (bool) => catalog_view.value = bool
 const props = defineProps(
     {
         posts: Object,
+        formFilter: Object,
+        formOrdering: Object,
         brands: Array,
         fuels: Array,
         wheels: Array,
@@ -25,12 +27,6 @@ const props = defineProps(
         bodyTypes: Array,
         transmissions: Array,
         search: String,
-
-        orderingDirection: String,
-        orderingValue: String,
-        orderingDesc: String,
-        orderingAsc: String,
-        headerIndex: String,
     }
 );
 </script>
@@ -44,6 +40,8 @@ const props = defineProps(
         <template #filters>
             <PostsFilter @checkbox="catalogView"
                          :posts
+                         :formFilter
+                         :formOrdering
                          :user
                          :brands
                          :fuels
@@ -64,15 +62,15 @@ const props = defineProps(
                 </ObjectNotFound>
             </template>
             <template v-else>
-                <IndexPhoto v-if="!catalog_view" :posts/>
+                <IndexPhoto v-if="!catalog_view"
+                            :posts
+                            :formFilter
+                            :formOrdering
+                />
                 <IndexTable v-if="catalog_view"
                             :posts
-                            :orderingDirection
-                            :orderingValue
-                            :orderingDesc
-                            :orderingAsc
-                            :headerIndex
-
+                            :formFilter
+                            :formOrdering
                 />
             </template>
             <nav class="flex justify-center">

@@ -6,36 +6,37 @@ import {reactive} from "vue";
 
 const props = defineProps({
     posts: Object,
-    orderingDirection: String,
-    orderingValue: String,
-    orderingDesc: String,
-    orderingAsc: String,
-    headerIndex: String,
+    formFilter: Object,
+    formOrdering: Object,
 })
-
 let formOrdering = reactive({
-    ordering_direction: props.orderingDirection,
-    ordering_value: props.orderingValue,
-    ordering_desc: props.orderingDesc,
-    ordering_asc: props.orderingAsc,
-    header_index: props.headerIndex,
-    search: props.search,
+    ordering_direction: '',
+    ordering_value: '',
+    ordering_desc: '',
+    ordering_asc: '',
 })
+if (props.formOrdering) {
+    formOrdering = reactive({
+        ordering_direction: props.formOrdering.ordering_direction,
+        ordering_value: props.formOrdering.ordering_value,
+        ordering_desc: props.formOrdering.ordering_desc,
+        ordering_asc: props.formOrdering.ordering_asc,
+    })
+}
 
 const tableHeaders = [
-    {id: 1, title: 'Бренд', value: 'brand_id', exception: false},
-    {id: 2, title: 'Модель', value: 'model_id', exception: false},
-    {id: 3, title: 'Год', value: 'year_release', exception: false},
-    {id: 4, title: 'VIN', value: 'vin', exception: false},
-    {id: 5, title: 'Цена', value: 'price', exception: false},
-    {id: 6, title: 'Ставка', value: 'up_price', exception: false},
-    {id: 7, title: 'Пробег', value: 'mileage', exception: false},
-    {id: 8, title: 'Трансмиссия', value: 'transmission_id', exception: false},
-    {id: 9, title: '', value: '', exception: true},
+    {title: 'Бренд', value: 'brand_id', exception: false},
+    {title: 'Модель', value: 'model_id', exception: false},
+    {title: 'Год', value: 'year_release', exception: false},
+    {title: 'VIN', value: 'vin', exception: false},
+    {title: 'Цена', value: 'price', exception: false},
+    {title: 'Ставка', value: 'up_price', exception: false},
+    {title: 'Пробег', value: 'mileage', exception: false},
+    {title: 'Трансмиссия', value: 'transmission_id', exception: false},
+    {title: '', value: '', exception: true},
 ]
 
-const filterOn = (i, v) => {
-    formOrdering.header_index = i.toString()
+const filterOn = (v) => {
     formOrdering.ordering_value = v
     if (formOrdering.ordering_desc === 'false') {
         formOrdering.ordering_direction = 'desc';
@@ -47,9 +48,10 @@ const filterOn = (i, v) => {
         formOrdering.ordering_asc = 'true';
     }
     router.get(route('admin-posts.index'),
-        formOrdering,
+        {formOrdering: formOrdering, formFilter: props.formFilter},
         {
             preserveState: true,
+            preserveScroll: true
         }
     )
 }
@@ -71,9 +73,10 @@ const show = (id) => {
                 <tr>
                     <TableHeader
                         :tableHeaders
+                        :formOrdering
                         :orderingDesc="formOrdering.ordering_desc"
                         :orderingAsc="formOrdering.ordering_asc"
-                        :headerIndex="formOrdering.header_index"
+                        :orderingValue="formOrdering.ordering_value"
                         @filter-on="filterOn"
                     />
                 </tr>
