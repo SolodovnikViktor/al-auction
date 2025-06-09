@@ -1,5 +1,5 @@
 <script setup>
-import {computed, onBeforeMount, reactive, ref,} from 'vue';
+import {computed, onMounted, onBeforeMount, reactive, ref,} from 'vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
@@ -8,16 +8,9 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import {Link, router, usePage} from '@inertiajs/vue3';
 
 const showingNavigationDropdown = ref(false);
-// const page = usePage()
-// let userRole
-// onBeforeMount(()=>{
-//     if (page.props.auth.user){
-//         userRole = computed(() => page.props.auth.user.role_id)
-//     }
-// })
+const page = usePage()
+const userRole = computed(() => page.props?.auth?.role)
 
-// console.log(userRole)
-// console.log(user.value.role.value === 'admin')
 let adminActive = false;
 if (route().current('admin-posts.index') || route().current('admin-post.create')
     || route().current('admin-post.show') || route().current('admin-post.edit')
@@ -32,7 +25,6 @@ let form = reactive(
     }
 )
 
-let search = ref();
 let i = 1
 onBeforeMount(() => {
     router.on('navigate', (event) => {
@@ -83,6 +75,7 @@ const getSearch = () => {
                         <div
                             class="hidden *:text-lg space-x-4 lg:space-x-8 sm:-my-px mx-4 sm:flex">
                             <NavLink
+                                v-if="userRole?.role?.value === 'admin'"
                                 :href="route('admin-posts.index')"
                                 :active=adminActive>
                                 Админ панель

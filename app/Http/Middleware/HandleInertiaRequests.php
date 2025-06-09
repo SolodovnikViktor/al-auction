@@ -21,7 +21,12 @@ class HandleInertiaRequests extends Middleware
     {
         return [
             ...parent::share($request),
-            'auth' => ['user' => $request->user()],
+            'auth' => [
+                'user' => $request->user(),
+                'role' => fn() => $request->user()
+                    ? $request->user()->only('role')
+                    : null,
+            ],
             'csrf_token' => csrf_token(),
             'message_form' => $request->session()->get('message_form'),
             'flash' => [
@@ -32,3 +37,13 @@ class HandleInertiaRequests extends Middleware
         ];
     }
 }
+
+//'auth.user' => fn() => $request->user()
+//    ? $request->user()->only('id', 'name', 'email', 'Role')
+//    : null,
+
+//function () {
+//    if (auth()->user()) {
+//        return new MainUserResource(auth()->user());
+//    }
+//},
