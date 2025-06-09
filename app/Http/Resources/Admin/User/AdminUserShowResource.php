@@ -3,7 +3,7 @@
 namespace App\Http\Resources\Admin\User;
 
 use App\Http\Resources\Admin\Post\AdminPostIndexResource;
-use App\Http\Resources\Main\BetResource;
+use App\Http\Resources\Main\MainBetResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -23,7 +23,7 @@ class AdminUserShowResource extends JsonResource
             'count_bets' => $this->count_bets,
             'address' => $this->address,
             'created_at' => $this->created_at->format('d.m.y'),
-            'bets' => BetResource::collection($this->CountBets),
+            'bets' => MainBetResource::collection($this->CountBets),
             'posts' => AdminPostIndexResource::collection($this->Posts),
         ];
     }

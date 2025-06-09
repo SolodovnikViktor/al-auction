@@ -10,7 +10,7 @@ class RolesMiddleware
 {
     public function handle(Request $request, Closure $next, string $role1 = null, $role2 = null): Response
     {
-        $userRole = auth()->user()->role_id;
+        $userRole = auth()->user()->Role->value;
 
         if ($userRole == $role1 || $userRole == $role2) {
             return $next($request);

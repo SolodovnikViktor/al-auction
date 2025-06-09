@@ -2,9 +2,9 @@
 
 namespace App\Http\Resources\Admin\Post;
 
-use App\Http\Resources\Main\BetResource;
+use App\Http\Resources\Main\MainBetResource;
 use App\Http\Resources\Main\PhotoResource;
-use App\Http\Resources\Main\UserResource;
+use App\Http\Resources\Main\MainUserResource;
 use App\Models\Photo;
 use App\Models\PhotoPosition;
 use Illuminate\Http\Request;
@@ -43,8 +43,8 @@ class AdminPostShowResource extends JsonResource
             'is_published' => $this->is_published,
             'count_bets' => $this->count_bets,
             'photos' => PhotoResource::collection($photos),
-            'bets' => BetResource::collection($this->bets),
-            'user' => UserResource::make($this->user),
+            'bets' => MainBetResource::collection($this->bets),
+            'user' => MainUserResource::make($this->user),
         ];
     }
 }

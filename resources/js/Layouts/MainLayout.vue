@@ -1,24 +1,29 @@
 <script setup>
-import {computed, onBeforeMount, onMounted, reactive, ref, watch} from 'vue';
+import {computed, onBeforeMount, reactive, ref,} from 'vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
-import {Link, useForm, router} from '@inertiajs/vue3';
+import {Link, router, usePage} from '@inertiajs/vue3';
 
 const showingNavigationDropdown = ref(false);
+// const page = usePage()
+// let userRole
+// onBeforeMount(()=>{
+//     if (page.props.auth.user){
+//         userRole = computed(() => page.props.auth.user.role_id)
+//     }
+// })
 
+// console.log(userRole)
+// console.log(user.value.role.value === 'admin')
 let adminActive = false;
 if (route().current('admin-posts.index') || route().current('admin-post.create')
     || route().current('admin-post.show') || route().current('admin-post.edit')
     || route().current('admin-post.search') || route().current('admin-posts.filter')
     || route().current('admin-users.index') || route().current('admin-user.show')) {
     adminActive = true;
-
-    if (route().current('admin-post.search')) {
-        console.log(123)
-    }
 }
 
 let form = reactive(
@@ -30,7 +35,6 @@ let form = reactive(
 let search = ref();
 let i = 1
 onBeforeMount(() => {
-
     router.on('navigate', (event) => {
         i++
         if (route().current('admin-post.search') && i === 2) {

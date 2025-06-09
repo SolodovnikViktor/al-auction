@@ -17,7 +17,7 @@ Route::get('/contact', function () {
     return Inertia::render('Main/Contact');
 })->name('contact');
 
-Route::middleware(['auth', 'verified', 'roles:1'])->group(function () {
+Route::middleware(['auth', 'verified', 'roles:admin'])->group(function () {
     Route::get('/admin/posts/index', [AdminPostIndexController::class, 'index'])->name('admin-posts.index');
     Route::get('/admin/posts/index/filter', [AdminPostIndexController::class, 'index'])
         ->name('admin-posts.filter');

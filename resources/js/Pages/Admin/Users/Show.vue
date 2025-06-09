@@ -7,7 +7,6 @@ import 'swiper/css/navigation';
 const props = defineProps({
     user: Object
 })
-console.log(props.user);
 </script>
 
 <template>

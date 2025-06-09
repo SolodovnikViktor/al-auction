@@ -85,10 +85,10 @@ const filterOn = (value) => {
     <div class="flex justify-end mb-4">
         <SecondaryButton
             @click="filterOn( 'price')"
-            class="justify-center mr-2"
+            class="justify-center w-1/3 sm:w-min mr-2"
             :class="['price' === formOrdering.ordering_value ? '!text-black' : '']"
         >
-            По цене
+            Цена
             <SvgOrdering
                 :formOrdering
                 :keyOrdering="'price'"
@@ -96,10 +96,10 @@ const filterOn = (value) => {
         </SecondaryButton>
         <SecondaryButton
             @click="filterOn( 'year_release')"
-            class="justify-center mr-2"
+            class="justify-center w-1/3 sm:w-min mr-2"
             :class="['year_release' === formOrdering.ordering_value ? '!text-black' : '']"
         >
-            По году выпуска
+            Год
             <SvgOrdering
                 :formOrdering
                 :keyOrdering="'year_release'"
@@ -107,10 +107,10 @@ const filterOn = (value) => {
         </SecondaryButton>
         <SecondaryButton
             @click="filterOn( 'mileage')"
-            class="justify-center mr-2"
+            class="justify-center w-1/3 sm:w-min mr-2"
             :class="['mileage' === formOrdering.ordering_value ? '!text-black' : '']"
         >
-            По пробегу
+            Пробег
             <SvgOrdering
                 :formOrdering
                 :keyOrdering="'mileage'"

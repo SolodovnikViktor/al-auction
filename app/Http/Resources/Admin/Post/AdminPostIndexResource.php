@@ -36,7 +36,7 @@ class AdminPostIndexResource extends JsonResource
             'description' => $this->description,
             'is_published' => $this->is_published,
             'photos' => PhotoResource::collection($photos),
-//            'userWhenLoaded' => UserResource::make($this->whenLoaded('user')),
+//            'userWhenLoaded' => MainUserResource::make($this->whenLoaded('user')),
         ];
     }
 }

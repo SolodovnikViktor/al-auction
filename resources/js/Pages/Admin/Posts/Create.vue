@@ -15,7 +15,6 @@ import {ref} from "vue";
 import axios from "axios";
 import FormPost from "@/Components/Main/Admin/Form/FormPost.vue";
 import ButtonCyan from "@/Components/Button/ButtonCyan.vue";
-import FormInput from "@/Components/Main/Admin/Form/FormInput.vue";
 
 const props = defineProps({
     brands: Array,
