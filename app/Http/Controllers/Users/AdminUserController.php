@@ -5,12 +5,10 @@ namespace App\Http\Controllers\Users;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\User\AdminUserIndexResource;
 use App\Http\Resources\Admin\User\AdminUserShowResource;
-use App\Models\Photo;
-use App\Models\Post;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -44,15 +42,13 @@ class AdminUserController extends Controller
         } else {
             $users = User::latest()->paginate(20);
         }
-        return Inertia::render('Admin/Users/Index', [
+        return Inertia::render('Admin/Users/AdminUserIndex', [
             'users' => AdminUserIndexResource::collection($users),
             'roles' => Role::all(),
-            'orderingValue' => $request->ordering_value,
-            'orderingDirection' => $request->ordering_direction,
-            'orderingDesc' => $request->ordering_desc,
-            'orderingAsc' => $request->ordering_asc,
-            'headerIndex' => $request->header_index,
-            'search' => $request->search,
+            'formOrdering' => $request->query(),
+            'usersCount' => User::count(),
+            'usersTrusted' => User::where('role_id', 2)->count(),
+            'usersOnline' => DB::table(config('session.table'))->count(),
         ]);
     }
 
@@ -64,19 +60,8 @@ class AdminUserController extends Controller
 
     public function show(User $user): Response
     {
-        return Inertia::render('Admin/Users/Show', [
+        return Inertia::render('Admin/Users/AdminUserShow', [
             'user' => new AdminUserShowResource($user),
         ]);
-    }
-
-    public function destroy(Post $post)
-    {
-        $images = Photo::where('post_id', $post->id)->get();
-        foreach ($images as $image) {
-            Storage::deleteDirectory($image->folder);
-            $image->delete();
-        }
-        $post->delete();
-        return to_route('admin-posts.index')->with('message', 'Объявление удалено');
     }
 }

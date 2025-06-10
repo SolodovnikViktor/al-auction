@@ -4,9 +4,6 @@ import SvgOrdering from "@/Components/Main/SvgOrdering.vue";
 const props = defineProps({
     tableHeaders: Array,
     formOrdering: Object,
-    orderingDesc: String,
-    orderingAsc: String,
-    orderingValue: String,
 })
 defineEmits(['filterOn'])
 </script>

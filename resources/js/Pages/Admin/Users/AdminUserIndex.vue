@@ -7,24 +7,23 @@ import axios from "axios";
 import {reactive} from "vue";
 import TableHeader from "@/Components/Main/TableHeader.vue";
 import SecondaryButton from "@/Components/Button/SecondaryButton.vue";
+import ObjectNotFound from "@/Components/Main/ObjectNotFound.vue";
 
 const props = defineProps({
     users: Object,
     roles: Array,
-    orderingDirection: String,
-    orderingValue: String,
-    orderingDesc: String,
-    orderingAsc: String,
-    headerIndex: String,
-    search: String,
+    formOrdering: Object,
+    usersOnline: Number,
+    usersTrusted: Number,
+    usersCount: Number,
 })
 
 let form = reactive({
-    ordering_direction: props.orderingDirection,
-    ordering_value: props.orderingValue,
-    ordering_desc: props.orderingDesc,
-    ordering_asc: props.orderingAsc,
-    search: props.search,
+    ordering_direction: props.formOrdering.ordering_direction,
+    ordering_value: props.formOrdering.ordering_value,
+    ordering_desc: props.formOrdering.ordering_desc,
+    ordering_asc: props.formOrdering.ordering_asc,
+    search: props.formOrdering.search,
 })
 
 const tableHeaders = [
@@ -79,7 +78,7 @@ const getSearch = () => {
 const cleanForm = () => {
     router.get(route("admin-users.index"))
 }
-
+console.log(props.usersCount)
 </script>
 
 <template>
@@ -91,39 +90,51 @@ const cleanForm = () => {
         <div class="p-2 lg:p-4 max-w-screen-2xl mx-auto shadow sm:rounded-2xl bg-white">
             <div class="overflow-x-auto">
                 <div class="min-w-full inline-block align-middle">
-                    <form
-                        @submit.prevent="getSearch"
-                        class="inline-flex w-1/3 m-1 items-center ">
-                        <div class="relative w-full">
-                            <input type="search"
-                                   id="users_search"
-                                   autocomplete="search"
-                                   v-model="form.search"
-                                   class="block w-full p-1 pl-2 pr-10 text-sm text-gray-800 border border-gray-200 rounded-lg "
-                                   placeholder="Поиск"/>
-                            <button type="submit"
-                                    class="absolute top-0 end-0 bottom-0 focus:outline-none px-3">
-                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
-                                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                          stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                                </svg>
-                            </button>
+                    <div class="flex items-start px-3 py-1 rounded-2xl bg-gray-100 justify-between">
+                        <div>
+                            <p>Всего пользователей: {{ props.usersCount }}</p>
+                            <p>Проверенных: {{ usersTrusted }}</p>
+                            <p>Онлайн: {{ usersOnline }}</p>
                         </div>
-                        <SecondaryButton class="py-1.5 ml-3" @click="cleanForm">
-                            x
-                        </SecondaryButton>
-                    </form>
-
-                    <div class="overflow-hidden rounded-t-lg">
+                        <form
+                            @submit.prevent="getSearch"
+                            class="inline-flex w-1/3 m-1 items-center ">
+                            <div class="relative w-full">
+                                <input type="search"
+                                       id="users_search"
+                                       autocomplete="search"
+                                       v-model="form.search"
+                                       class="block w-full p-1 pl-2 pr-10 text-sm text-gray-800 border border-gray-200 rounded-lg "
+                                       placeholder="Поиск"/>
+                                <button type="submit"
+                                        class="absolute top-0 end-0 bottom-0 focus:outline-none px-3">
+                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                              stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            <SecondaryButton class="py-1.5 ml-3" @click="cleanForm">
+                                x
+                            </SecondaryButton>
+                        </form>
+                    </div>
+                    <template v-if="!users.data.length">
+                        <ObjectNotFound v-if="formOrdering.search"
+                                        class="mt-4">
+                            Поиск: "{{ formOrdering.search }}" не дал результатов.
+                        </ObjectNotFound>
+                    </template>
+                    <div
+                        v-else
+                        class="overflow-hidden mt-2 rounded-t-lg">
                         <table class="min-w-full divide-y divide-gray-200 ">
                             <thead>
                             <tr>
                                 <TableHeader
                                     :tableHeaders
                                     :formOrdering="form"
-                                    :orderingDesc="form.ordering_desc"
-                                    :orderingAsc="form.ordering_asc"
                                     @filter-on="filterOn"
                                 />
                             </tr>

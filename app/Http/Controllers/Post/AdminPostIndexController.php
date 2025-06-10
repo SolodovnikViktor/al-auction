@@ -30,7 +30,7 @@ class AdminPostIndexController extends Controller
     {
         $this->getPosts($request, $posts);
 
-        return Inertia::render('Admin/Posts/Index', [
+        return Inertia::render('Admin/Posts/AdminPostIndex', [
             'posts' => AdminPostIndexResource::collection($posts),
             'formFilter' => $request->formFilter,
             'formOrdering' => $request->formOrdering,
@@ -51,7 +51,7 @@ class AdminPostIndexController extends Controller
             $paginate = 5;
         }
         return Inertia::render(
-            'Admin/Posts/Index',
+            'Admin/Posts/AdminPostIndex',
             [
                 'search' => $request->search,
                 'brands' => Brand::all(),
