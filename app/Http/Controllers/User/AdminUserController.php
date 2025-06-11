@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Users;
+namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Admin\User\AdminUserIndexResource;
@@ -42,7 +42,7 @@ class AdminUserController extends Controller
         } else {
             $users = User::latest()->paginate(20);
         }
-        return Inertia::render('Admin/Users/AdminUserIndex', [
+        return Inertia::render('Admin/User/Index', [
             'users' => AdminUserIndexResource::collection($users),
             'roles' => Role::all(),
             'formOrdering' => $request->query(),
@@ -60,7 +60,7 @@ class AdminUserController extends Controller
 
     public function show(User $user): Response
     {
-        return Inertia::render('Admin/Users/AdminUserShow', [
+        return Inertia::render('Admin/User/Show', [
             'user' => new AdminUserShowResource($user),
         ]);
     }

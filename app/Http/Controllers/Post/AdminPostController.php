@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Post;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Post\PostRequest;
-use App\Http\Resources\Admin\Post\AdminPostIndexResource;
 use App\Http\Resources\Admin\Post\AdminPostShowResource;
 use App\Models\BodyType;
 use App\Models\Brand;
@@ -28,7 +27,7 @@ class AdminPostController extends Controller
 {
     public function create(): Response
     {
-        return Inertia::render('Admin/Posts/Create', [
+        return Inertia::render('Admin/Post/Create', [
             'brands' => Brand::all(),
             'fuels' => Fuel::all(),
             'wheels' => Wheel::all(),
@@ -113,14 +112,14 @@ class AdminPostController extends Controller
 
     public function show(Post $post): Response
     {
-        return Inertia::render('Admin/Posts/Show', [
+        return Inertia::render('Admin/Post/Show', [
             'post' => new AdminPostShowResource($post),
         ]);
     }
 
     public function edit(Post $post): Response
     {
-        return Inertia::render('Admin/Posts/Edit', [
+        return Inertia::render('Admin/Post/Edit', [
             'post' => $post,
             'brands' => Brand::all(),
             'fuels' => Fuel::all(),

@@ -2,11 +2,8 @@
 
 namespace App\Http\Middleware;
 
-use App\Http\Resources\Main\MainUserResource;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Inertia\Middleware;
-use Tighten\Ziggy\Ziggy;
 
 class HandleInertiaRequests extends Middleware
 {

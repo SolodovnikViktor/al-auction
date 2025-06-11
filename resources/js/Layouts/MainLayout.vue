@@ -1,5 +1,5 @@
 <script setup>
-import {computed, onMounted, onBeforeMount, reactive, ref,} from 'vue';
+import {computed, onBeforeMount, reactive, ref,} from 'vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
@@ -17,6 +17,12 @@ if (route().current('admin-posts.index') || route().current('admin-post.create')
     || route().current('admin-post.search') || route().current('admin-posts.filter')
     || route().current('admin-users.index') || route().current('admin-user.show')) {
     adminActive = true;
+}
+let mainActive = false;
+if (route().current('main-posts.index')
+    || route().current('main-post.show')
+    || route().current('main-post.search') || route().current('main-posts.filter')) {
+    mainActive = true;
 }
 
 let form = reactive(
@@ -37,12 +43,20 @@ onBeforeMount(() => {
 
 const getSearch = () => {
     if (form.search) {
-        router.get(route("admin-post.search"),
-            form,
-            {
-                preserveState: true,
-            }
-        );
+        if (userRole?.role?.value === 'admin') {
+            router.get(route("admin-post.search"),
+                form,
+                {
+                    preserveState: true,
+                }
+            );
+        } else
+            router.get(route("main-post.search"),
+                form,
+                {
+                    preserveState: true,
+                }
+            );
     }
 }
 </script>
@@ -81,8 +95,8 @@ const getSearch = () => {
                                 Админ панель
                             </NavLink>
                             <NavLink
-                                :href="route('home')"
-                                :active="route().current('home')">
+                                :href="route('main-posts.index')"
+                                :active=mainActive>
                                 Аукцион
                             </NavLink>
                             <NavLink

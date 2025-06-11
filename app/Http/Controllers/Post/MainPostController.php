@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class AdminPostIndexController extends Controller
+class MainPostController extends Controller
 {
     public function index(Request $request): Response
     {
@@ -40,10 +40,10 @@ class AdminPostIndexController extends Controller
     {
         $paginate = 15;
         if (auth()->user()->catalog_view) {
-            $paginate = 5;
+            $paginate = 25;
         }
         return Inertia::render(
-            'Admin/Post/Index',
+            'Main/Post/Index',
             [
                 'search' => $request->search,
                 'brands' => Brand::all(),
@@ -80,7 +80,7 @@ class AdminPostIndexController extends Controller
     {
         $paginate = 15;
         if (auth()->user()->catalog_view) {
-            $paginate = 10;
+            $paginate = 25;
         }
 
         $posts = new Post();
@@ -184,7 +184,6 @@ class AdminPostIndexController extends Controller
         } else {
             // сортировка есть
             if ($request->formOrdering) {
-//                dd($request->formOrdering);
                 $posts = $posts->orderBy(
                     $request->formOrdering['ordering_value'],
                     $request->formOrdering['ordering_direction'],
@@ -196,87 +195,3 @@ class AdminPostIndexController extends Controller
         }
     }
 }
-//if ($formFilter['brand_id']) {
-//    $posts = $posts->
-//    when($formFilter['brand_id'], function ($query, $x) {
-//        $query->where('brand_id', $x);
-//    });
-//}
-//if ($formFilter['model_id']) {
-//    $posts = $posts->
-//    when($formFilter['model_id'], function ($query, $x) {
-//        $query->where('model_id', $x);
-//    });
-//}
-//if ($formFilter['body_type_id']) {
-//    $posts = $posts->
-//    when($formFilter['body_type_id'], function ($query, $x) {
-//        $query->where('body_type_id', $x);
-//    });
-//}
-//if ($formFilter['transmission_id']) {
-//    $posts = $posts->
-//    when($formFilter['transmission_id'], function ($query, $x) {
-//        $query->where('transmission_id', $x);
-//    });
-//}
-//if ($formFilter['fuel_id']) {
-//    $posts = $posts->
-//    when($formFilter['fuel_id'], function ($query, $x) {
-//        $query->where('fuel_id', $x);
-//    });
-//}
-//if ($formFilter['wheel_id']) {
-//    $posts = $posts->
-//    when($formFilter['wheel_id'], function ($query, $x) {
-//        $query->where('wheel_id', $x);
-//    });
-//}
-//if ($formFilter['drive_id']) {
-//    $posts = $posts->
-//    when($formFilter['drive_id'], function ($query, $x) {
-//        $query->where('drive_id', $x);
-//    });
-//}
-//if ($formFilter['color_id']) {
-//    $posts = $posts->
-//    when($formFilter['color_id'], function ($query, $x) {
-//        $query->where('color_id', $x);
-//    });
-//}
-//if ($formFilter['price_ot']) {
-//    $posts = $posts->
-//    when($formFilter['price_ot'], function ($query, $x) {
-//        $query->where('price', '>=', $x);
-//    });
-//}
-//if ($formFilter['price_do']) {
-//    $posts = $posts->
-//    when($formFilter['price_do'], function ($query, $x) {
-//        $query->where('price', '<=', $x);
-//    });
-//}
-//if ($formFilter['year_ot']) {
-//    $posts = $posts->
-//    when($formFilter['year_ot'], function ($query, $x) {
-//        $query->where('year_release', '>=', $x);
-//    });
-//}
-//if ($formFilter['year_do']) {
-//    $posts = $posts->
-//    when($formFilter['year_do'], function ($query, $x) {
-//        $query->where('year_release', '<=', $x);
-//    });
-//}
-//if ($formFilter['mileage_ot']) {
-//    $posts = $posts->
-//    when($formFilter['mileage_ot'], function ($query, $x) {
-//        $query->where('mileage', '>=', $x);
-//    });
-//}
-//if ($formFilter['mileage_do']) {
-//    $posts = $posts->
-//    when($formFilter['mileage_do'], function ($query, $x) {
-//        $query->where('mileage', '<=', $x);
-//    });
-//}
