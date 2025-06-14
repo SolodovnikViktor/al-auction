@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
-use App\Models\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -53,9 +53,16 @@ class ProfileController extends Controller
         return Redirect::to('/');
     }
 
-    public function updateCatalogView(Request $request, User $user)
+    public function updateCatalogView(Request $request)
     {
         $validated = $request->validate(['catalog_view' => ['required']]);
-        $user->update($validated);
+        if (auth()->user()) {
+            $user = auth()->user();
+            $user->update($validated);
+        } else {
+            DB::table('sessions')->where('id', auth()->getSession()->id())->update(
+                ['catalog_view' => $validated['catalog_view']]
+            );
+        }
     }
 }

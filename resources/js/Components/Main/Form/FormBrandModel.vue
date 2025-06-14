@@ -25,15 +25,9 @@ const formModel = useForm({
 
 let modelOptions = ref();
 
-const message = ref('')
-const select_is = ref(true)
-
 let inputBrand_is = ref(false);
 let inputModel_is = ref(false);
 let blockModel_is = ref(false);
-
-let inputBrand = ref(false);
-let inputModel = ref(false);
 
 const inputBrandOpen = () => {
     inputBrand_is.value = true;
@@ -80,7 +74,7 @@ watch(() => props.form.brand_id, (value) => {
 })
 
 function getModel(value, bool) {
-    axios.post('/admin/post/crete/get-model', value)
+    axios.post('/post/get-model', value)
         .then(response => {
             showModel(response.data, bool)
         })
@@ -118,18 +112,6 @@ const storeBrand = () => {
             console.log('formBrand reset')
         },
     });
-
-
-    // axios.post('/admin/post/crete/brand', formBrand).then(response => {
-    //     inputBrand_is.value = false;
-    //     formBrand.title = ''
-    //     arrBrands.value.push(response.data);
-    //     props.form.brand_id = response.data.id
-    // })
-    //     .catch(error => {
-    //         console.log(error)
-    //         console.log(error.message);
-    //     });
 }
 
 const storeModel = () => {

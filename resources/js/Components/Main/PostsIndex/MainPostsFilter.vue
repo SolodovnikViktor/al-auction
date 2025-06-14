@@ -3,7 +3,7 @@ import {reactive, ref, watch} from "vue";
 import axios from "axios";
 import SecondaryButton from "@/Components/Button/SecondaryButton.vue";
 import ButtonCyan from "@/Components/Button/ButtonCyan.vue";
-import {router, useForm} from "@inertiajs/vue3";
+import {router} from "@inertiajs/vue3";
 
 const emit = defineEmits(['checkbox'])
 
@@ -55,21 +55,16 @@ if (props.formFilter) {
         body_type_id: props.formFilter.body_type_id || '',
         engine_capacity: props.formFilter.engine_capacity || '',
     });
-    axios.post('/admin/post/crete/get-model', props.formFilter.brand_id)
-        .then(response => {
-            models.value = response.data;
-        })
-        .catch(error => {
-            console.log(error)
-        });
+    getModel(props.formFilter.brand_id)
 }
 const models = ref()
 let toggle = ref(props.user.catalog_view);
 let postCount = ref(props.posts.meta.total);
 let viewFullFilter = ref(false);
+console.log(props.user.id)
 
 function updateCatalogView() {
-    axios.patch(`/update-catalog-view/${props.user.id}`, {catalog_view: toggle.value})
+    axios.patch('/update-catalog-view', {catalog_view: toggle.value})
         .then(res => {
                 router.reload({only: ['posts']})
                 emit('checkbox', toggle.value)
@@ -84,7 +79,7 @@ function updateCatalogView() {
 }
 
 function getModel(value) {
-    axios.post('/admin/post/crete/get-model', value)
+    axios.post('/post/get-model', value)
         .then(response => {
             models.value = response.data;
         })
@@ -104,9 +99,10 @@ watch(() => formFilter.brand_id, (value) => {
 })
 
 watch((formFilter), (formFilter) => {
-    axios.post('/admin/posts/filter', {formFilter: formFilter},)
+    axios.post('/main/posts/filter', {formFilter: formFilter},)
         .then(response => {
             postCount.value = response.data
+            console.log(postCount.value)
         })
         .catch(error => {
             console.log(error)
@@ -115,7 +111,7 @@ watch((formFilter), (formFilter) => {
 });
 
 const filterIndex = () => {
-    router.get(route('admin-posts.filter'),
+    router.get(route('main-posts.filter'),
         {formFilter: formFilter, formOrdering: props.formOrdering},
         {
             preserveState: true,

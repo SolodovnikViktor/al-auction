@@ -16,15 +16,15 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class AdminPostIndexController extends Controller
+class MainPostIndexController extends Controller
 {
     public function index(Request $request): Response
     {
         $this->getPosts($request, $posts, $user);
 
-        return Inertia::render('Admin/Post/Index', [
+        return Inertia::render('Main/Post/Index', [
             'posts' => AdminPostIndexResource::collection($posts),
-            'user' => auth()->user(),
+            'user' => $user,
             'formFilter' => $request->formFilter,
             'formOrdering' => $request->formOrdering,
             'brands' => Brand::all(),
@@ -40,11 +40,12 @@ class AdminPostIndexController extends Controller
     public function search(Request $request)
     {
         $paginate = 15;
+
         if (auth()->user()->catalog_view) {
             $paginate = 25;
         }
         return Inertia::render(
-            'Admin/Post/Index',
+            'Main/Post/Index',
             [
                 'search' => $request->search,
                 'brands' => Brand::all(),

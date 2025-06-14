@@ -1,7 +1,7 @@
 <script setup>
 import {Head, router} from "@inertiajs/vue3";
 import MainLayout from "@/Layouts/MainLayout.vue";
-import AdminNav from "@/Components/Main/Admin/AdminNav.vue";
+import AdminNav from "@/Components/Main/AdminNav.vue";
 import PaginationBar from "@/Components/Main/PaginationBar.vue";
 import axios from "axios";
 import {reactive} from "vue";

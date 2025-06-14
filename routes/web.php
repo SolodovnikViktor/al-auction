@@ -3,8 +3,10 @@
 use App\Http\Controllers\Post\AdminPostController;
 use App\Http\Controllers\Post\AdminPostIndexController;
 use App\Http\Controllers\Post\MainPostController;
+use App\Http\Controllers\Post\MainPostIndexController;
 use App\Http\Controllers\Post\PhotoController;
 use App\Http\Controllers\Post\PhotoPostController;
+use App\Http\Controllers\Post\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\User\AdminUserController;
 use Illuminate\Support\Facades\Route;
@@ -35,7 +37,6 @@ Route::middleware(['auth', 'verified', 'roles:admin'])->group(function () {
     );
     Route::delete('/admin/post/{post}', [AdminPostController::class, 'destroy'])->name('admin-post.destroy');
 
-    Route::post('/admin/post/crete/get-model', [AdminPostController::class, 'getModel']);
     Route::post('/admin/post/crete/brand', [AdminPostController::class, 'storeBrand'])->name('admin-post.storeBrand');
     Route::post('/admin/post/crete/model', [AdminPostController::class, 'storeModel'])->name('admin-post.storeModel');
 
@@ -54,17 +55,20 @@ Route::middleware(['auth', 'verified', 'roles:admin'])->group(function () {
     Route::patch('/admin/update-role/{user}', [AdminUserController::class, 'updateRole']);
 });
 
-Route::get('/main/posts/index', [MainPostController::class, 'index'])->name('main-posts.index');
-Route::get('/main/posts/index/filter', [MainPostController::class, 'index'])
+Route::get('/main/posts/index', [MainPostIndexController::class, 'index'])->name('main-posts.index');
+Route::get('/main/posts/index/filter', [MainPostIndexController::class, 'index'])
     ->name('main-posts.filter');
-Route::post('/main/posts/filter', [MainPostController::class, 'filterCount']);
-Route::get('/main/posts/search', [MainPostController::class, 'search'])->name('main-post.search');
+Route::post('/main/posts/filter', [MainPostIndexController::class, 'filterCount']);
+Route::get('/main/posts/search', [MainPostIndexController::class, 'search'])->name('main-post.search');
+Route::get('/main/post/{post}/show', [MainPostController::class, 'show'])->name('main-post.show');
+
+Route::post('/post/get-model', [PostController::class, 'getModel']);
+Route::patch('/update-catalog-view', [ProfileController::class, 'updateCatalogView']);
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::patch('/update-catalog-view/{user}', [ProfileController::class, 'updateCatalogView']);
 });
 
 require __DIR__ . '/auth.php';

@@ -245,8 +245,8 @@ const getSearch = () => {
                     <slot name="header"/>
                 </nav>
             </template>
-            <template v-if="$slots.adminNav ">
-                <slot name="adminNav"/>
+            <template v-if="$slots.navigation ">
+                <slot name="navigation"/>
             </template>
         </header>
         <div class="pt-[123px]"></div>

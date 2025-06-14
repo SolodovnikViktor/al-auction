@@ -10,13 +10,13 @@ import 'filepond/dist/filepond.min.css';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css';
 import 'filepond-plugin-file-poster/dist/filepond-plugin-file-poster.css';
 import InputError from "@/Components/InputError.vue";
-import AdminNav from "@/Components/Main/Admin/AdminNav.vue";
+import AdminNav from "@/Components/Main/AdminNav.vue";
 import {ref} from "vue";
 import axios from "axios";
 import SecondaryButton from "@/Components/Button/SecondaryButton.vue";
 import DangerButton from "@/Components/Button/DangerButton.vue";
 import Modal from "@/Components/Modal.vue";
-import FormPost from "@/Components/Main/Admin/Form/FormPost.vue";
+import FormPost from "@/Components/Main/Form/FormPost.vue";
 
 const props = defineProps({
     post: Object,

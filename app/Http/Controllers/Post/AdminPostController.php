@@ -38,11 +38,6 @@ class AdminPostController extends Controller
         ]);
     }
 
-    public function getModel(Request $request)
-    {
-        return CarModel::where('brand_id', $request->getContent())->get();
-    }
-
     public function storeBrand(Request $request)
     {
         $validated = $request->validate([

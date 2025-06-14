@@ -5,10 +5,8 @@ namespace App\Http\Controllers\Post;
 use App\Http\Controllers\Controller;
 
 use App\Models\Photo;
-use App\Models\Post;
 use App\Models\PhotoPosition;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Intervention\Image\Laravel\Facades\Image;

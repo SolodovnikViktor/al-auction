@@ -1,5 +1,6 @@
-*
-!private/
-!public/images/service/not_photo.jpg
+private/
+public/images/posts
+public/images/tmp
 !.gitignore
+
 

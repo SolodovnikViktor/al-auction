@@ -121,7 +121,7 @@ const filterOn = (value) => {
     <div class="grid grid-cols-12 gap-4 pb-4 mb-4 border-b border-gray-200">
         <div v-for="(post, postIndex) in posts.data" :key="post.id"
              class="overflow-hidden col-span-12 sm:col-span-6 lg:col-span-4 text-gray-900">
-            <Link :href="route('admin-post.show', post.id)">
+            <Link :href="route('main-post.show', post.id)">
                 <div
                     v-if="post.photos.length > 0"
                     class="slider hidden sm:flex">

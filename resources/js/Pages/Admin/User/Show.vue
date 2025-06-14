@@ -1,6 +1,6 @@
 <script setup>
 import MainLayout from "@/Layouts/MainLayout.vue";
-import AdminNav from "@/Components/Main/Admin/AdminNav.vue";
+import AdminNav from "@/Components/Main/AdminNav.vue";
 import {Head} from "@inertiajs/vue3";
 import 'swiper/css/navigation';
 

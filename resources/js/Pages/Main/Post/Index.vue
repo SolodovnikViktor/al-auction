@@ -1,22 +1,21 @@
 <script setup>
 import {Head, usePage} from '@inertiajs/vue3';
 import MainLayout from "@/Layouts/MainLayout.vue";
-import AdminNav from "@/Components/Main/Admin/AdminNav.vue";
+import AdminNav from "@/Components/Main/AdminNav.vue";
 import {computed, ref} from 'vue'
-import PostsFilter from "@/Components/Main/PostsIndex/PostsFilter.vue";
+import MainPostsFilter from "@/Components/Main/PostsIndex/MainPostsFilter.vue";
 import PaginationBar from "@/Components/Main/PaginationBar.vue";
 import IndexPhoto from "@/Components/Main/PostsIndex/IndexPhoto.vue";
 import IndexTable from "@/Components/Main/PostsIndex/IndexTable.vue";
 import ObjectNotFound from "@/Components/Main/ObjectNotFound.vue";
+import MainNav from "@/Components/Main/MainNav.vue";
 
 const page = usePage()
-const user = computed(() => page.props.auth.user)
-const catalog_view = ref(user.value.catalog_view)
-const catalogView = (bool) => catalog_view.value = bool
-
+// const user = computed(() => page.props.auth.user)
 const props = defineProps(
     {
         posts: Object,
+        user: Object,
         formFilter: Object,
         formOrdering: Object,
         brands: Array,
@@ -29,27 +28,29 @@ const props = defineProps(
         search: String,
     }
 );
+const catalog_view = ref(props.user.catalog_view)
+const catalogView = (bool) => catalog_view.value = bool
 </script>
 
 <template>
-    <Head title="Админ панель"/>
+    <Head title="Каталог"/>
     <MainLayout>
-        <template #adminNav>
-            <AdminNav/>
+        <template #navigation>
+            <MainNav/>
         </template>
         <template #filters>
-            <PostsFilter @checkbox="catalogView"
-                         :posts
-                         :formFilter
-                         :formOrdering
-                         :user
-                         :brands
-                         :fuels
-                         :wheels
-                         :colors
-                         :drives
-                         :bodyTypes
-                         :transmissions
+            <MainPostsFilter @checkbox="catalogView"
+                             :posts
+                             :formFilter
+                             :formOrdering
+                             :user
+                             :brands
+                             :fuels
+                             :wheels
+                             :colors
+                             :drives
+                             :bodyTypes
+                             :transmissions
             />
         </template>
         <div class="p-2 lg:p-4 max-w-screen-2xl mx-auto shadow sm:rounded-2xl bg-white">
