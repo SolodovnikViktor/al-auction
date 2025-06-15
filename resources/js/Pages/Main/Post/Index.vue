@@ -13,6 +13,7 @@ const props = defineProps(
     {
         posts: Object,
         user: Object,
+        formSearch: Object,
         formFilter: Object,
         formOrdering: Object,
         brands: Array,
@@ -31,7 +32,7 @@ const catalogView = (bool) => catalog_view.value = bool
 
 <template>
     <Head title="Каталог"/>
-    <MainLayout>
+    <MainLayout :formSearch>
         <template #navigation>
             <MainNav/>
         </template>

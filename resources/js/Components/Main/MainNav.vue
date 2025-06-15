@@ -1,9 +1,9 @@
 <script setup>
 import {ref} from "vue";
-
-defineProps(['post', 'user'])
 import NavLink from "@/Components/NavLink.vue";
 import {router} from '@inertiajs/vue3';
+
+defineProps(['post', 'user'])
 
 let search_is = ref(false);
 let filter_is = ref(false);
@@ -29,20 +29,22 @@ router.on('navigate', (event) => {
                 :active="route().current('main-posts.index')">
                 Каталог
             </NavLink>
-            <template v-if="search_is">
+
+            <template v-if="route().current('main-posts.search')">
                 <NavLink
-                    :href="route('main-post.search')"
-                    :active="search_is">
+                    :href="route('main-posts.search')"
+                    :active="route().current('main-posts.search')">
                     Поиск
                 </NavLink>
             </template>
-            <template v-if="filter_is">
+            <template v-if="route().current('main-posts.filter')">
                 <NavLink
                     :href="route('main-posts.filter')"
-                    :active="filter_is">
+                    :active="route().current('main-posts.filter')">
                     Фильтр
                 </NavLink>
             </template>
+
             <template
                 v-if="route().current('main-post.show')">
                 <NavLink

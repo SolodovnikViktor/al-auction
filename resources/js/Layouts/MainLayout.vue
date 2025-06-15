@@ -10,9 +10,12 @@ import {Link, router, usePage} from '@inertiajs/vue3';
 const props = defineProps({
     formSearch: Object,
 })
+
 const showingNavigationDropdown = ref(false);
 const page = usePage()
-const userRole = computed(() => page.props?.auth?.role)
+const userRole = computed(() => page.props.auth.role)
+
+console.log(userRole)
 
 let adminActive = false;
 if (route().current('admin-posts.index') || route().current('admin-post.create')
@@ -36,7 +39,7 @@ let formSearch = reactive(
 
 const getSearch = () => {
     if (formSearch.search) {
-        if (userRole.value.role.value === 'admin') {
+        if (userRole.value?.role.value === 'admin') {
             router.get(route("admin-posts.search"),
                 {formSearch: formSearch},
                 {

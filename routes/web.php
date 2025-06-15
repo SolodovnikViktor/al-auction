@@ -1,9 +1,7 @@
 <?php
 
 use App\Http\Controllers\Post\AdminPostController;
-use App\Http\Controllers\Post\AdminPostIndexController;
 use App\Http\Controllers\Post\MainPostController;
-use App\Http\Controllers\Post\MainPostIndexController;
 use App\Http\Controllers\Post\PhotoController;
 use App\Http\Controllers\Post\PhotoPostController;
 use App\Http\Controllers\Post\PostController;
@@ -21,10 +19,10 @@ Route::get('/contact', function () {
 })->name('contact');
 
 Route::middleware(['auth', 'verified', 'roles:admin'])->group(function () {
-    Route::get('/admin/posts/index', [AdminPostIndexController::class, 'index'])->name('admin-posts.index');
-    Route::get('/admin/posts/index/filter', [AdminPostIndexController::class, 'index'])
+    Route::get('/admin/posts/index', [AdminPostController::class, 'index'])->name('admin-posts.index');
+    Route::get('/admin/posts/index/filter', [AdminPostController::class, 'index'])
         ->name('admin-posts.filter');
-    Route::get('/admin/posts/search', [AdminPostIndexController::class, 'index'])->name('admin-posts.search');
+    Route::get('/admin/posts/search', [AdminPostController::class, 'index'])->name('admin-posts.search');
 
     Route::get('/admin/post/create', [AdminPostController::class, 'create'])->name('admin-post.create');
     Route::post('/admin/post/create', [AdminPostController::class, 'store'])->name('admin-post.store');
@@ -54,11 +52,11 @@ Route::middleware(['auth', 'verified', 'roles:admin'])->group(function () {
     Route::patch('/admin/update-role/{user}', [AdminUserController::class, 'updateRole']);
 });
 
-Route::get('/main/posts/index', [MainPostIndexController::class, 'index'])->name('main-posts.index');
-Route::get('/main/posts/index/filter', [MainPostIndexController::class, 'index'])
+Route::get('/main/posts/index', [MainPostController::class, 'index'])->name('main-posts.index');
+Route::get('/main/posts/index/filter', [MainPostController::class, 'index'])
     ->name('main-posts.filter');
 
-Route::get('/main/posts/search', [MainPostIndexController::class, 'index'])->name('main-posts.search');
+Route::get('/main/posts/search', [MainPostController::class, 'index'])->name('main-posts.search');
 Route::get('/main/post/{post}/show', [MainPostController::class, 'show'])->name('main-post.show');
 
 Route::post('/posts/filter/get-model', [PostController::class, 'getModel'])->name('post-filter.getModel');

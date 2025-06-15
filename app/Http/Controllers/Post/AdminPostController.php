@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Post;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Post\PostRequest;
+use App\Http\Resources\Admin\Post\AdminPostIndexResource;
 use App\Http\Resources\Admin\Post\AdminPostShowResource;
 use App\Models\BodyType;
 use App\Models\Brand;
@@ -25,6 +26,26 @@ use Intervention\Image\Laravel\Facades\Image;
 
 class AdminPostController extends Controller
 {
+    public function index(Request $request): Response
+    {
+        $this->getPosts($request, $posts, $user);
+
+        return Inertia::render('Admin/Post/Index', [
+            'posts' => AdminPostIndexResource::collection($posts),
+            'user' => auth()->user(),
+            'formSearch' => $request->formSearch,
+            'formFilter' => $request->formFilter,
+            'formOrdering' => $request->formOrdering,
+            'brands' => Brand::all(),
+            'fuels' => Fuel::all(),
+            'wheels' => Wheel::all(),
+            'colors' => Color::all(),
+            'drives' => Drive::all(),
+            'bodyTypes' => BodyType::all(),
+            'transmissions' => Transmission::all(),
+        ]);
+    }
+
     public function create(): Response
     {
         return Inertia::render('Admin/Post/Create', [
