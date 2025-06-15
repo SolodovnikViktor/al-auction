@@ -1,5 +1,5 @@
 <script setup>
-import {router, Link} from "@inertiajs/vue3";
+import {Link, router} from "@inertiajs/vue3";
 import TableHeader from "@/Components/Main/TableHeader.vue";
 import {reactive} from "vue";
 
@@ -35,10 +35,6 @@ const tableHeaders = [
     {title: 'Ставка', value: 'up_price', exception: false},
     {title: '', value: '', exception: true},
 ]
-
-
-console.log(props.formSearch)
-
 
 const filterOn = (v) => {
     formOrdering.ordering_value = v
@@ -78,7 +74,6 @@ const filterOn = (v) => {
             }
         )
     }
-
 }
 
 function numberFilter(number) {

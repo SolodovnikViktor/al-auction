@@ -7,6 +7,7 @@ use App\Http\Controllers\Post\PhotoPostController;
 use App\Http\Controllers\Post\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\User\AdminUserController;
+use App\Http\Controllers\User\BetController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -17,6 +18,11 @@ Route::get('/', function () {
 Route::get('/contact', function () {
     return Inertia::render('Main/Contact');
 })->name('contact');
+
+Route::middleware(['auth', 'verified', 'roles:trusted1'])->group(function () {
+    Route::get('/main/bets/index', [BetController::class, 'index'])->name('main-bets.index');
+    Route::patch('/main/bets/test', [BetController::class, 'test'])->name('main-bets.test');
+});
 
 Route::middleware(['auth', 'verified', 'roles:admin'])->group(function () {
     Route::get('/admin/posts/index', [AdminPostController::class, 'index'])->name('admin-posts.index');

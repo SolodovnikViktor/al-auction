@@ -2,6 +2,7 @@
 import {computed, onMounted, onUnmounted, ref} from 'vue';
 
 const props = defineProps({
+    massage: String,
     align: {
         type: String,
         default: 'right',
@@ -10,11 +11,14 @@ const props = defineProps({
         type: String,
         default: '48',
     },
-    contentClasses: {
-        type: String,
-        default: 'py-1 bg-white',
-    },
+
 });
+const open = ref(false);
+console.log(props.massage);
+if (props.massage) {
+    open.value = true;
+    console.log(open.value);
+}
 
 const closeOnEscape = (e) => {
     if (open.value && e.key === 'Escape') {
@@ -41,19 +45,15 @@ const alignmentClasses = computed(() => {
     }
 });
 
-const open = ref(false);
+
 </script>
 
 <template>
     <div class="relative">
-        <div @click="open = !open">
-            <slot name="trigger"/>
-        </div>
-
         <!-- Full Screen Dropdown Overlay -->
         <div
             v-show="open"
-            class="fixed inset-0 z-40"
+            class="fixed bg-gray-200 opacity-75 inset-0 z-40"
             @click="open = false"
         ></div>
 
@@ -67,14 +67,11 @@ const open = ref(false);
         >
             <div
                 v-show="open"
-                class="absolute z-50 mt-2 rounded-md shadow-lg"
-                :class="[widthClass, alignmentClasses]"
-                style="display: none"
-                @click="open = false">
+                class="absolute z-50 top-52 left-1/2 -translate-x-1/2 rounded-md shadow-lg">
                 <div
-                    class="rounded-md ring-1 ring-black ring-opacity-5"
-                    :class="contentClasses">
-                    <slot name="content"/>
+                    class="rounded-md ring-1 sm:p-6 lg:p-12  bg-white ring-black ring-opacity-5">
+                    <p>{{ massage }}</p>
+                    <p class="text-center">тел 8 999 999 99 99</p>
                 </div>
             </div>
         </Transition>

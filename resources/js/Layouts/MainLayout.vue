@@ -6,6 +6,7 @@ import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import {Link, router, usePage} from '@inertiajs/vue3';
+import MassageBet from "@/Components/MassageBet.vue";
 
 const props = defineProps({
     formSearch: Object,
@@ -59,16 +60,16 @@ const getSearch = () => {
 
 <template>
     <div class="min-h-screen bg-[#0085db12] sm:px-4">
-        <div v-if="$page.props.message_form" class="alert">
+        
+        <MassageBet :massage="$page.props.flash.message_bet"/>
+
+        <div v-if="$page.props.message_form" class="alert z-50 mt-32">
             {{ $page.props.message_form }}
         </div>
-        <div v-if="$page.props.flash.message" class="alert">
-            {{ $page.props.flash.message }}
-        </div>
-        <div v-if="$page.props.flash.success" class="alert alert-success">
+        <div v-if="$page.props.flash.success" class="alert alert-success z-50 mt-32">
             {{ $page.props.flash.success }}
         </div>
-        <div v-if="$page.props.flash.error" class="alert alert-danger">
+        <div v-if="$page.props.flash.error" class="alert alert-danger z-50 mt-32">
             {{ $page.props.flash.error }}
         </div>
 

@@ -1,24 +1,8 @@
 <script setup>
-import {ref} from "vue";
 import NavLink from "@/Components/NavLink.vue";
-import {router} from '@inertiajs/vue3';
 
 defineProps(['post', 'user'])
 
-let search_is = ref(false);
-let filter_is = ref(false);
-
-router.on('navigate', (event) => {
-
-    if (route().current('main-post.search')) {
-        search_is.value = true;
-        filter_is.value = false;
-    }
-    if (route().current('main-posts.filter')) {
-        filter_is.value = true;
-        search_is.value = false;
-    }
-})
 </script>
 
 <template>
@@ -28,6 +12,11 @@ router.on('navigate', (event) => {
                 :href="route('main-posts.index')"
                 :active="route().current('main-posts.index')">
                 Каталог
+            </NavLink>
+            <NavLink
+                :href="route('main-bets.index')"
+                :active="route().current('main-bets.index')">
+                Мои ставки
             </NavLink>
 
             <template v-if="route().current('main-posts.search')">

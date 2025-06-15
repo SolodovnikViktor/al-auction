@@ -7,6 +7,7 @@ const props = defineProps({
     posts: Object,
     formFilter: Object,
     formOrdering: Object,
+    formSearch: Object,
 })
 let formOrdering = reactive({
     ordering_direction: '',
@@ -48,15 +49,25 @@ const filterOn = (v) => {
     }
     if (route().current('main-posts.filter')) {
         router.get(route('main-posts.filter'),
-            {formOrdering: formOrdering, formFilter: props.formFilter},
+            {formOrdering: formOrdering, formFilter: props.formFilter, formSearch: props.formSearch},
             {
                 preserveState: true,
                 preserveScroll: true
             }
         );
-    } else {
+    }
+    if (route().current('main-posts.search')) {
+        router.get(route('main-posts.search'),
+            {formOrdering: formOrdering, formFilter: props.formFilter, formSearch: props.formSearch},
+            {
+                preserveState: true,
+                preserveScroll: true
+            }
+        )
+    }
+    if (route().current('main-posts.index')) {
         router.get(route('main-posts.index'),
-            {formOrdering: formOrdering, formFilter: props.formFilter},
+            {formOrdering: formOrdering, formFilter: props.formFilter, formSearch: props.formSearch},
             {
                 preserveState: true,
                 preserveScroll: true

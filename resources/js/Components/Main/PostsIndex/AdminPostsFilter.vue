@@ -119,23 +119,6 @@ const cleanForm = () => {
             return router.get(route('admin-posts.filter'));
         }
     }
-
-
-    // formFilter.brand_id = ''
-    // formFilter.model_id = ''
-    // formFilter.price_ot = ''
-    // formFilter.price_do = ''
-    // formFilter.year_ot = ''
-    // formFilter.year_do = ''
-    // formFilter.mileage_ot = ''
-    // formFilter.mileage_do = ''
-    // formFilter.color_id = ''
-    // formFilter.fuel_id = ''
-    // formFilter.wheel_id = ''
-    // formFilter.transmission_id = ''
-    // formFilter.drive_id = ''
-    // formFilter.body_type_id = ''
-    // formFilter.engine_capacity = ''
 }
 </script>
 

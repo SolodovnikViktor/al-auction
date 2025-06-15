@@ -15,6 +15,10 @@ class RolesMiddleware
         if ($userRole == $role1 || $userRole == $role2) {
             return $next($request);
         }
-        return redirect()->route('home');
+        if (auth()->user()) {
+            return back()->with('message_bet', 'Чтобы сделать ставки, свяжитесь с менеджером.');
+        } else {
+            return redirect()->route('home');
+        }
     }
 }
