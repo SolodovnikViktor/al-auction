@@ -1,17 +1,14 @@
 <script setup>
-import {Head, usePage} from '@inertiajs/vue3';
+import {Head} from '@inertiajs/vue3';
 import MainLayout from "@/Layouts/MainLayout.vue";
-import AdminNav from "@/Components/Main/AdminNav.vue";
-import {computed, ref} from 'vue'
+import {ref} from 'vue'
 import MainPostsFilter from "@/Components/Main/PostsIndex/MainPostsFilter.vue";
 import PaginationBar from "@/Components/Main/PaginationBar.vue";
-import IndexPhoto from "@/Components/Main/PostsIndex/IndexPhoto.vue";
-import IndexTable from "@/Components/Main/PostsIndex/IndexTable.vue";
+import MainPostsPhoto from "@/Components/Main/PostsIndex/MainPostsPhoto.vue";
+import MainPostsTable from "@/Components/Main/PostsIndex/MainPostsTable.vue";
 import ObjectNotFound from "@/Components/Main/ObjectNotFound.vue";
 import MainNav from "@/Components/Main/MainNav.vue";
 
-const page = usePage()
-// const user = computed(() => page.props.auth.user)
 const props = defineProps(
     {
         posts: Object,
@@ -63,15 +60,15 @@ const catalogView = (bool) => catalog_view.value = bool
                 </ObjectNotFound>
             </template>
             <template v-else>
-                <IndexPhoto v-if="!catalog_view"
-                            :posts
-                            :formFilter
-                            :formOrdering
+                <MainPostsPhoto v-if="!catalog_view"
+                                :posts
+                                :formFilter
+                                :formOrdering
                 />
-                <IndexTable v-if="catalog_view"
-                            :posts
-                            :formFilter
-                            :formOrdering
+                <MainPostsTable v-if="catalog_view"
+                                :posts
+                                :formFilter
+                                :formOrdering
                 />
             </template>
             <nav class="flex justify-center">

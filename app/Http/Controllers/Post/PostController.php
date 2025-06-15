@@ -12,4 +12,10 @@ class PostController extends Controller
     {
         return CarModel::where('brand_id', $request->getContent())->get();
     }
+
+    public function filterCount(Request $request)
+    {
+        $this->getPosts($request, $posts, $user);
+        return $posts->total();
+    }
 }

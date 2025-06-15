@@ -1,5 +1,5 @@
 <script setup>
-import {router} from "@inertiajs/vue3";
+import {router, Link} from "@inertiajs/vue3";
 import TableHeader from "@/Components/Main/TableHeader.vue";
 import {reactive} from "vue";
 
@@ -7,6 +7,7 @@ const props = defineProps({
     posts: Object,
     formFilter: Object,
     formOrdering: Object,
+    formSearch: Object,
 })
 let formOrdering = reactive({
     ordering_direction: '',
@@ -35,6 +36,10 @@ const tableHeaders = [
     {title: '', value: '', exception: true},
 ]
 
+
+console.log(props.formSearch)
+
+
 const filterOn = (v) => {
     formOrdering.ordering_value = v
     if (formOrdering.ordering_desc === 'false') {
@@ -46,13 +51,34 @@ const filterOn = (v) => {
         formOrdering.ordering_desc = 'false';
         formOrdering.ordering_asc = 'true';
     }
-    router.get(route('main-posts.index'),
-        {formOrdering: formOrdering, formFilter: props.formFilter},
-        {
-            preserveState: true,
-            preserveScroll: true
-        }
-    )
+    if (route().current('admin-posts.filter')) {
+        router.get(route('admin-posts.filter'),
+            {formOrdering: formOrdering, formFilter: props.formFilter, formSearch: props.formSearch},
+            {
+                preserveState: true,
+                preserveScroll: true
+            }
+        );
+    }
+    if (route().current('admin-posts.search')) {
+        router.get(route('admin-posts.search'),
+            {formOrdering: formOrdering, formFilter: props.formFilter, formSearch: props.formSearch},
+            {
+                preserveState: true,
+                preserveScroll: true
+            }
+        )
+    }
+    if (route().current('admin-posts.index')) {
+        router.get(route('admin-posts.index'),
+            {formOrdering: formOrdering, formFilter: props.formFilter, formSearch: props.formSearch},
+            {
+                preserveState: true,
+                preserveScroll: true
+            }
+        )
+    }
+
 }
 
 function numberFilter(number) {
@@ -60,7 +86,7 @@ function numberFilter(number) {
 }
 
 const show = (id) => {
-    router.get(route('main-post.show', id))
+    router.get(route('admin-post.show', id))
 }
 </script>
 
@@ -110,7 +136,10 @@ const show = (id) => {
                         Ставок нет
                     </td>
                     <td class="px-4 py-4 whitespace-nowrap text-end text-sm font-medium">
-                        поднять ставку
+                        <Link :href="route('admin-post.edit', post.id)"
+                              class="bg-gray-200 rounded-md p-1 border-transparent border-b-2 transition focus:outline-none focus:border-indigo-400 hover:bg-gray-300">
+                            Редактировать
+                        </Link>
                     </td>
                 </tr>
                 </tbody>

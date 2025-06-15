@@ -1,11 +1,11 @@
 <script setup>
 import MainLayout from "@/Layouts/MainLayout.vue";
-import AdminNav from "@/Components/Main/AdminNav.vue";
-import {Head, Link} from "@inertiajs/vue3";
+import {Head} from "@inertiajs/vue3";
 import {Swiper, SwiperSlide} from "swiper/vue";
 import {FreeMode, Navigation, Thumbs} from 'swiper/modules';
 import 'swiper/css/navigation';
 import {ref} from "vue";
+import MainNav from "@/Components/Main/MainNav.vue";
 
 const props = defineProps({
     post: Object
@@ -32,8 +32,8 @@ function numberFilter(number) {
     <Head title="Карточка авто"/>
 
     <MainLayout>
-        <template #adminNav>
-            <AdminNav :post/>
+        <template #navigation>
+            <MainNav :post/>
         </template>
         <div class="max-w-screen-xl mx-auto">
             <div class="grid grid-cols-12 gap-4">
@@ -71,8 +71,6 @@ function numberFilter(number) {
                         class="rounded-2xl"
                         src="/storage/images/service/not_photo.jpg"
                         alt="Фото отсутствует">
-
-
                     <div
                         class="px-4 py-3 block lg:hidden mt-5 mx-auto shadow sm:rounded-2xl bg-white text-gray-500">
                         <div class="      ">
@@ -84,10 +82,7 @@ function numberFilter(number) {
                                 </span>
                                 </h4>
                                 <div>
-                                    <Link :href="route('admin-post.edit', post.id)"
-                                          class="bg-gray-200 rounded-md p-1 border-transparent border-b-2 transition focus:outline-none focus:border-indigo-400 hover:bg-gray-300">
-                                        Редактировать
-                                    </Link>
+                                    пока пусто
                                 </div>
                             </div>
                             <div class="bg-lime-200 rounded-md text-xl mx-[-2px] mb-5">
@@ -175,10 +170,7 @@ function numberFilter(number) {
                                 </span>
                             </h4>
                             <div>
-                                <Link :href="route('admin-post.edit', post.id)"
-                                      class="bg-gray-200 rounded-md p-1 border-transparent border-b-2 transition focus:outline-none focus:border-indigo-400 hover:bg-gray-300">
-                                    Редактировать
-                                </Link>
+                                пока пусто
                             </div>
                         </div>
                         <div class="bg-lime-200 rounded-md text-xl mx-[-2px] mb-5">

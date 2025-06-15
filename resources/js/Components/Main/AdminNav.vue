@@ -8,17 +8,32 @@ import {router} from '@inertiajs/vue3';
 let search_is = ref(false);
 let filter_is = ref(false);
 
-router.on('navigate', (event) => {
 
-    if (route().current('admin-post.search')) {
-        search_is.value = true;
-        filter_is.value = false;
-    }
-    if (route().current('admin-posts.filter')) {
-        filter_is.value = true;
-        search_is.value = false;
-    }
-})
+// router.on('navigate', (event) => {
+//     console.log('navigate', event);
+//
+//     if (route().current('admin-posts.search')) {
+//         console.log('search')
+//         search_is.value = true;
+//         filter_is.value = false;
+//     }
+//     if (route().current('admin-posts.filter')) {
+//         console.log('filter')
+//         filter_is.value = true;
+//         search_is.value = false;
+//     }
+// })
+
+if (route().current('admin-posts.search')) {
+    // console.log('search')
+    search_is.value = true;
+    filter_is.value = false;
+}
+if (route().current('admin-posts.filter')) {
+    // console.log('filter')
+    filter_is.value = true;
+    search_is.value = false;
+}
 </script>
 
 <template>
@@ -44,26 +59,31 @@ router.on('navigate', (event) => {
                      :active="route().current('admin-user.show')">
                 {{ user.name }} {{ user.surname }}
             </NavLink>
-            <template v-if="search_is">
+
+
+            <template v-if="route().current('admin-posts.search')">
                 <NavLink
-                    :href="route('admin-post.search')"
-                    :active="search_is">
+                    :href="route('admin-posts.search')"
+                    :active="route().current('admin-posts.search')">
                     Поиск
                 </NavLink>
             </template>
-            <template v-if="filter_is">
+
+            <template v-if="route().current('admin-posts.filter')">
                 <NavLink
                     :href="route('admin-posts.filter')"
                     :active="filter_is">
                     Фильтр
                 </NavLink>
             </template>
+
+
             <template
                 v-if="route().current('admin-post.edit') || route().current('admin-post.show')">
                 <NavLink
                     :href="route('admin-post.show',post.id)"
                     :active="route().current('admin-post.show')">
-                    Карточка
+                    {{ post.brand }} {{ post.model }}
                 </NavLink>
                 <NavLink
                     :href="route('admin-post.edit',post.id)"

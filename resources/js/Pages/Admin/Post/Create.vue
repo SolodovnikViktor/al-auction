@@ -162,7 +162,7 @@ function FilePondErrorLoad(error, files) {
     <Head title="Админ панель"/>
 
     <MainLayout>
-        <template #adminNav>
+        <template #navigation>
             <AdminNav/>
         </template>
 

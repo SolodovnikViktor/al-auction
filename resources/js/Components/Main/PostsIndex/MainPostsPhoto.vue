@@ -71,13 +71,23 @@ const filterOn = (value) => {
         formOrdering.ordering_desc = 'false';
         formOrdering.ordering_asc = 'true';
     }
-    router.get(route('admin-posts.index'),
-        {formOrdering: formOrdering, formFilter: props.formFilter},
-        {
-            preserveState: true,
-            preserveScroll: true,
-        }
-    )
+    if (route().current('main-posts.filter')) {
+        router.get(route('main-posts.filter'),
+            {formOrdering: formOrdering, formFilter: props.formFilter},
+            {
+                preserveState: true,
+                preserveScroll: true
+            }
+        );
+    } else {
+        router.get(route('main-posts.index'),
+            {formOrdering: formOrdering, formFilter: props.formFilter},
+            {
+                preserveState: true,
+                preserveScroll: true
+            }
+        )
+    }
 }
 </script>
 
@@ -164,10 +174,7 @@ const filterOn = (value) => {
                                 {{ post.year_release }}г</span>
                     </h4>
                     <div>
-                        <Link :href="route('admin-post.edit', post.id)"
-                              class="bg-gray-200 rounded-md px-1 border-transparent border-b-2 transition focus:outline-none focus:border-indigo-400 hover:bg-gray-300">
-                            Редактировать
-                        </Link>
+                        пока ничего
                     </div>
                 </div>
                 <div class="flex justify-between">

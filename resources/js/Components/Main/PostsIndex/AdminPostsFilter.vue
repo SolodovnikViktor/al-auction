@@ -11,6 +11,7 @@ const props = defineProps({
     posts: Object,
     formFilter: Object,
     formOrdering: Object,
+    formSearch: Object,
     user: Object,
     brands: Array,
     fuels: Array,
@@ -20,48 +21,28 @@ const props = defineProps({
     bodyTypes: Array,
     transmissions: Array,
 });
+
 let formFilter = reactive({
-    brand_id: '',
-    model_id: '',
-    price_ot: '',
-    price_do: '',
-    year_ot: '',
-    year_do: '',
-    mileage_ot: '',
-    mileage_do: '',
-    color_id: '',
-    fuel_id: '',
-    wheel_id: '',
-    transmission_id: '',
-    drive_id: '',
-    body_type_id: '',
-    engine_capacity: '',
+    brand_id: props.formFilter?.brand_id || '',
+    model_id: props.formFilter?.model_id || '',
+    price_ot: props.formFilter?.price_ot || '',
+    price_do: props.formFilter?.price_do || '',
+    year_ot: props.formFilter?.year_ot || '',
+    year_do: props.formFilter?.year_do || '',
+    mileage_ot: props.formFilter?.mileage_ot || '',
+    mileage_do: props.formFilter?.mileage_do || '',
+    horsepower_ot: props.formFilter?.horsepower_ot || '',
+    horsepower_do: props.formFilter?.horsepower_do || '',
+    color_id: props.formFilter?.color_id || '',
+    fuel_id: props.formFilter?.fuel_id || '',
+    wheel_id: props.formFilter?.wheel_id || '',
+    transmission_id: props.formFilter?.transmission_id || '',
+    drive_id: props.formFilter?.drive_id || '',
+    body_type_id: props.formFilter?.body_type_id || '',
+    engine_capacity: props.formFilter?.engine_capacity || '',
 });
 if (props.formFilter) {
-    formFilter = reactive({
-        brand_id: props.formFilter.brand_id || '',
-        model_id: props.formFilter.model_id || '',
-        price_ot: props.formFilter.price_ot || '',
-        price_do: props.formFilter.price_do || '',
-        year_ot: props.formFilter.year_ot || '',
-        year_do: props.formFilter.year_do || '',
-        mileage_ot: props.formFilter.mileage_ot || '',
-        mileage_do: props.formFilter.mileage_do || '',
-        color_id: props.formFilter.color_id || '',
-        fuel_id: props.formFilter.fuel_id || '',
-        wheel_id: props.formFilter.wheel_id || '',
-        transmission_id: props.formFilter.transmission_id || '',
-        drive_id: props.formFilter.drive_id || '',
-        body_type_id: props.formFilter.body_type_id || '',
-        engine_capacity: props.formFilter.engine_capacity || '',
-    });
-    axios.post('/admin/post/crete/get-model', props.formFilter.brand_id)
-        .then(response => {
-            models.value = response.data;
-        })
-        .catch(error => {
-            console.log(error)
-        });
+    getModel(props.formFilter.brand_id)
 }
 const models = ref()
 let toggle = ref(props.user.catalog_view);
@@ -69,7 +50,7 @@ let postCount = ref(props.posts.meta.total);
 let viewFullFilter = ref(false);
 
 function updateCatalogView() {
-    axios.patch('/update-catalog-view', {catalog_view: toggle.value})
+    axios.patch(route('post-filter.updateCatalogView'), {catalog_view: toggle.value})
         .then(res => {
                 router.reload({only: ['posts']})
                 emit('checkbox', toggle.value)
@@ -78,13 +59,10 @@ function updateCatalogView() {
         .catch((error) => {
             console.log(error);
         });
-    // router.patch(route('admin-post.updateCatalogView', user.value.id), {
-    //     catalog_view: toggle.value
-    // })
 }
 
 function getModel(value) {
-    axios.post('/post/get-model', value)
+    axios.post(route('post-filter.getModel'), value)
         .then(response => {
             models.value = response.data;
         })
@@ -104,10 +82,9 @@ watch(() => formFilter.brand_id, (value) => {
 })
 
 watch((formFilter), (formFilter) => {
-    axios.post('/admin/posts/filter', {formFilter: formFilter},)
+    axios.post(route('post-filter.filterCount'), {formFilter: formFilter, formSearch: props.formSearch},)
         .then(response => {
             postCount.value = response.data
-            console.log(postCount.value)
         })
         .catch(error => {
             console.log(error)
@@ -116,30 +93,49 @@ watch((formFilter), (formFilter) => {
 });
 
 const filterIndex = () => {
-    router.get(route('admin-posts.filter'),
-        {formFilter: formFilter, formOrdering: props.formOrdering},
-        {
-            preserveState: true,
-        }
-    );
+    if (route().current('admin-posts.filter') || route().current('admin-posts.index')) {
+        router.get(route('admin-posts.filter'),
+            {formFilter: formFilter, formOrdering: props.formOrdering, formSearch: props.formSearch},
+            {
+                // preserveState: true,
+                preserveScroll: true
+            }
+        );
+    }
+    if (route().current('admin-posts.search')) {
+        router.get(route('admin-posts.search'),
+            {formFilter: formFilter, formOrdering: props.formOrdering, formSearch: props.formSearch},
+            {
+                // preserveState: true,
+                preserveScroll: true
+            }
+        )
+    }
 }
 
 const cleanForm = () => {
-    formFilter.brand_id = ''
-    formFilter.model_id = ''
-    formFilter.price_ot = ''
-    formFilter.price_do = ''
-    formFilter.year_ot = ''
-    formFilter.year_do = ''
-    formFilter.mileage_ot = ''
-    formFilter.mileage_do = ''
-    formFilter.color_id = ''
-    formFilter.fuel_id = ''
-    formFilter.wheel_id = ''
-    formFilter.transmission_id = ''
-    formFilter.drive_id = ''
-    formFilter.body_type_id = ''
-    formFilter.engine_capacity = ''
+    for (const key in formFilter) {
+        if (formFilter[key] !== '') {
+            return router.get(route('admin-posts.filter'));
+        }
+    }
+
+
+    // formFilter.brand_id = ''
+    // formFilter.model_id = ''
+    // formFilter.price_ot = ''
+    // formFilter.price_do = ''
+    // formFilter.year_ot = ''
+    // formFilter.year_do = ''
+    // formFilter.mileage_ot = ''
+    // formFilter.mileage_do = ''
+    // formFilter.color_id = ''
+    // formFilter.fuel_id = ''
+    // formFilter.wheel_id = ''
+    // formFilter.transmission_id = ''
+    // formFilter.drive_id = ''
+    // formFilter.body_type_id = ''
+    // formFilter.engine_capacity = ''
 }
 </script>
 

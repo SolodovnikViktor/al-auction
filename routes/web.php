@@ -24,8 +24,7 @@ Route::middleware(['auth', 'verified', 'roles:admin'])->group(function () {
     Route::get('/admin/posts/index', [AdminPostIndexController::class, 'index'])->name('admin-posts.index');
     Route::get('/admin/posts/index/filter', [AdminPostIndexController::class, 'index'])
         ->name('admin-posts.filter');
-    Route::post('/admin/posts/filter', [AdminPostIndexController::class, 'filterCount']);
-    Route::get('/admin/posts/search', [AdminPostIndexController::class, 'search'])->name('admin-post.search');
+    Route::get('/admin/posts/search', [AdminPostIndexController::class, 'index'])->name('admin-posts.search');
 
     Route::get('/admin/post/create', [AdminPostController::class, 'create'])->name('admin-post.create');
     Route::post('/admin/post/create', [AdminPostController::class, 'store'])->name('admin-post.store');
@@ -58,12 +57,15 @@ Route::middleware(['auth', 'verified', 'roles:admin'])->group(function () {
 Route::get('/main/posts/index', [MainPostIndexController::class, 'index'])->name('main-posts.index');
 Route::get('/main/posts/index/filter', [MainPostIndexController::class, 'index'])
     ->name('main-posts.filter');
-Route::post('/main/posts/filter', [MainPostIndexController::class, 'filterCount']);
-Route::get('/main/posts/search', [MainPostIndexController::class, 'search'])->name('main-post.search');
+
+Route::get('/main/posts/search', [MainPostIndexController::class, 'index'])->name('main-posts.search');
 Route::get('/main/post/{post}/show', [MainPostController::class, 'show'])->name('main-post.show');
 
-Route::post('/post/get-model', [PostController::class, 'getModel']);
-Route::patch('/update-catalog-view', [ProfileController::class, 'updateCatalogView']);
+Route::post('/posts/filter/get-model', [PostController::class, 'getModel'])->name('post-filter.getModel');
+Route::patch('/posts/filter/update-catalog-view', [ProfileController::class, 'updateCatalogView'])->name(
+    'post-filter.updateCatalogView'
+);
+Route::post('/posts/filter/get-count', [PostController::class, 'filterCount'])->name('post-filter.filterCount');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

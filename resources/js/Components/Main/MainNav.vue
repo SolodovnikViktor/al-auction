@@ -44,16 +44,11 @@ router.on('navigate', (event) => {
                 </NavLink>
             </template>
             <template
-                v-if="route().current('main-post.edit') || route().current('main-post.show')">
+                v-if="route().current('main-post.show')">
                 <NavLink
                     :href="route('main-post.show',post.id)"
                     :active="route().current('main-post.show')">
-                    Карточка
-                </NavLink>
-                <NavLink
-                    :href="route('main-post.edit',post.id)"
-                    :active="route().current('main-post.edit')">
-                    Редактировать
+                    {{ post.brand }} {{ post.model }}
                 </NavLink>
             </template>
         </div>

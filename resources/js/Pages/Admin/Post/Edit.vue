@@ -195,7 +195,7 @@ function updatePublished() {
     <Head title="Редактирование авто"/>
 
     <MainLayout>
-        <template #adminNav>
+        <template #navigation>
             <AdminNav :post/>
         </template>
 

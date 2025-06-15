@@ -13,7 +13,7 @@ const props = defineProps({
     <Head title="Пользователь"/>
 
     <MainLayout>
-        <template #adminNav>
+        <template #navigation>
             <AdminNav :user/>
         </template>
         <div class="p-4 max-w-screen-2xl mx-auto shadow sm:rounded-2xl bg-white">

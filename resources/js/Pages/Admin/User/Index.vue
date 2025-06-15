@@ -78,13 +78,12 @@ const getSearch = () => {
 const cleanForm = () => {
     router.get(route("admin-users.index"))
 }
-console.log(props.usersCount)
 </script>
 
 <template>
     <Head title="Клиенты"/>
     <MainLayout>
-        <template #adminNav>
+        <template #navigation>
             <AdminNav/>
         </template>
         <div class="p-2 mb-4 max-w-screen-2xl mx-auto shadow sm:rounded-2xl bg-white">

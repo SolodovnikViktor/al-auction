@@ -32,7 +32,7 @@ function numberFilter(number) {
     <Head title="Карточка авто"/>
 
     <MainLayout>
-        <template #adminNav>
+        <template #navigation>
             <AdminNav :post/>
         </template>
         <div class="max-w-screen-xl mx-auto">

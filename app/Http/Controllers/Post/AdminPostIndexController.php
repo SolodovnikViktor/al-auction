@@ -25,6 +25,7 @@ class AdminPostIndexController extends Controller
         return Inertia::render('Admin/Post/Index', [
             'posts' => AdminPostIndexResource::collection($posts),
             'user' => auth()->user(),
+            'formSearch' => $request->formSearch,
             'formFilter' => $request->formFilter,
             'formOrdering' => $request->formOrdering,
             'brands' => Brand::all(),
@@ -47,6 +48,7 @@ class AdminPostIndexController extends Controller
             'Admin/Post/Index',
             [
                 'search' => $request->search,
+                'user' => auth()->user(),
                 'brands' => Brand::all(),
                 'fuels' => Fuel::all(),
                 'wheels' => Wheel::all(),
@@ -64,11 +66,5 @@ class AdminPostIndexController extends Controller
                 )
             ]
         );
-    }
-
-    public function filterCount(Request $request)
-    {
-        $this->getPosts($request, $posts, $user);
-        return $posts->total();
     }
 }

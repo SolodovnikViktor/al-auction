@@ -66,10 +66,4 @@ class MainPostIndexController extends Controller
             ]
         );
     }
-
-    public function filterCount(Request $request)
-    {
-        $this->getPosts($request, $posts, $user);
-        return $posts->total();
-    }
 }

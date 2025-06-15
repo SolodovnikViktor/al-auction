@@ -30,6 +30,12 @@ abstract class Controller
         }
 
         $posts = new Post();
+        if ($request->formSearch) {
+            $posts = $posts->when($request->formSearch['search'], function ($query, $search) {
+                $query->where('vin', 'like', '%' . $search . '%')
+                    ->OrWhere('id', 'like', '%' . $search . '%');
+            });
+        }
         if ($request->formFilter) {
             $formFilter = $request->formFilter;
             if (isset($formFilter['brand_id'])) {
@@ -81,7 +87,9 @@ abstract class Controller
                 });
             }
 
+
             if (isset($formFilter['price_ot'])) {
+                $posts = $posts->
                 when($formFilter['price_ot'], function ($query, $x) {
                     $query->where('price', '>=', $x);
                 });
@@ -92,6 +100,7 @@ abstract class Controller
                     $query->where('price', '<=', $x);
                 });
             };
+
             if (isset($formFilter['year_ot'])) {
                 $posts = $posts->
                 when($formFilter['year_ot'], function ($query, $x) {
@@ -104,6 +113,8 @@ abstract class Controller
                     $query->where('year_release', '<=', $x);
                 });
             };
+
+
             if (isset($formFilter['mileage_ot'])) {
                 $posts = $posts->
                 when($formFilter['mileage_ot'], function ($query, $x) {
@@ -116,27 +127,28 @@ abstract class Controller
                     $query->where('mileage', '<=', $x);
                 });
             };
+            if (isset($formFilter['horsepower_ot'])) {
+                $posts = $posts->
+                when($formFilter['horsepower_ot'], function ($query, $x) {
+                    $query->where('horsepower', '>=', $x);
+                });
+            };
+            if (isset($formFilter['horsepower_do'])) {
+                $posts = $posts->
+                when($formFilter['horsepower_do'], function ($query, $x) {
+                    $query->where('horsepower', '<=', $x);
+                });
+            };
             // сортировка есть
-            if ($request->formOrdering) {
-                $posts = $posts->orderBy(
-                    $request->formOrdering['ordering_value'],
-                    $request->formOrdering['ordering_direction'],
-                )->paginate($paginate)->withQueryString();
-                // сортировки нет
-            } else {
-                $posts = $posts->latest()->paginate($paginate)->withQueryString();
-            }
+        }
+        if ($request->formOrdering) {
+            $posts = $posts->orderBy(
+                $request->formOrdering['ordering_value'],
+                $request->formOrdering['ordering_direction'],
+            )->paginate($paginate)->withQueryString();
+            // сортировки нет
         } else {
-            // сортировка есть
-            if ($request->formOrdering) {
-                $posts = $posts->orderBy(
-                    $request->formOrdering['ordering_value'],
-                    $request->formOrdering['ordering_direction'],
-                )->paginate($paginate)->withQueryString();
-                // сортировки нет
-            } else {
-                $posts = $posts->latest()->paginate($paginate)->withQueryString();
-            }
+            $posts = $posts->latest()->paginate($paginate)->withQueryString();
         }
     }
 }

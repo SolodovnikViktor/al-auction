@@ -61,10 +61,9 @@ const models = ref()
 let toggle = ref(props.user.catalog_view);
 let postCount = ref(props.posts.meta.total);
 let viewFullFilter = ref(false);
-console.log(props.user.id)
 
 function updateCatalogView() {
-    axios.patch('/update-catalog-view', {catalog_view: toggle.value})
+    axios.patch(route('post-filter.updateCatalogView'), {catalog_view: toggle.value})
         .then(res => {
                 router.reload({only: ['posts']})
                 emit('checkbox', toggle.value)
@@ -73,13 +72,10 @@ function updateCatalogView() {
         .catch((error) => {
             console.log(error);
         });
-    // router.patch(route('admin-post.updateCatalogView', user.value.id), {
-    //     catalog_view: toggle.value
-    // })
 }
 
 function getModel(value) {
-    axios.post('/post/get-model', value)
+    axios.post(route('post-filter.getModel'), value)
         .then(response => {
             models.value = response.data;
         })
@@ -99,10 +95,9 @@ watch(() => formFilter.brand_id, (value) => {
 })
 
 watch((formFilter), (formFilter) => {
-    axios.post('/main/posts/filter', {formFilter: formFilter},)
+    axios.post(route('post-filter.filterCount'), {formFilter: formFilter},)
         .then(response => {
             postCount.value = response.data
-            console.log(postCount.value)
         })
         .catch(error => {
             console.log(error)

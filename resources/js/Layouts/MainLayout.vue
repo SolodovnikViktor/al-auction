@@ -1,5 +1,5 @@
 <script setup>
-import {computed, onBeforeMount, reactive, ref,} from 'vue';
+import {computed, reactive, ref,} from 'vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
@@ -7,6 +7,9 @@ import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import {Link, router, usePage} from '@inertiajs/vue3';
 
+const props = defineProps({
+    formSearch: Object,
+})
 const showingNavigationDropdown = ref(false);
 const page = usePage()
 const userRole = computed(() => page.props?.auth?.role)
@@ -14,47 +17,37 @@ const userRole = computed(() => page.props?.auth?.role)
 let adminActive = false;
 if (route().current('admin-posts.index') || route().current('admin-post.create')
     || route().current('admin-post.show') || route().current('admin-post.edit')
-    || route().current('admin-post.search') || route().current('admin-posts.filter')
+    || route().current('admin-posts.search') || route().current('admin-posts.filter')
     || route().current('admin-users.index') || route().current('admin-user.show')) {
     adminActive = true;
 }
 let mainActive = false;
 if (route().current('main-posts.index')
     || route().current('main-post.show')
-    || route().current('main-post.search') || route().current('main-posts.filter')) {
+    || route().current('main-posts.search') || route().current('main-posts.filter')) {
     mainActive = true;
 }
 
-let form = reactive(
+let formSearch = reactive(
     {
-        search: '',
+        search: props.formSearch?.search || '',
     }
 )
 
-let i = 1
-onBeforeMount(() => {
-    router.on('navigate', (event) => {
-        i++
-        if (route().current('admin-post.search') && i === 2) {
-            form.search = event.detail.page.props.search
-        }
-    })
-})
-
 const getSearch = () => {
-    if (form.search) {
-        if (userRole?.role?.value === 'admin') {
-            router.get(route("admin-post.search"),
-                form,
+    if (formSearch.search) {
+        if (userRole.value.role.value === 'admin') {
+            router.get(route("admin-posts.search"),
+                {formSearch: formSearch},
                 {
-                    preserveState: true,
+                    // preserveState: true,
                 }
             );
         } else
-            router.get(route("main-post.search"),
-                form,
+            router.get(route("main-posts.search"),
+                {formSearch: formSearch},
                 {
-                    preserveState: true,
+                    // preserveState: true,
                 }
             );
     }
@@ -113,7 +106,7 @@ const getSearch = () => {
                             <input type="search"
                                    id="post_search"
                                    autocomplete="search"
-                                   v-model="form.search"
+                                   v-model="formSearch.search"
                                    class="block w-full p-1 pl-2 pr-10 text-sm text-gray-900 border border-gray-200 rounded-lg "
                                    placeholder="Поиск по VIN"/>
                             <button type="submit"
@@ -208,9 +201,20 @@ const getSearch = () => {
                     class="sm:hidden">
                     <div class="space-y-1 pb-3 pt-2">
                         <ResponsiveNavLink
+                            v-if="userRole?.role?.value === 'admin'"
                             :href="route('admin-posts.index')"
                             :active="route().current('admin-posts.index')">
                             Админ панель
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            :href="route('main-posts.index')"
+                            :active=mainActive>
+                            Аукцион
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            :href="route('contact')"
+                            :active="route().current('contact')">
+                            Контакты
                         </ResponsiveNavLink>
                     </div>
                     <!-- Responsive Settings Options -->
@@ -237,6 +241,16 @@ const getSearch = () => {
                                 Выйти
                             </ResponsiveNavLink>
                         </div>
+                    </div>
+                    <div v-else
+                         class="border-t border-gray-200 pb-1 pt-4"
+                    >
+                        <ResponsiveNavLink :href="route('login')">
+                            Вход
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('register')">
+                            Регистрация
+                        </ResponsiveNavLink>
                     </div>
                 </div>
             </div>
