@@ -6,10 +6,13 @@ import {FreeMode, Navigation, Thumbs} from 'swiper/modules';
 import 'swiper/css/navigation';
 import {ref} from "vue";
 import MainNav from "@/Components/Main/MainNav.vue";
+import ModalPlaceBet from "@/Components/Main/ModalPlaceBet.vue";
+import ButtonCyan from "@/Components/Button/ButtonCyan.vue";
 
 const props = defineProps({
     post: Object
 })
+const openModalPlaceBet = ref(false);
 const modules = [FreeMode, Navigation, Thumbs];
 const thumbsSwiper = ref(null);
 const setThumbsSwiper = (swiper) => {
@@ -26,6 +29,8 @@ function numberFilter(number) {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 }
 
+console.log(props.post)
+
 </script>
 
 <template>
@@ -35,6 +40,7 @@ function numberFilter(number) {
         <template #navigation>
             <MainNav :post/>
         </template>
+        <ModalPlaceBet :openModalPlaceBet/>
         <div class="max-w-screen-xl mx-auto">
             <div class="grid grid-cols-12 gap-4">
                 <div class="overflow-hidden col-span-12 lg:col-span-8">
@@ -71,8 +77,9 @@ function numberFilter(number) {
                         class="rounded-2xl"
                         src="/storage/images/service/not_photo.jpg"
                         alt="Фото отсутствует">
-                    <div
-                        class="px-4 py-3 block lg:hidden mt-5 mx-auto shadow sm:rounded-2xl bg-white text-gray-500">
+
+
+                    <div class="px-4 py-3 block lg:hidden mt-5 mx-auto shadow sm:rounded-2xl bg-white text-gray-500">
                         <div class="      ">
                             <div class="mb-3 flex justify-between">
                                 <h4 class="text-xl overflow-auto div-no-scrollbar font-medium text-black">
@@ -82,7 +89,7 @@ function numberFilter(number) {
                                 </span>
                                 </h4>
                                 <div>
-                                    пока пусто
+                                    пока пусто11
                                 </div>
                             </div>
                             <div class="bg-lime-200 rounded-md text-xl mx-[-2px] mb-5">
@@ -149,10 +156,7 @@ function numberFilter(number) {
                                 </div>
                             </div>
                         </div>
-
                     </div>
-
-
                     <!--Описание-->
                     <div class="mt-10 px-2">
                         <h2 class="text-3xl font-bold mb-4">Описание</h2>
@@ -169,9 +173,9 @@ function numberFilter(number) {
                                     {{ post.year_release }}г
                                 </span>
                             </h4>
-                            <div>
-                                пока пусто
-                            </div>
+                            <ButtonCyan @click="openModalPlaceBet = true">
+                                Сделать ставку
+                            </ButtonCyan>
                         </div>
                         <div class="bg-lime-200 rounded-md text-xl mx-[-2px] mb-5">
                             <div v-if="post.up_price === null"
@@ -232,7 +236,7 @@ function numberFilter(number) {
                                 </div>
                                 <div class="flex *:w-1/2">
                                     <p>Обьём</p>
-                                    <p class="font-bold scrollb">{{ post.engine_capacity }} л</p>
+                                    <p class="font-bold">{{ post.engine_capacity }} л</p>
                                 </div>
                             </div>
                         </div>

@@ -1,5 +1,5 @@
 <script setup>
-import SvgOrdering from "@/Components/Main/SvgOrdering.vue";
+import SvgOrdering from "@/Components/Main/SVG/SvgOrdering.vue";
 
 const props = defineProps({
     tableHeaders: Array,

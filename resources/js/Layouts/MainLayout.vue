@@ -6,7 +6,7 @@ import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import {Link, router, usePage} from '@inertiajs/vue3';
-import MassageBet from "@/Components/MassageBet.vue";
+import MessageBet from "@/Components/MessageBet.vue";
 
 const props = defineProps({
     formSearch: Object,
@@ -15,8 +15,6 @@ const props = defineProps({
 const showingNavigationDropdown = ref(false);
 const page = usePage()
 const userRole = computed(() => page.props.auth.role)
-
-console.log(userRole)
 
 let adminActive = false;
 if (route().current('admin-posts.index') || route().current('admin-post.create')
@@ -60,8 +58,8 @@ const getSearch = () => {
 
 <template>
     <div class="min-h-screen bg-[#0085db12] sm:px-4">
-        
-        <MassageBet :massage="$page.props.flash.message_bet"/>
+
+        <MessageBet :message="$page.props.flash.message_bet"/>
 
         <div v-if="$page.props.message_form" class="alert z-50 mt-32">
             {{ $page.props.message_form }}

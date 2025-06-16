@@ -19,7 +19,7 @@ Route::get('/contact', function () {
     return Inertia::render('Main/Contact');
 })->name('contact');
 
-Route::middleware(['auth', 'verified', 'roles:trusted1'])->group(function () {
+Route::middleware(['auth', 'verified', 'roles:trusted'])->group(function () {
     Route::get('/main/bets/index', [BetController::class, 'index'])->name('main-bets.index');
     Route::patch('/main/bets/test', [BetController::class, 'test'])->name('main-bets.test');
 });

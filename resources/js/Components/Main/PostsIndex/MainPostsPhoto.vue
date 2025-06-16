@@ -4,7 +4,7 @@ import {onBeforeMount, reactive, ref, watch} from 'vue'
 import {Link, router} from "@inertiajs/vue3";
 import {Navigation, Pagination} from 'swiper/modules';
 import SecondaryButton from "@/Components/Button/SecondaryButton.vue";
-import SvgOrdering from "@/Components/Main/SvgOrdering.vue";
+import SvgOrdering from "@/Components/Main/SVG/SvgOrdering.vue";
 
 const modules = [Navigation, Pagination];
 const props = defineProps({

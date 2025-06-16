@@ -1,39 +1,7 @@
 <script setup>
-import {ref} from "vue";
+import NavLink from "@/Components/NavLink.vue";
 
 defineProps(['post', 'user'])
-import NavLink from "@/Components/NavLink.vue";
-import {router} from '@inertiajs/vue3';
-
-let search_is = ref(false);
-let filter_is = ref(false);
-
-
-// router.on('navigate', (event) => {
-//     console.log('navigate', event);
-//
-//     if (route().current('admin-posts.search')) {
-//         console.log('search')
-//         search_is.value = true;
-//         filter_is.value = false;
-//     }
-//     if (route().current('admin-posts.filter')) {
-//         console.log('filter')
-//         filter_is.value = true;
-//         search_is.value = false;
-//     }
-// })
-
-if (route().current('admin-posts.search')) {
-    // console.log('search')
-    search_is.value = true;
-    filter_is.value = false;
-}
-if (route().current('admin-posts.filter')) {
-    // console.log('filter')
-    filter_is.value = true;
-    search_is.value = false;
-}
 </script>
 
 <template>

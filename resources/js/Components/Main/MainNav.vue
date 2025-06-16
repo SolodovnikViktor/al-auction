@@ -2,7 +2,6 @@
 import NavLink from "@/Components/NavLink.vue";
 
 defineProps(['post', 'user'])
-
 </script>
 
 <template>
