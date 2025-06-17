@@ -13,6 +13,7 @@ const props = defineProps({
     post: Object
 })
 const openModalPlaceBet = ref(false);
+
 const modules = [FreeMode, Navigation, Thumbs];
 const thumbsSwiper = ref(null);
 const setThumbsSwiper = (swiper) => {
@@ -29,7 +30,8 @@ function numberFilter(number) {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 }
 
-console.log(props.post)
+// console.log(props.post)
+
 
 </script>
 
@@ -40,7 +42,16 @@ console.log(props.post)
         <template #navigation>
             <MainNav :post/>
         </template>
-        <ModalPlaceBet :openModalPlaceBet/>
+
+
+        <ModalPlaceBet v-show="openModalPlaceBet"
+                       @toggleModalPlaceBet="(open) => openModalPlaceBet = open"
+                       :openModalPlaceBet
+                       :post
+
+        />
+
+
         <div class="max-w-screen-xl mx-auto">
             <div class="grid grid-cols-12 gap-4">
                 <div class="overflow-hidden col-span-12 lg:col-span-8">

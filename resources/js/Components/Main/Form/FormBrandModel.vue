@@ -1,10 +1,10 @@
 <script setup>
 import InputLabel from "@/Components/InputLabel.vue";
 import InputError from "@/Components/InputError.vue";
-import ButtonPlus from "@/Components/Button/ButtonPlus.vue";
-import ButtonClose from "@/Components/Button/ButtonClose.vue";
+import ButtonSvgPlus from "@/Components/Button/ButtonSVGPlus.vue";
+import ButtonSvgClose from "@/Components/Button/ButtonSVGClose.vue";
 import ButtonOk from "@/Components/Button/ButtonOk.vue";
-import {ref, watch, nextTick, onMounted} from "vue";
+import {nextTick, onMounted, ref, watch} from "vue";
 import {useForm} from "@inertiajs/vue3";
 import axios from "axios";
 
@@ -143,7 +143,7 @@ const storeModel = () => {
                     <option disabled value="">Выберите бренд</option>
                     <option v-for="option in arrBrands" :value="option.id">{{ option.title }}</option>
                 </select>
-                <ButtonPlus
+                <ButtonSvgPlus
                     v-show="!inputBrand_is"
                     @click="inputBrandOpen"
                     :value="'Бренд'"
@@ -160,15 +160,10 @@ const storeModel = () => {
                     <InputError class="mt-2" :message="formBrand.errors.title"/>
                     <div
                         class="absolute flex right-1 top-[3px]">
-                        <ButtonClose
+                        <ButtonSvgClose
                             @click.prevent="inputBrandClose"
-                            class="w-9"
-                            type="button"
                         />
-                        <ButtonOk
-                            class="w-9"
-                            type="submit"
-                        />
+                        <ButtonOk/>
                     </div>
                 </form>
             </div>
@@ -194,7 +189,7 @@ const storeModel = () => {
                             <option disabled value="">Добавьте модель</option>
                         </template>
                     </select>
-                    <ButtonPlus
+                    <ButtonSvgPlus
                         v-show="!inputModel_is"
                         @click="inputModelOpen"
                         :value="'Модель'"
@@ -211,7 +206,7 @@ const storeModel = () => {
                         <InputError class="mt-2" :message="formModel.errors.title"/>
                         <div
                             class="absolute flex right-1 top-[3px]">
-                            <ButtonClose
+                            <ButtonSvgClose
                                 @click="inputModelClose"
                                 class="w-9"
                                 type="button"

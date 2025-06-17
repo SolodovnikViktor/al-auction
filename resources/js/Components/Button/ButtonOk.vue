@@ -1,5 +1,7 @@
 <template>
-    <button>
+    <button
+        class="w-9"
+        type="submit">
         <svg id="Icons" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg"
              xmlns:xlink="http://www.w3.org/1999/xlink">
             <title>Сохранить</title>
@@ -10,3 +12,5 @@
         </svg>
     </button>
 </template>
+<script setup lang="ts">
+</script>

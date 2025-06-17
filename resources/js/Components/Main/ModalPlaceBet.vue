@@ -1,38 +1,45 @@
 <script setup>
 
-import {onMounted, onUnmounted, ref, watch} from "vue";
+import {onMounted, onUnmounted, ref, watchEffect} from "vue";
 import SvgClose from "@/Components/Main/SVG/SvgClose.vue";
+import ButtonGreen from "@/Components/Button/ButtonGreen.vue";
+import SecondaryButton from "@/Components/Button/SecondaryButton.vue";
 
+const emit = defineEmits(['toggleModalPlaceBet'])
 const props = defineProps({
-    message: String,
+    post: Object,
     openModalPlaceBet: Boolean,
 });
 
-
-watch(props.openModalPlaceBet, () => {
-    console.log(123)
+let open = ref();
+watchEffect(() => {
+    console.log("watch")
+    open.value = props.openModalPlaceBet;
+    console.log(open.value)
 })
 
-
-let open = ref(props.openModalPlaceBet);
 const closeOnEscape = (e) => {
     if (open.value && e.key === 'Escape') {
-        open.value = false;
+        toggleModalPlaceBet();
     }
 };
 
 onMounted(() => document.addEventListener('keydown', closeOnEscape));
 onUnmounted(() => document.removeEventListener('keydown', closeOnEscape));
+
+const toggleModalPlaceBet = () => {
+    open.value = false;
+    emit('toggleModalPlaceBet', open.value);
+}
 </script>
 
 <template>
-    <div v-show="open"
-         class="relative">
+    <div
+        class="relative">
         <!-- Full Screen Dropdown Overlay -->
         <div
-            v-show="open"
             class="fixed bg-gray-200 opacity-75 inset-0 overflow-y-auto overflow-x-hidden top-0 right-0 left-0 z-40 justify-center items-center w-full h-full"
-            @click="open = false">
+            @click="toggleModalPlaceBet">
         </div>
 
         <Transition
@@ -51,20 +58,39 @@ onUnmounted(() => document.removeEventListener('keydown', closeOnEscape));
                     class="rounded-md text-center ring-1 bg-white ring-black ring-opacity-5">
                     <div class="flex items-center p-2 px-4 justify-between  border-b rounded-t border-gray-200">
                         <h3 class="text-xl font-semibold text-gray-700">
-                            Предупреждение
+                            Выберите ставку
                         </h3>
-                        <SvgClose @click="open = false"/>
+                        <SvgClose @click="toggleModalPlaceBet"/>
                     </div>
                     <div class="p-4 md:p-5 space-y-3">
-                        <p class="text-base leading-relaxed text-gray-900">
-                            {{ message }}
-                        </p>
                         <p class="text-base leading-relaxed text-gray-600">
-                            Александр тел. +7(999)-999-99-99
+                            Ставка должна быть минимум на 5000руб больше предыдущей или начальной цены.
                         </p>
-                        <p class="text-base leading-relaxed text-gray-600">
-                            WhatsApp тел. +7(777)-666-33-22
-                        </p>
+
+                        <input
+                            class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="Произвольная"
+                            type="number"
+                        />
+
+                        <select
+                            class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+
+                            id="color">
+                            <option class="text-gray-500" value="">Ставка</option>
+                            <option>12</option>
+                            <option>12</option>
+                            <option>12</option>
+                            <option>12</option>
+                        </select>
+
+                        <div class="flex items-center mt-6 space-x-8 rtl:space-x-reverse">
+                            <SecondaryButton @click="toggleModalPlaceBet">Закрыть</SecondaryButton>
+
+                            <ButtonGreen>
+                                Отправить ставку
+                            </ButtonGreen>
+                        </div>
                     </div>
                 </div>
             </div>
