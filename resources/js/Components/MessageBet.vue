@@ -42,7 +42,7 @@ onUnmounted(() => document.removeEventListener('keydown', closeOnEscape));
                 class="absolute z-50 w-full sm:w-1/2 lg:w-1/3 top-52 left-1/2 -translate-x-1/2 rounded-md shadow-lg">
 
                 <div
-                    class="rounded-md text-center ring-1 bg-white ring-black ring-opacity-5">
+                    class="rounded-md text-center ring-1 bg-white ring-red-500 ">
                     <div class="flex items-center p-2 px-4 justify-between  border-b rounded-t border-gray-200">
                         <h3 class="text-xl font-semibold text-gray-700">
                             Предупреждение

@@ -1,9 +1,10 @@
 <script setup>
 
-import {onMounted, onUnmounted, ref, watchEffect} from "vue";
+import {onMounted, onUnmounted, reactive, ref, watch, watchEffect} from "vue";
 import SvgClose from "@/Components/Main/SVG/SvgClose.vue";
 import ButtonGreen from "@/Components/Button/ButtonGreen.vue";
 import SecondaryButton from "@/Components/Button/SecondaryButton.vue";
+import {router} from "@inertiajs/vue3";
 
 const emit = defineEmits(['toggleModalPlaceBet'])
 const props = defineProps({
@@ -11,11 +12,53 @@ const props = defineProps({
     openModalPlaceBet: Boolean,
 });
 
-let open = ref();
+let formBet = reactive({
+    up_price: '',
+    down_price: '',
+    post_id: props.post.id,
+})
+let arbitrary = ref('')
+let choose = ref('')
+let open = ref()
+let chooseArr = []
+let priceBet
+let disabledButton = true
+
+function numberFilter(number) {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+}
+
+console.log(props.post)
+
+const pushArr = (priceBet) => {
+    let price = priceBet
+    for (let i = 0; i < 10; i++) {
+        price = price + 5000
+        let priceString = numberFilter(price);
+        chooseArr.push({value: price, title: priceString.toString() + ' ₽'});
+    }
+}
+
+if (props.post.bets.length === 0) {
+    priceBet = props.post.price
+    pushArr(priceBet)
+} else {
+    priceBet = props.post.bets.at(-1)
+    pushArr(priceBet)
+}
+
+watch((choose), () => {
+    disabledButton = choose.value < priceBet;
+    formBet.up_price = choose.value;
+});
+watch((arbitrary), () => {
+    disabledButton = arbitrary.value === '';
+    formBet.up_price = arbitrary.value;
+});
+
 watchEffect(() => {
-    console.log("watch")
     open.value = props.openModalPlaceBet;
-    console.log(open.value)
+
 })
 
 const closeOnEscape = (e) => {
@@ -31,11 +74,16 @@ const toggleModalPlaceBet = () => {
     open.value = false;
     emit('toggleModalPlaceBet', open.value);
 }
+
+const storeBet = () => {
+    toggleModalPlaceBet()
+    router.patch(route('main-bets.store'))
+}
 </script>
 
 <template>
     <div
-        class="relative">
+        class="relative max-w-screen-xl mx-auto">
         <!-- Full Screen Dropdown Overlay -->
         <div
             class="fixed bg-gray-200 opacity-75 inset-0 overflow-y-auto overflow-x-hidden top-0 right-0 left-0 z-40 justify-center items-center w-full h-full"
@@ -62,36 +110,38 @@ const toggleModalPlaceBet = () => {
                         </h3>
                         <SvgClose @click="toggleModalPlaceBet"/>
                     </div>
-                    <div class="p-4 md:p-5 space-y-3">
+                    <form @submit.prevent="storeBet" class="p-4 md:p-5 space-y-3">
                         <p class="text-base leading-relaxed text-gray-600">
-                            Ставка должна быть минимум на 5000руб больше предыдущей или начальной цены.
+                            Ставка должна быть минимум на 5000 ₽ больше {{ numberFilter(priceBet) }} ₽.
                         </p>
 
                         <input
-                            class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                            class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 disabled:opacity-25"
                             placeholder="Произвольная"
                             type="number"
+                            id="choose"
+                            v-model="choose"
+                            :disabled="arbitrary !== ''"
                         />
-
                         <select
-                            class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
-
-                            id="color">
-                            <option class="text-gray-500" value="">Ставка</option>
-                            <option>12</option>
-                            <option>12</option>
-                            <option>12</option>
-                            <option>12</option>
+                            class="w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 disabled:opacity-25"
+                            v-model="arbitrary"
+                            :disabled="choose !== ''"
+                            id="arbitrary">
+                            <option class="text-gray-500" value="">Выбрать</option>
+                            <option v-for="choose in chooseArr" :value="choose.value">{{ choose.title }}</option>
                         </select>
-
                         <div class="flex items-center mt-6 space-x-8 rtl:space-x-reverse">
-                            <SecondaryButton @click="toggleModalPlaceBet">Закрыть</SecondaryButton>
-
-                            <ButtonGreen>
+                            <SecondaryButton @click="toggleModalPlaceBet">
+                                Закрыть
+                            </SecondaryButton>
+                            <ButtonGreen
+                                :disabled="disabledButton"
+                                :type="'submit'">
                                 Отправить ставку
                             </ButtonGreen>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </Transition>

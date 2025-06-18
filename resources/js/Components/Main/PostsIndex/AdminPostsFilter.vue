@@ -62,7 +62,7 @@ function updateCatalogView() {
 }
 
 function getModel(value) {
-    axios.post(route('post-filter.getModel'), value)
+    axios.post(route('getModel'), value)
         .then(response => {
             models.value = response.data;
         })
@@ -270,7 +270,7 @@ const cleanForm = () => {
                 <SecondaryButton class="w-1/2 py-3 justify-center mr-2">
                     Сбросить Х
                 </SecondaryButton>
-                <ButtonCyan :disabled="postCount === 0" type="submit" class="w-1/2 justify-center">
+                <ButtonCyan :disabled="postCount === 0" :type="'submit'" class="w-1/2 justify-center">
                     Показать {{ postCount }} авто
                 </ButtonCyan>
             </div>

@@ -19,8 +19,11 @@ Route::get('/contact', function () {
     return Inertia::render('Main/Contact');
 })->name('contact');
 
-Route::middleware(['auth', 'verified', 'roles:trusted'])->group(function () {
+Route::middleware(['auth', 'verified', 'roles:trusted,admin'])->group(function () {
     Route::get('/main/bets/index', [BetController::class, 'index'])->name('main-bets.index');
+    Route::patch('/main/bets/store', [BetController::class, 'store'])->name('main-bets.store');
+
+
     Route::patch('/main/bets/test', [BetController::class, 'test'])->name('main-bets.test');
 });
 
@@ -65,7 +68,7 @@ Route::get('/main/posts/index/filter', [MainPostController::class, 'index'])
 Route::get('/main/posts/search', [MainPostController::class, 'index'])->name('main-posts.search');
 Route::get('/main/post/{post}/show', [MainPostController::class, 'show'])->name('main-post.show');
 
-Route::post('/posts/filter/get-model', [PostController::class, 'getModel'])->name('post-filter.getModel');
+Route::post('/get-model', [PostController::class, 'getModel'])->name('getModel');
 Route::patch('/posts/filter/update-catalog-view', [ProfileController::class, 'updateCatalogView'])->name(
     'post-filter.updateCatalogView'
 );

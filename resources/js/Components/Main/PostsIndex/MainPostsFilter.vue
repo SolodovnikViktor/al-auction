@@ -62,7 +62,7 @@ function updateCatalogView() {
 }
 
 function getModel(value) {
-    axios.post(route('post-filter.getModel'), value)
+    axios.post(route('getModel'), value)
         .then(response => {
             models.value = response.data;
         })

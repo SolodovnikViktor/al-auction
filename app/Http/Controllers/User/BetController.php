@@ -36,6 +36,12 @@ class BetController extends Controller
         ]);
     }
 
+    public function store(Request $request)
+    {
+        $request->session()->flash('message_form', 'Автомобиль успешно добавлен message_form');
+        return back()->with('message', 'Category Created Successfully');
+    }
+
     public function test(Request $request)
     {
         $request->session()->flash('message_form', 'Автомобиль успешно добавлен message_form');

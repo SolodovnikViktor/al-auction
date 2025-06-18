@@ -74,13 +74,12 @@ watch(() => props.form.brand_id, (value) => {
 })
 
 function getModel(value, bool) {
-    axios.post('/post/get-model', value)
+    axios.post(route('getModel'), value)
         .then(response => {
             showModel(response.data, bool)
         })
         .catch(error => {
             console.log(error)
-            console.log(error.message);
         });
 }
 
