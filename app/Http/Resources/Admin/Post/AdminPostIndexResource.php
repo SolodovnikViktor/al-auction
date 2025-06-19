@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Admin\Post;
 
+use App\Http\Resources\Main\MainBetResource;
 use App\Http\Resources\Main\PhotoResource;
 use App\Models\Photo;
 use App\Models\PhotoPosition;
@@ -32,10 +33,10 @@ class AdminPostIndexResource extends JsonResource
             'engine_capacity' => $this->engine_capacity,
             'horsepower' => $this->horsepower,
             'price' => $this->price,
-            'up_price' => $this->up_price,
             'description' => $this->description,
             'is_published' => $this->is_published,
             'photos' => PhotoResource::collection($photos),
+            'bets' => MainBetResource::collection($this->bets),
 //            'userWhenLoaded' => MainUserResource::make($this->whenLoaded('user')),
         ];
     }

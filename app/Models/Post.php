@@ -30,7 +30,6 @@ class Post extends Model
         'engine_capacity',
         'horsepower',
         'price',
-        'up_price',
         'description',
         'user_id',
         'is_published',

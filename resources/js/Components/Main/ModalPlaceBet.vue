@@ -13,25 +13,23 @@ const props = defineProps({
 });
 
 let formBet = reactive({
-    up_price: '',
-    down_price: '',
-    post_id: props.post.id,
+    up_bet: '',
+    down_bet: '',
 })
+
 let arbitrary = ref('')
 let choose = ref('')
 let open = ref()
 let chooseArr = []
-let priceBet
+let priceDown
 let disabledButton = true
 
 function numberFilter(number) {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 }
 
-console.log(props.post)
-
-const pushArr = (priceBet) => {
-    let price = priceBet
+const pushArr = (priceDown) => {
+    let price = priceDown
     for (let i = 0; i < 10; i++) {
         price = price + 5000
         let priceString = numberFilter(price);
@@ -40,20 +38,20 @@ const pushArr = (priceBet) => {
 }
 
 if (props.post.bets.length === 0) {
-    priceBet = props.post.price
-    pushArr(priceBet)
+    priceDown = props.post.price
+    pushArr(priceDown)
 } else {
-    priceBet = props.post.bets.at(-1)
-    pushArr(priceBet)
+    priceDown = props.post.bets.at(-1)
+    pushArr(priceDown)
 }
 
 watch((choose), () => {
-    disabledButton = choose.value < priceBet;
-    formBet.up_price = choose.value;
+    disabledButton = choose.value < priceDown;
+    formBet.up_bet = choose.value;
 });
 watch((arbitrary), () => {
     disabledButton = arbitrary.value === '';
-    formBet.up_price = arbitrary.value;
+    formBet.up_bet = arbitrary.value;
 });
 
 watchEffect(() => {
@@ -77,7 +75,8 @@ const toggleModalPlaceBet = () => {
 
 const storeBet = () => {
     toggleModalPlaceBet()
-    router.patch(route('main-bets.store'))
+    formBet.down_bet = priceDown
+    router.post(route('main-bets.store', props.post.id), formBet)
 }
 </script>
 
@@ -112,7 +111,8 @@ const storeBet = () => {
                     </div>
                     <form @submit.prevent="storeBet" class="p-4 md:p-5 space-y-3">
                         <p class="text-base leading-relaxed text-gray-600">
-                            Ставка должна быть минимум на 5000 ₽ больше {{ numberFilter(priceBet) }} ₽.
+                            Ставка должна быть минимум на 5000&nbsp;₽ <span
+                            class="text-nowrap">больше {{ numberFilter(priceDown) }} ₽.</span>
                         </p>
 
                         <input

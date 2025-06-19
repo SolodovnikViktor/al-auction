@@ -39,7 +39,6 @@ class PostRequest extends FormRequest
             'engine_capacity' => 'required|numeric|max:100',
             'horsepower' => 'required|integer|max:1000',
             'price' => 'required|integer|max:16700000',
-            'up_price' => 'nullable|integer|max:100000000',
             'description' => 'required|string|max:3000',
             'user_id' => 'integer',
             'is_published' => 'nullable|boolean',

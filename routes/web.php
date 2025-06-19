@@ -21,7 +21,7 @@ Route::get('/contact', function () {
 
 Route::middleware(['auth', 'verified', 'roles:trusted,admin'])->group(function () {
     Route::get('/main/bets/index', [BetController::class, 'index'])->name('main-bets.index');
-    Route::patch('/main/bets/store', [BetController::class, 'store'])->name('main-bets.store');
+    Route::post('/main/bets/store/{post}', [BetController::class, 'store'])->name('main-bets.store');
 
 
     Route::patch('/main/bets/test', [BetController::class, 'test'])->name('main-bets.test');

@@ -30,9 +30,6 @@ function numberFilter(number) {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 }
 
-// console.log(props.post)
-
-
 </script>
 
 <template>
@@ -92,27 +89,33 @@ function numberFilter(number) {
 
                     <div class="px-4 py-3 block lg:hidden mt-5 mx-auto shadow sm:rounded-2xl bg-white text-gray-500">
                         <div class="      ">
-                            <div class="mb-3 flex justify-between">
+                            <div class="flex justify-between">
                                 <h4 class="text-xl overflow-auto div-no-scrollbar font-medium text-black">
                                     {{ post.brand }} {{ post.model }}
                                     <span class="text-gray-500">
                                     {{ post.year_release }}г
                                 </span>
                                 </h4>
-                                <div>
-                                    пока пусто11
-                                </div>
+                                <ButtonCyan @click="openModalPlaceBet = true">
+                                    Сделать ставку
+                                </ButtonCyan>
                             </div>
+                            <div class="mb-3 -mt-2">id {{ post.id }}</div>
                             <div class="bg-lime-200 rounded-md text-xl mx-[-2px] mb-5">
-                                <div v-if="post.up_price === null"
+                                <div v-if="!post.bets.length"
                                      class="flex justify-between px-1 bg-orange-200 rounded-md">
                                     <span>{{ numberFilter(post.price) }}₽</span>
                                     <span class="ml-3">Ставок нет</span>
                                 </div>
-                                <div v-else>
+                                <div v-else class="flex justify-between px-2 rounded-md">
                                     <span class="line-through">{{ numberFilter(post.price) }}₽</span>
-                                    <span class="ml-3">{{ numberFilter(post.up_price) }}₽</span>
-                                    <span class="text-xl font-bold">{{ post.count_bets }}</span>
+
+                                    <span class="ml-3">
+                                        <span class="mr-5 text-base">
+                                            Ставок: {{ post.bets.length }}
+                                        </span>
+                                        {{ numberFilter(props.post.bets.at(-1).up_bet) }}₽</span>
+
                                 </div>
                             </div>
                             <div>
@@ -177,7 +180,7 @@ function numberFilter(number) {
                 <!--Боковые хар-ки-->
                 <div class="hidden lg:block col-span-4">
                     <div class="px-4 py-3 sticky top-28 rounded-2xl shadow bg-white text-gray-500">
-                        <div class="mb-3 flex justify-between">
+                        <div class=" flex justify-between">
                             <h4 class="text-xl overflow-auto div-no-scrollbar font-medium text-black">
                                 {{ post.brand }} {{ post.model }}
                                 <span class="text-gray-500">
@@ -188,16 +191,22 @@ function numberFilter(number) {
                                 Сделать ставку
                             </ButtonCyan>
                         </div>
-                        <div class="bg-lime-200 rounded-md text-xl mx-[-2px] mb-5">
-                            <div v-if="post.up_price === null"
-                                 class="flex justify-between px-1 bg-orange-200 rounded-md">
+                        <div class="mb-3 -mt-2">id {{ post.id }}</div>
+                        <div class="bg-lime-200 rounded-md text-xl mx-[-2px] mb-1">
+                            <div v-if="!post.bets.length"
+                                 class="flex justify-between px-2 bg-orange-200 rounded-md">
                                 <span>{{ numberFilter(post.price) }}₽</span>
                                 <span class="ml-3">Ставок нет</span>
                             </div>
-                            <div v-else>
+                            <div v-else class="flex justify-between px-2 rounded-md">
                                 <span class="line-through">{{ numberFilter(post.price) }}₽</span>
-                                <span class="ml-3">{{ numberFilter(post.up_price) }}₽</span>
-                                <span class="text-xl font-bold">{{ post.count_bets }}</span>
+                                <span class="ml-3">{{ numberFilter(post.bets.at(-1).up_bet) }}₽</span>
+                            </div>
+                        </div>
+                        <div class="*:text-base mb-4">
+                            <div class="flex *:w-1/2">
+                                <p>Сделано ставок</p>
+                                <p class="font-bold">{{ post.bets.length }}</p>
                             </div>
                         </div>
                         <div>

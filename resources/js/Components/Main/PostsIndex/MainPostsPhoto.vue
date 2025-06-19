@@ -201,15 +201,14 @@ const filterOn = (value) => {
                     </div>
                 </div>
                 <div class="bg-lime-200 rounded-md text-lg mx-[-2px]">
-                    <div v-if="post.up_price === null"
+                    <div v-if="!post.bets.length"
                          class="flex justify-between px-1 bg-orange-200 rounded-md">
                         <span>{{ numberFilter(post.price) }}₽</span>
                         <span class="ml-3">Ставок нет</span>
                     </div>
-                    <div v-else>
+                    <div v-else class="flex justify-between px-2 rounded-md">
                         <span class="line-through">{{ numberFilter(post.price) }}₽</span>
-                        <span class="ml-3">{{ numberFilter(post.up_price) }}</span>
-                        <span class="text-xl font-bold">{{ post.count_bets }}₽</span>
+                        <span class="ml-3">{{ numberFilter(post.bets.at(-1).up_bet) }}₽</span>
                     </div>
                 </div>
             </div>

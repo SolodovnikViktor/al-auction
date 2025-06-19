@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Photo;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -24,11 +23,9 @@ return new class extends Migration {
             $table->float('engine_capacity'); // объём
             $table->unsignedSmallInteger('horsepower'); // лошади от 0 до 65535
             $table->unsignedMediumInteger('price');//0 до 16 777 215
-            $table->unsignedMediumInteger('up_price')->nullable();
             $table->text('description'); // описание
             $table->foreignId('user_id')->index();
             $table->boolean('is_published')->default(true);
-            $table->unsignedSmallInteger('count_bets')->default(0);
             $table->timestamps();
         });
     }
