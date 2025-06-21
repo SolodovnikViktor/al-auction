@@ -1,20 +1,20 @@
 <script setup>
 import NavLink from "@/Components/NavLink.vue";
 
-defineProps(['post', 'user'])
+defineProps(['lot', 'user'])
 </script>
 
 <template>
     <div class="flex h-10 justify-between">
         <div class="flex space-x-3 lg:space-x-5 sm:-my-px">
             <NavLink
-                :href="route('admin-posts.index')"
-                :active="route().current('admin-posts.index')">
+                :href="route('admin-lots.index')"
+                :active="route().current('admin-lots.index')">
                 Каталог
             </NavLink>
             <NavLink
-                :href="route('admin-post.create')"
-                :active="route().current('admin-post.create')">
+                :href="route('admin-lot.create')"
+                :active="route().current('admin-lot.create')">
                 Добавить
             </NavLink>
             <NavLink
@@ -29,17 +29,17 @@ defineProps(['post', 'user'])
             </NavLink>
 
 
-            <template v-if="route().current('admin-posts.search')">
+            <template v-if="route().current('admin-lots.search')">
                 <NavLink
-                    :href="route('admin-posts.search')"
-                    :active="route().current('admin-posts.search')">
+                    :href="route('admin-lots.search')"
+                    :active="route().current('admin-lots.search')">
                     Поиск
                 </NavLink>
             </template>
 
-            <template v-if="route().current('admin-posts.filter')">
+            <template v-if="route().current('admin-lots.filter')">
                 <NavLink
-                    :href="route('admin-posts.filter')"
+                    :href="route('admin-lots.filter')"
                     :active="filter_is">
                     Фильтр
                 </NavLink>
@@ -47,15 +47,15 @@ defineProps(['post', 'user'])
 
 
             <template
-                v-if="route().current('admin-post.edit') || route().current('admin-post.show')">
+                v-if="route().current('admin-lot.edit') || route().current('admin-lot.show')">
                 <NavLink
-                    :href="route('admin-post.show',post.id)"
-                    :active="route().current('admin-post.show')">
-                    {{ post.brand }} {{ post.model }}
+                    :href="route('admin-lot.show',lot.id)"
+                    :active="route().current('admin-lot.show')">
+                    {{ lot.brand }} {{ lot.model }}
                 </NavLink>
                 <NavLink
-                    :href="route('admin-post.edit',post.id)"
-                    :active="route().current('admin-post.edit')">
+                    :href="route('admin-lot.edit',lot.id)"
+                    :active="route().current('admin-lot.edit')">
                     Редактировать
                 </NavLink>
             </template>

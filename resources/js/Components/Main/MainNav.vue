@@ -1,15 +1,15 @@
 <script setup>
 import NavLink from "@/Components/NavLink.vue";
 
-defineProps(['post', 'user'])
+defineProps(['lot', 'user'])
 </script>
 
 <template>
     <div class="flex h-10 justify-between">
         <div class="flex space-x-3 lg:space-x-5 sm:-my-px">
             <NavLink
-                :href="route('main-posts.index')"
-                :active="route().current('main-posts.index')">
+                :href="route('main-lots.index')"
+                :active="route().current('main-lots.index')">
                 Каталог
             </NavLink>
             <NavLink
@@ -18,27 +18,27 @@ defineProps(['post', 'user'])
                 Мои ставки
             </NavLink>
 
-            <template v-if="route().current('main-posts.search')">
+            <template v-if="route().current('main-lots.search')">
                 <NavLink
-                    :href="route('main-posts.search')"
-                    :active="route().current('main-posts.search')">
+                    :href="route('main-lots.search')"
+                    :active="route().current('main-lots.search')">
                     Поиск
                 </NavLink>
             </template>
-            <template v-if="route().current('main-posts.filter')">
+            <template v-if="route().current('main-lots.filter')">
                 <NavLink
-                    :href="route('main-posts.filter')"
-                    :active="route().current('main-posts.filter')">
+                    :href="route('main-lots.filter')"
+                    :active="route().current('main-lots.filter')">
                     Фильтр
                 </NavLink>
             </template>
 
             <template
-                v-if="route().current('main-post.show')">
+                v-if="route().current('main-lot.show')">
                 <NavLink
-                    :href="route('main-post.show',post.id)"
-                    :active="route().current('main-post.show')">
-                    {{ post.brand }} {{ post.model }}
+                    :href="route('main-lot.show',lot.id)"
+                    :active="route().current('main-lot.show')">
+                    {{ lot.brand }} {{ lot.model }}
                 </NavLink>
             </template>
         </div>

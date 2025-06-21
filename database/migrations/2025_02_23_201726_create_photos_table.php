@@ -9,7 +9,7 @@ return new class extends Migration {
     {
         Schema::create('photos', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('post_id')->nullable();
+            $table->foreignId('lot_id')->nullable();
             $table->foreignId('user_id');
             $table->string('name');
             $table->string('folder');

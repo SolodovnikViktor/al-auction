@@ -1,5 +1,5 @@
 <script setup>
-import {Head, router} from '@inertiajs/vue3';
+import {Head} from '@inertiajs/vue3';
 import MainLayout from "@/Layouts/MainLayout.vue";
 import {ref} from 'vue'
 import MainLotsFilter from "@/Components/Main/PostsIndex/MainLotsFilter.vue";
@@ -26,17 +26,12 @@ const props = defineProps(
         search: String,
     }
 );
-const catalog_view = ref(props.user?.catalog_view)
+const catalog_view = ref(props.user.catalog_view)
 const catalogView = (bool) => catalog_view.value = bool
-
-
-const test = () => {
-    router.patch(route('main-bets.test'))
-}
 </script>
 
 <template>
-    <Head title="Ставки"/>
+    <Head title="Каталог"/>
     <MainLayout :formSearch>
         <template #navigation>
             <MainNav/>
@@ -58,7 +53,7 @@ const test = () => {
             />
         </template>
         <div class="p-2 lg:p-4 max-w-screen-2xl mx-auto shadow sm:rounded-2xl bg-white">
-            <template v-if="!lots?.data.length">
+            <template v-if="!lots.data.length">
                 <ObjectNotFound v-if="search">
                     Поиск: "{{ search }}" не дал результатов.
                 </ObjectNotFound>
@@ -67,7 +62,6 @@ const test = () => {
                 </ObjectNotFound>
             </template>
             <template v-else>
-                <button @click="test">вапвап</button>
                 <MainLotsPhoto v-if="!catalog_view"
                                :lots
                                :formFilter
@@ -82,7 +76,7 @@ const test = () => {
                 />
             </template>
             <nav class="flex justify-center">
-                <PaginationBar :links="lots?.meta.links"/>
+                <PaginationBar :links="lots.meta.links"/>
             </nav>
         </div>
     </MainLayout>

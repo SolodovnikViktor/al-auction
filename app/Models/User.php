@@ -32,9 +32,9 @@ class User extends Authenticatable
         return $this->hasMany(Bet::class);
     }
 
-    public function Posts(): HasMany
+    public function Lots(): HasMany
     {
-        return $this->hasMany(Post::class);
+        return $this->hasMany(Lot::class);
     }
 
     public function Role(): BelongsTo

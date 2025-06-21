@@ -10,7 +10,7 @@ return new class extends Migration {
         Schema::create('photo_positions', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id');
-            $table->integer('post_id')->nullable();
+            $table->integer('lot_id')->nullable();
             $table->string('position');
             $table->timestamps();
         });

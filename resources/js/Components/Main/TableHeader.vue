@@ -28,7 +28,6 @@ defineEmits(['filterOn'])
              class="py-1 mb-1 px-3 lg:mb-1.5 select-none inline-flex items-center border border-transparent text-sm text-gray-500 rounded-md">
             {{ tableHeader.title }}
         </div>
-
     </th>
 </template>
 

@@ -9,7 +9,7 @@ class Photo extends Model
 {
     protected $table = 'photos';
     protected $fillable = [
-        'post_id',
+        'lot_id',
         'user_id',
         'name',
         'folder',
@@ -18,9 +18,9 @@ class Photo extends Model
         'size',
     ];
 
-    public function post(): BelongsTo
+    public function lot(): BelongsTo
     {
-        return $this->belongsTo(Post::class);
+        return $this->belongsTo(Lot::class);
     }
 
     public function getPhotoUrlAttribute(): string

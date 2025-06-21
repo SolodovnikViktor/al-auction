@@ -8,7 +8,7 @@ import {router} from "@inertiajs/vue3";
 
 const emit = defineEmits(['toggleModalPlaceBet'])
 const props = defineProps({
-    post: Object,
+    lot: Object,
     openModalPlaceBet: Boolean,
 });
 
@@ -37,11 +37,11 @@ const pushArr = (priceDown) => {
     }
 }
 
-if (props.post.bets.length === 0) {
-    priceDown = props.post.price
+if (props.lot.bets.length === 0) {
+    priceDown = props.lot.price
     pushArr(priceDown)
 } else {
-    priceDown = props.post.bets.at(-1)
+    priceDown = props.lot.bets.at(-1)
     pushArr(priceDown)
 }
 
@@ -76,7 +76,7 @@ const toggleModalPlaceBet = () => {
 const storeBet = () => {
     toggleModalPlaceBet()
     formBet.down_bet = priceDown
-    router.post(route('main-bets.store', props.post.id), formBet)
+    router.post(route('main-bets.store', props.lot.id), formBet)
 }
 </script>
 

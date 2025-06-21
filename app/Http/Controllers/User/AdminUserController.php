@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Admin\User\AdminUserIndexResource;
-use App\Http\Resources\Admin\User\AdminUserShowResource;
+use App\Http\Resources\User\AdminUserIndexResource;
+use App\Http\Resources\User\AdminUserShowResource;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;

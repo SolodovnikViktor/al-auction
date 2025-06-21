@@ -3,14 +3,14 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Admin\Post\AdminPostIndexResource;
+use App\Http\Resources\LotIndexResource;
 use App\Models\Bet;
 use App\Models\BodyType;
 use App\Models\Brand;
 use App\Models\Color;
 use App\Models\Drive;
 use App\Models\Fuel;
-use App\Models\Post;
+use App\Models\Lot;
 use App\Models\Transmission;
 use App\Models\Wheel;
 use Illuminate\Http\Request;
@@ -20,10 +20,10 @@ class BetController extends Controller
 {
     public function index(Request $request)
     {
-        $this->getPosts($request, $posts, $user);
+        $this->getLots($request, $lots, $user);
 
         return Inertia::render('Main/Bet/Index', [
-            'posts' => AdminPostIndexResource::collection($posts),
+            'lots' => LotIndexResource::collection($lots),
             'user' => auth()->user(),
             'formSearch' => $request->formSearch,
             'formFilter' => $request->formFilter,
@@ -38,19 +38,19 @@ class BetController extends Controller
         ]);
     }
 
-    public function store(Request $request, Post $post)
+    public function store(Request $request, Lot $lot)
     {
         $validated = $request->validate([
             'up_bet' => ['required', 'numeric'],
             'down_bet' => ['required', 'numeric'],
         ]);
         $user = auth()->user();
-//        dd($post->id, $request);
+//        dd($lot->id, $request);
 
         Bet::create(
             [
                 'user_id' => $user->id,
-                'post_id' => $post->id,
+                'lot_id' => $lot->id,
                 'down_bet' => $validated['down_bet'],
                 'up_bet' => $validated['up_bet']
             ]

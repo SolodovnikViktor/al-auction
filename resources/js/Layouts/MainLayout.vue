@@ -17,16 +17,16 @@ const page = usePage()
 const userRole = computed(() => page.props.auth.role)
 
 let adminActive = false;
-if (route().current('admin-posts.index') || route().current('admin-post.create')
-    || route().current('admin-post.show') || route().current('admin-post.edit')
-    || route().current('admin-posts.search') || route().current('admin-posts.filter')
+if (route().current('admin-lots.index') || route().current('admin-lot.create')
+    || route().current('admin-lot.show') || route().current('admin-lot.edit')
+    || route().current('admin-lots.search') || route().current('admin-lots.filter')
     || route().current('admin-users.index') || route().current('admin-user.show')) {
     adminActive = true;
 }
 let mainActive = false;
-if (route().current('main-posts.index')
-    || route().current('main-post.show')
-    || route().current('main-posts.search') || route().current('main-posts.filter')) {
+if (route().current('main-lots.index')
+    || route().current('main-lot.show')
+    || route().current('main-lots.search') || route().current('main-lots.filter')) {
     mainActive = true;
 }
 
@@ -39,14 +39,14 @@ let formSearch = reactive(
 const getSearch = () => {
     if (formSearch.search) {
         if (userRole.value?.role.value === 'admin') {
-            router.get(route("admin-posts.search"),
+            router.get(route("admin-lots.search"),
                 {formSearch: formSearch},
                 {
                     // preserveState: true,
                 }
             );
         } else
-            router.get(route("main-posts.search"),
+            router.get(route("main-lots.search"),
                 {formSearch: formSearch},
                 {
                     // preserveState: true,
@@ -85,12 +85,12 @@ const getSearch = () => {
                             class="hidden *:text-lg space-x-4 lg:space-x-8 sm:-my-px mx-4 sm:flex">
                             <NavLink
                                 v-if="userRole?.role?.value === 'admin'"
-                                :href="route('admin-posts.index')"
+                                :href="route('admin-lots.index')"
                                 :active=adminActive>
                                 Админ панель
                             </NavLink>
                             <NavLink
-                                :href="route('main-posts.index')"
+                                :href="route('main-lots.index')"
                                 :active=mainActive>
                                 Аукцион
                             </NavLink>
@@ -106,7 +106,7 @@ const getSearch = () => {
                             @submit.prevent="getSearch"
                             class="inline-flex items-center relative">
                             <input type="search"
-                                   id="post_search"
+                                   id="lot_search"
                                    autocomplete="search"
                                    v-model="formSearch.search"
                                    class="block w-full p-1 pl-2 pr-10 text-sm text-gray-900 border border-gray-200 rounded-lg "
@@ -150,7 +150,7 @@ const getSearch = () => {
                                         </DropdownLink>
                                         <DropdownLink
                                             :href="route('logout')"
-                                            method="post"
+                                            method="lot"
                                             as="button">
                                             Выйти
                                         </DropdownLink>
@@ -204,12 +204,12 @@ const getSearch = () => {
                     <div class="space-y-1 pb-3 pt-2">
                         <ResponsiveNavLink
                             v-if="userRole?.role?.value === 'admin'"
-                            :href="route('admin-posts.index')"
-                            :active="route().current('admin-posts.index')">
+                            :href="route('admin-lots.index')"
+                            :active="route().current('admin-lots.index')">
                             Админ панель
                         </ResponsiveNavLink>
                         <ResponsiveNavLink
-                            :href="route('main-posts.index')"
+                            :href="route('main-lots.index')"
                             :active=mainActive>
                             Аукцион
                         </ResponsiveNavLink>
@@ -238,7 +238,7 @@ const getSearch = () => {
                             </ResponsiveNavLink>
                             <ResponsiveNavLink
                                 :href="route('logout')"
-                                method="post"
+                                method="lot"
                                 as="button">
                                 Выйти
                             </ResponsiveNavLink>

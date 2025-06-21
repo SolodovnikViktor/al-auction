@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
             WheelSeeder::class,
             FuelSeeder::class,
             RoleSeeder::class,
-            PostSeeder::class,
+            LotSeeder::class,
         ]);
     }
 }

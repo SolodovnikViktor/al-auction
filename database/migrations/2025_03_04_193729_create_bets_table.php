@@ -10,7 +10,7 @@ return new class extends Migration {
         Schema::create('bets', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id');
-            $table->foreignId('post_id');
+            $table->foreignId('lot_id');
             $table->unsignedMediumInteger('down_bet');
             $table->unsignedMediumInteger('up_bet');
             $table->timestamps();

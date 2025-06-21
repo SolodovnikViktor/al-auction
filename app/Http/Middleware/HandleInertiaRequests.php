@@ -42,6 +42,6 @@ class HandleInertiaRequests extends Middleware
 
 //function () {
 //    if (auth()->user()) {
-//        return new MainUserResource(auth()->user());
+//        return new UserResource(auth()->user());
 //    }
 //},
